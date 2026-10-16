@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'lms',
 ]
 
+AUTH_USER_MODEL = 'lms.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
