@@ -1,0 +1,21 @@
+### get all users
+GET http://127.0.0.1:8000/api/users/
+
+
+### get one use
+GET http://127.0.0.1:8000/api/users/4/
+
+
+### Create user
+POST http://127.0.0.1:8000/api/users/create/
+Content-Type: application/json
+
+{
+    "username": "Jakob",
+    "password": "jakob",
+    "role": "student"
+}
+
+
+### delete user
+DELETE http://127.0.0.1:8000/api/users/1/remove/
