@@ -8,27 +8,7 @@ from django.forms.models import model_to_dict
 # remove when csrf is implemented properly
 from django.views.decorators.csrf import csrf_exempt
 
-
-def get_courses(request):
-    courses = list(
-        Course.objects.values()
-    )
-    return JsonResponse(courses, safe=False) # safe parameter to allow for the studenst list to be passed, without it only excepts dictionaries.
-
-def get_course(requst, course_id):
-    try:
-        course = Course.objects.get(
-            id= course_id
-        )
-        return JsonResponse(
-            model_to_dict(course)
-        )
-    except Course.DoesNotExist:
-        return JsonResponse(
-            {"error": "Course not found"},
-            status=404
-        )
-
+#user model CRUD defenitions
 def get_user_profiles(request):
     user_profiles = list(
         User.objects.values()
@@ -73,6 +53,40 @@ def create_user_profile(request):
     return JsonResponse(model_to_dict(user),status=201)
 
 @csrf_exempt
+def update_user_profile(request, user_id):
+    if request.method != "PUT":
+        return JsonResponse(
+            {"error": "PUT required"},
+            status=405
+        )
+
+    data = json.loads(request.body)
+
+    try:
+        user = User.objects.get(id=user_id)
+
+        user.username = data["username"]
+        user.set_password(data["password"]) #let Django deal with the password so it gets hashed correcty
+        user.first_name = data["first_name"]
+        user.last_name = data["last_name"]
+        user.email = data["email"]
+        user.is_staff = data["is_staff"]
+        user.is_active = data["is_active"]
+        user.role = data["role"]
+
+        user.save() # writes changes to SQLite
+
+        return JsonResponse(
+            model_to_dict(user)
+        )
+
+    except User.DoesNotExist:
+        return JsonResponse(
+            {"error": "User not found"},
+            status=404
+        )
+
+@csrf_exempt
 def remove_user_profile(request, user_id):
     if request.method != "DELETE":
         return JsonResponse(
@@ -92,7 +106,26 @@ def remove_user_profile(request, user_id):
             status=404
         )
 
+#course model CRUD defenitions
+def get_courses(request):
+    courses = list(
+        Course.objects.values()
+    )
+    return JsonResponse(courses, safe=False) # safe parameter to allow for the studenst list to be passed, without it only excepts dictionaries.
 
+def get_course(requst, course_id):
+    try:
+        course = Course.objects.get(
+            id= course_id
+        )
+        return JsonResponse(
+            model_to_dict(course)
+        )
+    except Course.DoesNotExist:
+        return JsonResponse(
+            {"error": "Course not found"},
+            status=404
+        )
 
 
     

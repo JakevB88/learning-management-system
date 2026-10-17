@@ -17,5 +17,21 @@ Content-Type: application/json
 }
 
 
+
+### update user
+PUT http://127.0.0.1:8000/api/users/6/update/
+Content-Type: application/json
+    #blank line required toherwise it fails on HTML error
+{
+    "username": "Jakob",
+    "password": "jakob",
+    "first_name": "Jakob",
+    "last_name": "van Bezooijen",
+    "email": "jvbezooijen1@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "role": "admin"
+}
+
 ### delete user
-DELETE http://127.0.0.1:8000/api/users/1/remove/
+DELETE http://127.0.0.1:8000/api/users/5/remove/
