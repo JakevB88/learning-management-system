@@ -1,30 +1,45 @@
+### log in
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+
+###test authentication with the access token
+GET http://127.0.0.1:8000/api/users/profile/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDQzNjQ0LCJpYXQiOjE3OTI0NDMwNDQsImp0aSI6IjBmY2E2YzVjNzEyNzQ0ZjlhMzZlNDE2ZjQ0MzA4Yjk1IiwidXNlcl9pZCI6IjEyIn0.dNrEyysUucbkKfyZxNJ2RvFjAaGWOwx9cmQq93abBH4
+
 ### get all course
 GET http://127.0.0.1:8000/api/courses/
 
 
 ### get one course
-GET http://127.0.0.1:8000/api/courses/2/
+GET http://127.0.0.1:8000/api/courses/5/
 
 
 ### Create course
 POST http://127.0.0.1:8000/api/courses/create/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDQyODQ2LCJpYXQiOjE3OTI0NDIyNDYsImp0aSI6IjAyOTBlMTU4ZjQ3MDQ5NGZiYmMxNzdjMjcwMDk4ZDE4IiwidXNlcl9pZCI6IjEyIn0.A9y9RzjkblOymJh7W6AcOX0HyqW_9JzCV3BisG0C0a0
 
 {
-    "title": "Django",
-    "description": "learn Django framework to become a fully fledged backend developer",
-    "teacher_id": 13
+    "title": "CSS",
+    "description": "Become a front end magician with this font end CSS styling course"
 }
 
 ### update course
-PATCH http://127.0.0.1:8000/api/courses/2/update/
+PATCH http://127.0.0.1:8000/api/courses/7/update/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDQyODQ2LCJpYXQiOjE3OTI0NDIyNDYsImp0aSI6IjAyOTBlMTU4ZjQ3MDQ5NGZiYmMxNzdjMjcwMDk4ZDE4IiwidXNlcl9pZCI6IjEyIn0.A9y9RzjkblOymJh7W6AcOX0HyqW_9JzCV3BisG0C0a0
 
 {
-    "title": "Django",
-    "description": "learn Django framework to become a fully fledged backend developer",
-    "teacher_id": 12
+    "title": "Bricklaying",
+    "description": "learn how to build a house"
 }
 
 ### delete user
-DELETE http://127.0.0.1:8000/api/users/6/remove/
+DELETE http://127.0.0.1:8000/api/courses/1/remove/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDQyODQ2LCJpYXQiOjE3OTI0NDIyNDYsImp0aSI6IjAyOTBlMTU4ZjQ3MDQ5NGZiYmMxNzdjMjcwMDk4ZDE4IiwidXNlcl9pZCI6IjEyIn0.A9y9RzjkblOymJh7W6AcOX0HyqW_9JzCV3BisG0C0a0

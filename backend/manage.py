@@ -20,3 +20,11 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+#incase superuser admin needs to be apdate for role admin
+from lms.models import User
+
+user = User.objects.get(username="admin")
+user.role = "admin"
+user.save()

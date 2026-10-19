@@ -5,12 +5,15 @@ from .views import (
     create_user_profile,
     remove_user_profile,
     update_user_profile,
+    current_profile,
 
     get_course,
     get_courses,
     create_course,
     remove_course,
     update_course,
+
+    
     )
 
 urlpatterns = [
@@ -20,10 +23,13 @@ urlpatterns = [
     path("users/<int:user_id>/", get_user_profile),
     path("users/<int:user_id>/update/", update_user_profile),
 
+    path("users/profile/", current_profile),
 
     path("courses/<int:course_id>/remove/", remove_course),
     path("courses/", get_courses), 
     path("courses/create/", create_course),
     path("courses/<int:course_id>/", get_course),
     path("courses/<int:course_id>/update/", update_course),
+
+
 ]

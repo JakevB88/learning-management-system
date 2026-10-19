@@ -22,19 +22,19 @@ Content-Type: application/json
 }
 
 ### update user
-PATCH http://127.0.0.1:8000/api/users/13/update/
+PATCH http://127.0.0.1:8000/api/users/14/update/
 Content-Type: application/application/json
 
 {
-    "username": "Jakob",
-    "password": "jakoba",
-    "first_name": "Jakob",
-    "last_name": "van Bezooijen",
-    "email": "jvbezooijen1@gmail.com",
+    "username": "admin",
+    "password": "admin",
+    "first_name": "admin",
+    "last_name": "admin",
+    "email": "admin@gmail.com",
     "is_staff": false,
     "is_active": true,
-    "role": "teacher"
+    "role": "admin"
 }
 
 ### delete user
-DELETE http://127.0.0.1:8000/api/users/6/remove/
+DELETE http://127.0.0.1:8000/api/users/12/remove/
