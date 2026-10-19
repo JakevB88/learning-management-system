@@ -8,7 +8,7 @@ from django.forms.models import model_to_dict
 # remove when csrf is implemented properly
 from django.views.decorators.csrf import csrf_exempt
 
-#user model CRUD defenitions
+#user model CRUD defenitions for Student model
 def get_user_profiles(request):
     user_profiles = list(
         User.objects.values()
@@ -36,25 +36,31 @@ def get_user_profile(request, user_id):
 def create_user_profile(request):
     if request.method != "POST":
         return JsonResponse(
-            {"error": "POST rewquired"},
+            {"error": "POST required"},
             status= 405
         )
-
+    
     data = json.loads(request.body)
 
-    #once validated for multiple users, role can be permanently set to "role=student" 
-    #this to force all users to only be able to register as a student
-    #then only allow admin to create teachers and admin
+    
+        #once validated for multiple users, role can be permanently set to "role=student" 
+        #this to force all users to only be able to register as a student
+        #then only allow admin to create teachers and admin
     user = User.objects.create_user(
         username=data["username"],
         password=data["password"],
+        first_name = data["first_name"],
+        last_name = data["last_name"],
+        email = data["email"],
+        is_staff = data["is_staff"],
+        is_active = data["is_active"],
         role=data.get("role", "student")
     )
     return JsonResponse(model_to_dict(user),status=201)
 
 @csrf_exempt
 def update_user_profile(request, user_id):
-    if request.method != "PUT":
+    if request.method != "PATCH":
         return JsonResponse(
             {"error": "PUT required"},
             status=405
@@ -106,7 +112,7 @@ def remove_user_profile(request, user_id):
             status=404
         )
 
-#course model CRUD defenitions
+#course model CRUD defenitions for Course model
 def get_courses(request):
     courses = list(
         Course.objects.values()
@@ -127,130 +133,122 @@ def get_course(requst, course_id):
             status=404
         )
 
-
-    
-#************************************************************************************
 @csrf_exempt
-def update_student(request, student_id):
-    if request.method != "PUT":
+def create_course(request):
+    if request.method != "POST":
         return JsonResponse(
-            {"error": "PUT required"},
-            status=405
+            {"error": "POST required"},
+            status= 405
         )
-
+    
     data = json.loads(request.body)
 
-    try:
-        student = Student.objects.get(id=student_id)
+    # #confirm user creating the course is authorised
+    # try:
+    #     teacher = User.objects.get(id=data["teacher_id"])
+    #     if teacher.role != "teacher" and teacher.role != "admin" :
+    #         return JsonResponse(
+    #             {"error": "Selected user is not a teacher"},
+    #             status=400
+    #         )
+    # except User.DoesNotExist:
+    #     return JsonResponse(
+    #         {"error": "Teacher not found"},
+    #         status=404
+    #     )
 
-        student.name = data["name"]
-        student.gpa = data["gpa"]
-        student.registered = data["registered"]
-
-        student.save() # writes changes to SQLite
-
-        return JsonResponse(
-            model_to_dict(student)
-        )
-
-    except Student.DoesNotExist:
-        return JsonResponse(
-            {"error": "Student not found"},
-            status=404
-        )
+    course = Course.objects.create(
+        title=data["title"],
+        description=data["description"],
+        teacher_id = data["teacher_id"]
+    )
+    return JsonResponse(model_to_dict(course),status=201)
 
 @csrf_exempt
-def patch_student(request, student_id):
+def update_course(request, course_id):
     if request.method != "PATCH":
         return JsonResponse(
             {"error": "PATCH required"},
-            status=405
+            status = 405
         )
 
     data = json.loads(request.body)
+
+    #confirm user updating the course is authorised
+    
+    # try:
+    #     teacher = User.objects.get(id=data["teacher_id"])
+    #     course = Course.objects.get(id=course_id)
+
+    #     if teacher.role != "admin" and teacher.id != course.teacher_id:
+    #         return JsonResponse(
+    #             {"error": "Selected user has no authorisation to update this course"},
+    #             status=403
+    #         )
+        
+    # except User.DoesNotExist:
+    #     return JsonResponse(
+    #         {"error": "Teacher not found"},
+    #         status=404
+    #     )
 
     try:
-        student = Student.objects.get(id=student_id)
-        if "name" in data:
-            student.name = data["name"]
-        
-        if "gpa" in data:
-            student.gpa = data["gpa"]
+        course = Course.objects.get(id=course_id)
 
-        if "registered" in data:
-            student.registered = data["registered"]
+        course.title = data["title"]
+        course.description = data["description"]
+        course.teacher_id = data["teacher_id"]
 
-        student.save() # writes changes to SQLite
+        course.save() # writes changes to SQLite
 
         return JsonResponse(
-            model_to_dict(student)
+            model_to_dict(course)
         )
 
-    except Student.DoesNotExist:
+    except Course.DoesNotExist:
         return JsonResponse(
-            {"error": "Student not found"},
+            {"error": "Course not found"},
             status=404
         )
-    
-@csrf_exempt
-def create_student(request):
-    if request.method != "POST":
-        return JsonResponse(
-            {"error": "POST required"},
-            status=405
-        )
-    
-    data = json.loads(request.body)
 
-    student = Student.objects.create(
-        name=data["name"],
-        gpa=data["gpa"]
-    )
-
-    return JsonResponse(model_to_dict(student),status=201)
 
 @csrf_exempt
-def remove_student(request, student_id):
+def remove_course(request, course_id):
     if request.method != "DELETE":
         return JsonResponse(
             {"error": "DELETE required"},
-            status=405
+            status = 405
         )
     
+    #  #confirm user updating the course is authorised
+    # try:
+    #     teacher = User.objects.get(id=data["teacher_id"])
+    #     course = Course.objects.get(id=course_id)
+
+    #     if teacher.role != "admin" and teacher.id != course.teacher_id:
+    #         return JsonResponse(
+    #             {"error": "Selected user has no authorisation to update this course"},
+    #             status=403
+    #         )
+        
+    # except User.DoesNotExist:
+    #     return JsonResponse(
+    #         {"error": "Teacher not found"},
+    #         status=404
+    #     )
+    
     try:
-        student = Student.objects.get(id=student_id)
-        student.delete()
+        course = Course.objects.get(
+            id = course_id
+        )
+        course.delete()
         return JsonResponse({
-            "message": "Student deleted"
+            "message": "Course deleted"
         })
 
-    except Student.DoesNotExist:
+    except Course.DoesNotExist:
         return JsonResponse(
-            {"error": "Student not found"},
+            {"error": "Course not found"},
             status=404
         )
-#register student needs to be able to link student and course, this will go in the Django controlled table, how does this work
-@csrf_exempt
-def register_student_to_course(request, student_id, course_id):
-    if request.method != "POST":
-        return JsonResponse(
-            {"error": "POST required"},
-            status=405
-        )
-
-    try:
-        student = Student.objects.get(id=student_id)
-
-        student.registered = True
-
-        student.save() # writes changes to SQLite
-
-        return JsonResponse(
-            model_to_dict(student)
-        )
-
-    except Student.DoesNotExist:
-        return JsonResponse(
-            {"error": "Student not found"},
-            status=404
-        )
+    

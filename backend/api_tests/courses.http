@@ -1,0 +1,30 @@
+### get all course
+GET http://127.0.0.1:8000/api/courses/
+
+
+### get one course
+GET http://127.0.0.1:8000/api/courses/2/
+
+
+### Create course
+POST http://127.0.0.1:8000/api/courses/create/
+Content-Type: application/json
+
+{
+    "title": "Django",
+    "description": "learn Django framework to become a fully fledged backend developer",
+    "teacher_id": 13
+}
+
+### update course
+PATCH http://127.0.0.1:8000/api/courses/2/update/
+Content-Type: application/json
+
+{
+    "title": "Django",
+    "description": "learn Django framework to become a fully fledged backend developer",
+    "teacher_id": 12
+}
+
+### delete user
+DELETE http://127.0.0.1:8000/api/users/6/remove/

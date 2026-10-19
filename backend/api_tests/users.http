@@ -1,0 +1,40 @@
+### get all users
+GET http://127.0.0.1:8000/api/users/
+
+
+### get one user
+GET http://127.0.0.1:8000/api/users/13/
+
+
+### Create user
+POST http://127.0.0.1:8000/api/users/create/
+Content-Type: application/json
+
+{
+    "username": "Chardlie",
+    "password": "jakoba",
+    "first_name": "Jakob",
+    "last_name": "van Bezooijen",
+    "email": "jvbezooijden1@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "role": "admin"
+}
+
+### update user
+PATCH http://127.0.0.1:8000/api/users/13/update/
+Content-Type: application/application/json
+
+{
+    "username": "Jakob",
+    "password": "jakoba",
+    "first_name": "Jakob",
+    "last_name": "van Bezooijen",
+    "email": "jvbezooijen1@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "role": "teacher"
+}
+
+### delete user
+DELETE http://127.0.0.1:8000/api/users/6/remove/
