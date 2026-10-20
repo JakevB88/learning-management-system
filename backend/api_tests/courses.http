@@ -31,15 +31,15 @@ DELETE http://127.0.0.1:8000/api/courses/2/remove/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNTEzOTAwLCJpYXQiOjE3OTI1MTMzMDAsImp0aSI6IjVhMjlmMGY5N2FjZTQwY2JiNTAzYjUzODJjOGIxYmY2IiwidXNlcl9pZCI6IjIifQ.CZmTQtnwQtoO7Aj0gsg-y1RUqCXszRqzFYLLxSinxJA
 
 ###register student to course
-PUT http://127.0.0.1:8000/api/courses/3/register
+PUT http://127.0.0.1:8000/api/courses/3/register/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNTI1NDM0LCJpYXQiOjE3OTI1MjQ4MzQsImp0aSI6IjA2ZWE3Y2MwYTQxMzQ5NTFhMjE0M2RlYzgwYjVkMTJjIiwidXNlcl9pZCI6IjEifQ.6K-YdEj2Mv0e84EjTfSR1Extu1VcZ-dPKSZYhTG1SVo
 
 ###register student to course
-PUT http://127.0.0.1:8000/api/courses/3/deregister
+PUT http://127.0.0.1:8000/api/courses/3/deregister/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNTI1NDM0LCJpYXQiOjE3OTI1MjQ4MzQsImp0aSI6IjA2ZWE3Y2MwYTQxMzQ5NTFhMjE0M2RlYzgwYjVkMTJjIiwidXNlcl9pZCI6IjEifQ.6K-YdEj2Mv0e84EjTfSR1Extu1VcZ-dPKSZYhTG1SVo
 
 ###register student to course
-PUT http://127.0.0.1:8000/api/courses/3/deregister-admin
+PUT http://127.0.0.1:8000/api/courses/3/deregister-admin/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNTI1NDM0LCJpYXQiOjE3OTI1MjQ4MzQsImp0aSI6IjA2ZWE3Y2MwYTQxMzQ5NTFhMjE0M2RlYzgwYjVkMTJjIiwidXNlcl9pZCI6IjEifQ.6K-YdEj2Mv0e84EjTfSR1Extu1VcZ-dPKSZYhTG1SVo
 Content-Type: application/json
 
