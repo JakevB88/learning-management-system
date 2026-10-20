@@ -1,40 +1,80 @@
 ### get all users
 GET http://127.0.0.1:8000/api/users/
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDk1ODE5LCJpYXQiOjE3OTI0OTUyMTksImp0aSI6IjMxOTFkNWVmMzQyOTQ0NWU5ZTI3MWViNWFkYWE1ZGY4IiwidXNlcl9pZCI6IjUifQ.5F4D9Ox4U8MNwbpPpZfjrkw3jF-b3hQTsB-2SSkw9sQ
 
 ### get one user
-GET http://127.0.0.1:8000/api/users/13/
+GET http://127.0.0.1:8000/api/users/1/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDk1ODE5LCJpYXQiOjE3OTI0OTUyMTksImp0aSI6IjMxOTFkNWVmMzQyOTQ0NWU5ZTI3MWViNWFkYWE1ZGY4IiwidXNlcl9pZCI6IjUifQ.5F4D9Ox4U8MNwbpPpZfjrkw3jF-b3hQTsB-2SSkw9sQ
 
+###Get own account
+GET http://127.0.0.1:8000/api/users/profile/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDk1ODE5LCJpYXQiOjE3OTI0OTUyMTksImp0aSI6IjMxOTFkNWVmMzQyOTQ0NWU5ZTI3MWViNWFkYWE1ZGY4IiwidXNlcl9pZCI6IjUifQ.5F4D9Ox4U8MNwbpPpZfjrkw3jF-b3hQTsB-2SSkw9sQ
 
-### Create user
+### Create user student
 POST http://127.0.0.1:8000/api/users/create/
 Content-Type: application/json
 
 {
-    "username": "Chardlie",
-    "password": "jakoba",
-    "first_name": "Jakob",
-    "last_name": "van Bezooijen",
-    "email": "jvbezooijden1@gmail.com",
+    "username": "Student3",
+    "password": "student3",
+    "first_name": "student3",
+    "last_name": "student3",
+    "email": "student3@gmail.com",
     "is_staff": false,
     "is_active": true,
-    "role": "admin"
+    "role": "student"
+}
+
+### Create user staff
+POST http://127.0.0.1:8000/api/users/create-staff/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDk1ODE5LCJpYXQiOjE3OTI0OTUyMTksImp0aSI6IjMxOTFkNWVmMzQyOTQ0NWU5ZTI3MWViNWFkYWE1ZGY4IiwidXNlcl9pZCI6IjUifQ.5F4D9Ox4U8MNwbpPpZfjrkw3jF-b3hQTsB-2SSkw9sQ
+Content-Type: application/json
+
+{
+    "username": "Teacher2",
+    "password": "teacher2",
+    "first_name": "teacher2",
+    "last_name": "teacher2",
+    "email": "teacher2@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "role": "teacher"
 }
 
 ### update user
-PATCH http://127.0.0.1:8000/api/users/14/update/
-Content-Type: application/application/json
+PATCH http://127.0.0.1:8000/api/users/6/update/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDk1ODE5LCJpYXQiOjE3OTI0OTUyMTksImp0aSI6IjMxOTFkNWVmMzQyOTQ0NWU5ZTI3MWViNWFkYWE1ZGY4IiwidXNlcl9pZCI6IjUifQ.5F4D9Ox4U8MNwbpPpZfjrkw3jF-b3hQTsB-2SSkw9sQ
+Content-Type: application/json
 
 {
-    "username": "admin",
-    "password": "admin",
-    "first_name": "admin",
-    "last_name": "admin",
-    "email": "admin@gmail.com",
+    "username": "Student3",
+    "password": "student3",
+    "first_name": "student3",
+    "last_name": "student3",
+    "email": "student3@gmail.com",
     "is_staff": false,
     "is_active": true,
-    "role": "admin"
+    "role": "student"
 }
 
+### update user
+PATCH http://127.0.0.1:8000/api/users/5/update/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDk1ODE5LCJpYXQiOjE3OTI0OTUyMTksImp0aSI6IjMxOTFkNWVmMzQyOTQ0NWU5ZTI3MWViNWFkYWE1ZGY4IiwidXNlcl9pZCI6IjUifQ.5F4D9Ox4U8MNwbpPpZfjrkw3jF-b3hQTsB-2SSkw9sQ
+Content-Type: application/json
+
+{
+    "username": "Hugo",
+    "password": "hugo",
+    "first_name": "master hugo",
+    "last_name": "van Bezooijen",
+    "email": "hvbezooijen1@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "role": "student"
+}
+
+
+
 ### delete user
-DELETE http://127.0.0.1:8000/api/users/12/remove/
+DELETE http://127.0.0.1:8000/api/users/5/remove/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDk1ODE5LCJpYXQiOjE3OTI0OTUyMTksImp0aSI6IjMxOTFkNWVmMzQyOTQ0NWU5ZTI3MWViNWFkYWE1ZGY4IiwidXNlcl9pZCI6IjUifQ.5F4D9Ox4U8MNwbpPpZfjrkw3jF-b3hQTsB-2SSkw9sQ

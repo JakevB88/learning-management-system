@@ -1,15 +1,10 @@
 from django.http import JsonResponse
 import json
 from .models import User, Course
-from .permissions import IsTeacherOrAdmin, IsAdmin, IsStudent
 from django.forms.models import model_to_dict
-from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
-
-# this will allow csrf verification to be bypassed for CRUD testing purposes 
-# remove when csrf is implemented properly
-from django.views.decorators.csrf import csrf_exempt
+from .permissions import IsTeacherOrAdmin, IsAdmin
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import api_view, permission_classes
 
 #Return data of current logged in user for validation
 @api_view(["GET"])
@@ -23,84 +18,149 @@ def current_profile(request):
 
 #user model CRUD defenitions for User model
 @api_view(["GET"])
+@permission_classes([IsAuthenticated, IsTeacherOrAdmin])
 def get_user_profiles(request):
-    user_profiles = list(
-        User.objects.values()
-    )
+    user_profiles = list(User.objects.values())
+
+    if request.user.role == "teacher":
+        users = [
+            {
+                "id": user["id"],
+                "username": user["username"],
+                "role": user["role"],
+            }
+            for user in user_profiles
+        ]
+
+        return JsonResponse(users, safe=False)
 
     return JsonResponse(user_profiles, safe=False)
     
 @api_view(["GET"])
+@permission_classes([IsAuthenticated, IsTeacherOrAdmin])
 def get_user_profile(request, user_id):
     try:
-        user_profile = User.objects.get(
-            id= user_id
-        )
+        user_profile = User.objects.get(id=user_id)
+
+        if request.user.role == "teacher":
+            return JsonResponse({
+                "id": user_profile.id,
+                "username": user_profile.username,
+                "role": user_profile.role,
+            })
+
         return JsonResponse(
             model_to_dict(user_profile)
         )
-    
+
     except User.DoesNotExist:
         return JsonResponse(
             {"error": "User not found"},
             status=404
-        )  
+        )
 
 @api_view(["POST"])
-@csrf_exempt
-def create_user_profile(request):
-    
-    data = json.loads(request.body)
+@permission_classes([IsAuthenticated, IsAdmin])
+def create_staff_user_profile(request):
+    data = request.data
 
-        #once validated for multiple users, role can be permanently set to "role=student" 
-        #this to force all users to only be able to register as a student
-        #then only allow admin to create teachers and admin
+    role = data.get("role")
+
+    if role not in ["teacher", "admin"]:
+        return JsonResponse(
+            {"error": "Role must be teacher or admin"},
+            status=400
+        )
+    
     user = User.objects.create_user(
         username=data["username"],
         password=data["password"],
-        first_name = data["first_name"],
-        last_name = data["last_name"],
-        email = data["email"],
-        is_staff = data["is_staff"],
-        is_active = data["is_active"],
-        role=data.get("role", "student")
+        first_name=data["first_name"],
+        last_name=data["last_name"],
+        email=data["email"],
+        is_staff=True,
+        is_active=True,
+        role=role
     )
-    return JsonResponse(model_to_dict(user),status=201)
+    return JsonResponse(
+        {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role
+        },
+        status=201
+    )
 
-#@permission_classes([IsAuthenticated, IsStudent])
+                                      
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def create_user_profile(request):
+    data = request.data
+    user = User.objects.create_user(
+        username=data["username"],
+        password=data["password"],
+        first_name=data["first_name"],
+        last_name=data["last_name"],
+        email=data["email"],
+        is_staff=False,
+        is_active=True,
+        role="student"
+    )
+    return JsonResponse(
+        {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role
+        },
+        status=201
+    )
+
 @api_view(["PATCH"])
-@csrf_exempt
+@permission_classes([IsAuthenticated])
 def update_user_profile(request, user_id):
 
-    data = json.loads(request.body)
+    data = request.data
 
     try:
         user = User.objects.get(id=user_id)
 
+        # permission check
+        if (
+            request.user.id != user.id
+            and request.user.role != "admin"
+        ):
+            return JsonResponse(
+                {"error": "Permission denied"},
+                status=403
+            )
+
         user.username = data["username"]
-        user.set_password(data["password"]) #let Django deal with the password so it gets hashed correcty
+        user.set_password(data["password"])
         user.first_name = data["first_name"]
         user.last_name = data["last_name"]
         user.email = data["email"]
-        user.is_staff = data["is_staff"]
-        user.is_active = data["is_active"]
-        user.role = data["role"]
 
-        user.save() # writes changes to SQLite
+        # Only admin can modify these
+        if request.user.role == "admin":
+            user.is_staff = data["is_staff"]
+            user.is_active = data["is_active"]
+            user.role = data["role"]
 
-        return JsonResponse(
-            model_to_dict(user)
-        )
+        user.save()
+
+        return JsonResponse(model_to_dict(user))
 
     except User.DoesNotExist:
         return JsonResponse(
             {"error": "User not found"},
             status=404
         )
+    
 
-#@permission_classes([IsAuthenticated, IsAdmin])
 @api_view(["DELETE"])
-@csrf_exempt
+@permission_classes([IsAuthenticated, IsAdmin])
 def remove_user_profile(request, user_id):
 
     try:
@@ -118,6 +178,7 @@ def remove_user_profile(request, user_id):
 
 #course model CRUD defenitions for Course model
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def get_courses(request):
     courses = list(
         Course.objects.values()
@@ -125,6 +186,7 @@ def get_courses(request):
     return JsonResponse(courses, safe=False) # safe parameter to allow for the studenst list to be passed, without it only excepts dictionaries.
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def get_course(requst, course_id):
     try:
         course = Course.objects.get(
@@ -143,7 +205,7 @@ def get_course(requst, course_id):
 @permission_classes([IsAuthenticated, IsTeacherOrAdmin])
 def create_course(request):
     
-    data = json.loads(request.body)
+    data = request.data
 
     course = Course.objects.create(
         title=data["title"],
@@ -156,14 +218,20 @@ def create_course(request):
 @permission_classes([IsAuthenticated, IsTeacherOrAdmin])
 def update_course(request, course_id):
 
-    data = json.loads(request.body)
+    data = request.data
 
     try:
         course = Course.objects.get(id=course_id)
 
+        if request.user.role != "admin":
+            if course.teacher_id != request.user.id:
+                return JsonResponse(
+                    {"error": "Permission denied"},
+                    status=403
+                )
+            
         course.title = data["title"]
         course.description = data["description"]
-        course.teacher_id = request.user.id
 
         course.save() # writes changes to SQLite
 
@@ -185,6 +253,14 @@ def remove_course(request, course_id):
         course = Course.objects.get(
             id = course_id
         )
+
+        if request.user.role != "admin":
+            if course.teacher_id != request.user.id:
+                return JsonResponse(
+                    {"error": "Permission denied"},
+                    status=403
+                )
+            
         course.delete()
         return JsonResponse({
             "message": "Course deleted"

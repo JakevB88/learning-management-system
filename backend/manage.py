@@ -22,7 +22,7 @@ if __name__ == '__main__':
     main()
 
 
-#incase superuser admin needs to be apdate for role admin
+#incase superuser admin needs to be apdate for role admin after initial superuser createion, to be deleted on final release.
 from lms.models import User
 
 user = User.objects.get(username="admin")

@@ -3,10 +3,10 @@ POST http://127.0.0.1:8000/api/token/
 Content-Type: application/json
 
 {
-    "username": "Jakob",
-    "password": "jakob"
+    "username": "Otto",
+    "password": "otto"
 }
 
 ###test authentication with the access token
 GET http://127.0.0.1:8000/api/users/profile/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDM2MzY0LCJpYXQiOjE3OTI0MzU3NjQsImp0aSI6IjllMDY5NDg3OGMwNzQ1NDU4M2JmZDBhOWM1MDk0Yzk2IiwidXNlcl9pZCI6IjEzIn0.WBRv5BpbLoIwM240vCYr1Hvf7gLo3gXJAsZ4eq5P5rI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNTA0ODkwLCJpYXQiOjE3OTI1MDQyOTAsImp0aSI6IjRkMWUyMDQwZTlkYjQ5MzRhNjI1MzdjNjE4MzUyODA3IiwidXNlcl9pZCI6IjIifQ.jXfT08RLfas_-2s3j_OWcuAxuitnzkYQECRoS8ZcMS0
