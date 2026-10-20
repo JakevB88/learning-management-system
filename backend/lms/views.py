@@ -284,7 +284,12 @@ def register_student_to_course(request, course_id):
             {"error": "Course not found"},
             status=404
         )
-
+    if course.students.filter(id=request.user.id).exists():
+        return JsonResponse(
+            {"error": "Already registered to this course"},
+            status=400
+        )
+    
     course = Course.objects.get(id=course_id)
 
     course.students.add(request.user)
@@ -321,7 +326,9 @@ def deregister_student_from_course(request, course_id):
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated, IsAdmin])
-def deregister_student_from_course_admin(request, course_id, student_id):
+def deregister_student_from_course_admin(request, course_id):
+
+    student_id = request.data.get("student_id")
     
     try:
         course = Course.objects.get(id=course_id)
