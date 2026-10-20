@@ -18,10 +18,10 @@ class IsAdmin(BasePermission):
 #     def has_permission(self, request, view):
 #         return request.user.role == "teacher"
 
-# #Allows access only to students.
-# class IsStudent(BasePermission):
-#     def has_permission(self, request, view):
-#         return request.user.role == "student"
+#Allows access only to students.
+class IsStudent(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.role == "student"
 
 # class IsOwnerOrAdmin(BasePermission):
 #     def has_object_permission(self, request, view, obj):

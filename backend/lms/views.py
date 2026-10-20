@@ -2,7 +2,7 @@ from django.http import JsonResponse
 import json
 from .models import User, Course
 from django.forms.models import model_to_dict
-from .permissions import IsTeacherOrAdmin, IsAdmin
+from .permissions import IsTeacherOrAdmin, IsAdmin, IsStudent
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 
@@ -273,6 +273,81 @@ def remove_course(request, course_id):
         )
 
 
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated, IsStudent])
+def register_student_to_course(request, course_id):
+    
+    try:
+        course = Course.objects.get(id=course_id)
+    except Course.DoesNotExist:
+        return JsonResponse(
+            {"error": "Course not found"},
+            status=404
+        )
 
+    course = Course.objects.get(id=course_id)
 
+    course.students.add(request.user)
 
+    return JsonResponse(
+        {"message": "Successfully registered"},
+        status=200
+    )
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated, IsStudent])
+def deregister_student_from_course(request, course_id):
+    
+    try:
+        course = Course.objects.get(id=course_id)
+    except Course.DoesNotExist:
+        return JsonResponse(
+            {"error": "Course not found"},
+            status=404
+        )
+
+    if not course.students.filter(id=request.user.id).exists():
+        return JsonResponse(
+            {"error": "Not registered to this course"},
+            status=404
+        )
+
+    course.students.remove(request.user)
+
+    return JsonResponse(
+        {"message": "Successfully de-regiseterd"},
+        status=200
+    )
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated, IsAdmin])
+def deregister_student_from_course_admin(request, course_id, student_id):
+    
+    try:
+        course = Course.objects.get(id=course_id)
+    except Course.DoesNotExist:
+        return JsonResponse(
+            {"error": "Course not found"},
+            status=404
+        )
+    
+    try:
+        user = User.objects.get(id=student_id)
+    except User.DoesNotExist:
+        return JsonResponse(
+            {"error": "Student not found"},
+            status=404
+        )
+
+    if not course.students.filter(id=student_id).exists():
+        return JsonResponse(
+            {"error": "Student not registered to this course"},
+            status=404
+        )
+
+    course.students.remove(user)
+
+    return JsonResponse(
+        {"message": "Successfully de-regiseterd"},
+        status=200
+    )
