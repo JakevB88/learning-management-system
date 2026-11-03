@@ -1,0 +1,85 @@
+/****************General*************************/
+h2, h1 {
+  font-family: 'Inter', sans-serif; 
+  font-weight: 600;
+  color: #391c69;
+  margin-top: 12px;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  text-align: left;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 4rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 2px solid #1d693a;
+  outline-offset: 5px;
+  border-radius: 8px;
+}
+
+
+/****************App.js*************************/
+.appheader {
+  margin-left: 2%;
+  margin-right: 2%;
+  max-width: 1200px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between; /* Pushes title to left and icons to right */
+  align-items: center;     
+}
+
+.header-line {
+  border: none;
+  height: 3px;
+  background-color: #dfe6e9;
+  margin: 0; 
+  margin-bottom: 3%;
+  width: 100%;
+}
+
+.headerIcons {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.body {
+    display: flex;
+    min-height: calc(100vh - 80px);
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #f4f4f4;
+    padding: 1rem;
+}
+
+.pageContent {
+    flex: 1;
+    background-color: #970f0f;
+    padding: 1rem;
+}
+
+
+/****************HomePage.js*************************/
+.homepage{
+  font-family: 'inter', sans-serif; 
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: #391c69;
+}
