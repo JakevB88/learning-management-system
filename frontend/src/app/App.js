@@ -1,5 +1,5 @@
 import HomePage from "../features/HomePage"
-import LoginPage from "../features/LoginPage"
+import Login from "../features/LoginPage"
 import ProfilePage from "../features/ProfilePage";
 import CoursesPage from "../features/CoursesPage"
 import { 
@@ -10,6 +10,13 @@ import {
   Outlet,
   useNavigate
 } from 'react-router-dom';
+
+
+const HandleLogout = () => {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  alert("Logged out");
+};
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -43,6 +50,9 @@ function Layout() {
       <div className="header">
         <h1>JvB Courses</h1>
         <div className="headerIcons">
+          <button onClick={HandleLogout}>
+            <p>Log out</p>
+          </button>
           <button onClick={() => {navigate("login")}}>
             <p>Log in</p>
           </button>
@@ -67,7 +77,7 @@ const appRouter = createBrowserRouter(
   createRoutesFromElements(
   <Route path="/" element={ <Layout /> }>
     <Route index element={ <HomePage/> } />
-    <Route path='login' element={ <LoginPage/>} />
+    <Route path='login' element={ <Login/>} />
     <Route path='profile' element={ <ProfilePage/>} />
     <Route path='courses' element={ <CoursesPage/>} />
   </Route>
