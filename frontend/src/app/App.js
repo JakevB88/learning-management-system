@@ -2,6 +2,9 @@ import HomePage from "../features/HomePage"
 import Login from "../features/LoginPage"
 import ProfilePage from "../features/ProfilePage";
 import CoursesPage from "../features/CoursesPage"
+import CreateUser from "../features/CreateUserPage";
+import AdminCreateUser from "../features/AdminCreateUserPage"
+import { useState, useEffect } from "react";
 import { 
   Route, 
   RouterProvider, 
@@ -18,8 +21,35 @@ const HandleLogout = () => {
   alert("Logged out");
 };
 
+
+
 function Sidebar() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/users/profile/",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   return (
     <div>
@@ -36,6 +66,21 @@ function Sidebar() {
       <div>
         <button onClick={() => {navigate("profile")}}>
           <p>Profile</p>
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={() =>{
+            console.log(user);
+            console.log(user?.role);
+            navigate(
+              user?.role === "admin"
+                ? "/create-user"
+                : "/signup"
+            )
+          }}
+        >
+          <p>Create User Account</p>
         </button>
       </div>
     </div>
@@ -80,6 +125,8 @@ const appRouter = createBrowserRouter(
     <Route path='login' element={ <Login/>} />
     <Route path='profile' element={ <ProfilePage/>} />
     <Route path='courses' element={ <CoursesPage/>} />
+    <Route path='signup' element={ <CreateUser/>} />
+    <Route path='create-user' element={ <AdminCreateUser/>} />
   </Route>
   ),
   //required to use for github pages 
