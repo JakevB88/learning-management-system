@@ -4,7 +4,8 @@ import ProfilePage from "../features/ProfilePage";
 import CoursesPage from "../features/CoursesPage"
 import CreateUser from "../features/CreateUserPage";
 import AdminCreateUser from "../features/AdminCreateUserPage"
-import { useState, useEffect } from "react";
+import AuthContext from "./AuthContext";
+import { useState, useContext } from "react";
 import { 
   Route, 
   RouterProvider, 
@@ -15,42 +16,13 @@ import {
 } from 'react-router-dom';
 
 
-const HandleLogout = () => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-  alert("Logged out");
-};
 
 
 
 function Sidebar() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await fetch(
-          "http://127.0.0.1:8000/api/users/profile/",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
-
+  const { user } = useContext(AuthContext);
+  console.log("Sidebar user:", user);
   return (
     <div>
       <div>
@@ -71,8 +43,6 @@ function Sidebar() {
       <div>
         <button
           onClick={() =>{
-            console.log(user);
-            console.log(user?.role);
             navigate(
               user?.role === "admin"
                 ? "/create-user"
@@ -89,7 +59,16 @@ function Sidebar() {
 
 function Layout() {
   const navigate = useNavigate();
-  
+
+  const { setUser } = useContext(AuthContext);
+  const HandleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    
+    setUser(null);
+    alert("Logged out");
+  };
+
   return (
     <div className="appheader">
       <div className="header">
@@ -135,8 +114,17 @@ const appRouter = createBrowserRouter(
 
 
 function App() {
+  const [user, setUser] = useState(null);
+
   return (
-    <RouterProvider router={appRouter}></RouterProvider>
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+      }}
+    >
+      <RouterProvider router={appRouter} />
+    </AuthContext.Provider>
   );
 }
 

@@ -14,13 +14,16 @@ export default function CreateUser() {
     
     const handleSubmitUser = async (e) => {
         e.preventDefault();
-
+        console.log("Role being sent:", role);
+        console.log("Access token:");
+        console.log(localStorage.getItem("access_token"));
         const response = await fetch(
-            "http://127.0.0.1:8000/api/users/create/",
+            "http://127.0.0.1:8000/api/users/create-staff/",
             {
                 method: "POST",
                 headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
                 },
                 body: JSON.stringify({
                 username,
@@ -38,6 +41,7 @@ export default function CreateUser() {
         const data = await response.json();
 
         if (response.ok) {
+            console.log("user create response: ", data)
             alert("User Created!");
             navigate("/create-user");
         } 

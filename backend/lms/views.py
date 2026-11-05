@@ -63,14 +63,15 @@ def get_user_profile(request, user_id):
 @permission_classes([IsAuthenticated, IsAdmin])
 def create_staff_user_profile(request):
     data = request.data
-
+    print("correct create user called")
     role = data.get("role")
 
-    if role not in ["teacher", "admin"]:
-        return JsonResponse(
-            {"error": "Role must be teacher or admin"},
-            status=400
-        )
+    # an admin should be able to als create students so this if statement is no longer required.
+    #if role not in ["teacher", "admin"]:
+    #    return JsonResponse(
+    #        {"error": "Role must be teacher or admin"},
+    #        status=400
+    #    )
     
     user = User.objects.create_user(
         username=data["username"],
@@ -80,7 +81,7 @@ def create_staff_user_profile(request):
         email=data["email"],
         is_staff=True,
         is_active=True,
-        role=role
+        role=data["role"]
     )
     return JsonResponse(
         {
@@ -97,6 +98,7 @@ def create_staff_user_profile(request):
 @permission_classes([AllowAny])
 def create_user_profile(request):
     data = request.data
+    print("incorrect create user called")
     user = User.objects.create_user(
         username=data["username"],
         password=data["password"],
