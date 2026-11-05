@@ -10,6 +10,7 @@ export default function CreateUser() {
     const [isstaff, setIsStaff] = useState(false);
     const [isactive, setIsActive] = useState(true);
     const [role, setRole] = useState("student");
+    const [id, setId] = useState("");
     const navigate = useNavigate();
     
     const handleSubmitUser = async (e) => {
@@ -18,12 +19,12 @@ export default function CreateUser() {
         console.log("Access token:");
         console.log(localStorage.getItem("access_token"));
         const response = await fetch(
-            "http://127.0.0.1:8000/api/users/create-staff/",
+            `http://127.0.0.1:8000/api/users/5/update/`,
             {
-                method: "POST",
+                method: "PATCH",
                 headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
                 },
                 body: JSON.stringify({
                 username,
@@ -50,54 +51,119 @@ export default function CreateUser() {
         }
     };
 
+    const handleDeleteUser = async (e) => {
+        e.preventDefault();
+        if (!window.confirm(`Delete user ${id}?`)) {
+            return;
+        }
+        const response = await fetch(
+            `http://127.0.0.1:8000/api/users/${id}/remove/`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log("user deleted: ", data)
+            alert("User Deleted!");
+            setId("");
+            navigate("/create-user");
+        } 
+        else {
+            alert("Invalid input");
+        }
+    };
+
     return (
-        <form onSubmit={handleSubmitUser}>
-            <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
+        <div>
+            <form onSubmit={handleSubmitUser}>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <br></br>
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <br></br>
+                <input
+                    type="text"
+                    placeholder="first name"
+                    value={first_name}
+                    onChange={(e) => setFirstname(e.target.value)}
+                />
+                <br></br>
+                <input
+                    type="text"
+                    placeholder="last name"
+                    value={last_name}
+                    onChange={(e) => setLastname(e.target.value)}
+                />
+                <br></br>
+                <input
+                    type="text"
+                    placeholder="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <br></br>
+                <select
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                >
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <br></br>
+                <br></br>
+                <button type="submit">Create User</button>
+            </form>
+
             <br></br>
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <br></br>
-            <input
-                type="text"
-                placeholder="first name"
-                value={first_name}
-                onChange={(e) => setFirstname(e.target.value)}
-            />
-            <br></br>
-            <input
-                type="text"
-                placeholder="last name"
-                value={last_name}
-                onChange={(e) => setLastname(e.target.value)}
-            />
-            <br></br>
-            <input
-                type="text"
-                placeholder="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <br></br>
-            <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-            >
-                <option value="student">Student</option>
-                <option value="teacher">Teacher</option>
-                <option value="admin">Admin</option>
-            </select>
             <br></br>
             <br></br>
-            <button type="submit">Create User</button>
-        </form>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+
+            <form onSubmit={handleDeleteUser}>
+                <input
+                    type="number"
+                    placeholder="User ID"
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
+                />
+                <br></br>
+                <br></br>
+                <button type = "submit">
+                    Delete User
+                </button>
+            </form>
+            
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+
+            <button onClick={navigate/"update-user"}>
+                    Update users
+            </button>
+        </div>
     );
 }

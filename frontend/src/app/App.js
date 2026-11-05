@@ -3,7 +3,8 @@ import Login from "../features/LoginPage"
 import ProfilePage from "../features/ProfilePage";
 import CoursesPage from "../features/CoursesPage"
 import CreateUser from "../features/CreateUserPage";
-import AdminCreateUser from "../features/AdminCreateUserPage"
+import AdminCreateUser from "../features/AdminCreateUserPage";
+import AdminUpdateUser from "../features/AdminUpdateUserPage";
 import AuthContext from "./AuthContext";
 import { useState, useContext } from "react";
 import { 
@@ -50,8 +51,22 @@ function Sidebar() {
             )
           }}
         >
-          <p>Create User Account</p>
+          {user?.role === "admin"
+            ?<p>Create/update/delete User Account</p>
+            :<p>Sign Up</p>
+          }
         </button>
+        <div>
+          {user?.role === "admin"
+            ?<button onClick={() =>{
+              navigate("/update-user")}}
+            >
+                Update Users
+            </button>
+            :<br></br>
+          }
+        </div>
+
       </div>
     </div>
   );
@@ -106,6 +121,7 @@ const appRouter = createBrowserRouter(
     <Route path='courses' element={ <CoursesPage/>} />
     <Route path='signup' element={ <CreateUser/>} />
     <Route path='create-user' element={ <AdminCreateUser/>} />
+    <Route path='update-user' element={ <AdminUpdateUser/>} />
   </Route>
   ),
   //required to use for github pages 

@@ -1,6 +1,6 @@
 ### get all users
 GET http://127.0.0.1:8000/api/users/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkzOTAzNjg4LCJpYXQiOjE3OTM4OTI4ODgsImp0aSI6IjYxNTVmZjM2NTE4MzQyOGU4OTdkYjVhN2M3YmI3MjkzIiwidXNlcl9pZCI6IjEifQ.wUucqHSY5sHaqh3qSot8zzAkBlVnmBRqlfLPNrNd8XA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkzOTI0MDQ2LCJpYXQiOjE3OTM5MTMyNDYsImp0aSI6ImYzMjE0NDYwYjI1OTRlYzY4NTIxNzFhOTQ1NzA5NmJmIiwidXNlcl9pZCI6IjEifQ.J76su23ltDoGrnO-1DZ-l7lGQcuEHBYmKNRMoH_Pg8k
 
 ### get one user
 GET http://127.0.0.1:8000/api/users/1/
@@ -76,5 +76,5 @@ Content-Type: application/json
 
 
 ### delete user
-DELETE http://127.0.0.1:8000/api/users/29/remove/
+DELETE http://127.0.0.1:8000/api/users/id/remove/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkzOTAzNjg4LCJpYXQiOjE3OTM4OTI4ODgsImp0aSI6IjYxNTVmZjM2NTE4MzQyOGU4OTdkYjVhN2M3YmI3MjkzIiwidXNlcl9pZCI6IjEifQ.wUucqHSY5sHaqh3qSot8zzAkBlVnmBRqlfLPNrNd8XA
