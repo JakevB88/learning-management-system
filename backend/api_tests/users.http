@@ -1,6 +1,6 @@
 ### get all users
 GET http://127.0.0.1:8000/api/users/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkzOTI0MDQ2LCJpYXQiOjE3OTM5MTMyNDYsImp0aSI6ImYzMjE0NDYwYjI1OTRlYzY4NTIxNzFhOTQ1NzA5NmJmIiwidXNlcl9pZCI6IjEifQ.J76su23ltDoGrnO-1DZ-l7lGQcuEHBYmKNRMoH_Pg8k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkzOTgyODg0LCJpYXQiOjE3OTM5NzIwODQsImp0aSI6IjQyMzA1NTY1Y2IxMTQ1OTY5YTg5OGJiNDk1YzM1ZGNhIiwidXNlcl9pZCI6IjEifQ.LiCEPXwVPktd-9wFuMCTZCw1M8mvffDxCZq89NdMAMY
 
 ### get one user
 GET http://127.0.0.1:8000/api/users/1/

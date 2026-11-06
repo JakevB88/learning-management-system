@@ -18,7 +18,7 @@ export default function CreateUser() {
         const response = await fetch(
             `http://127.0.0.1:8000/api/users/${id}/update-user/`,
             {
-                method: "POST",
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("access_token")}`,

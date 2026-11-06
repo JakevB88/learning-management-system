@@ -19,9 +19,9 @@ export default function CreateUser() {
         console.log("Access token:");
         console.log(localStorage.getItem("access_token"));
         const response = await fetch(
-            `http://127.0.0.1:8000/api/users/5/update/`,
+            `http://127.0.0.1:8000/api/users/create-staff/`,
             {
-                method: "PATCH",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
