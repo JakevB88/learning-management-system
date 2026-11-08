@@ -13,6 +13,9 @@ def current_profile(request):
     return JsonResponse({
         "id": request.user.id,
         "username": request.user.username,
+        "first_name": request.user.first_name,
+        "last_name": request.user.last_name,
+        "email": request.user.email,
         "role": request.user.role,
     })
 

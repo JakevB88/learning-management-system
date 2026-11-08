@@ -124,7 +124,7 @@ export default function CreateUser() {
             <br></br>
             <br></br>
 
-            <button onClick={navigate/"update-course"}>
+            <button onClick={() => navigate("/update-course")}>
                     Update Course
             </button>
         </div>

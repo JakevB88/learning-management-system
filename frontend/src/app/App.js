@@ -65,7 +65,7 @@ function Sidebar() {
           }
         </div>
         <div>
-          {user?.role === "admin"|| "teacher"
+          {(user?.role === "admin"|| user?.role === "teacher")
             ?<button onClick={() =>{
               navigate("/create-course")}}
             >
@@ -130,7 +130,7 @@ const appRouter = createBrowserRouter(
     <Route path='create-user' element={ <AdminCreateUser/>} />
     <Route path='update-user' element={ <AdminUpdateUser/>} />
     <Route path='create-course' element={ <CreateCourse/>} />
-    <Route path='update-course' element={ <UpdateCourse/>} />
+    <Route path='update-course/:id' element={ <UpdateCourse/>} />
   </Route>
   ),
   //required to use for github pages 
