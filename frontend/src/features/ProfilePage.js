@@ -64,9 +64,8 @@ export default function ProfilePage() {
             <br></br>
             <br></br>
             <div>
-                
-                <button onClick={() =>{
-                    navigate(`/update-user}`)}}
+                <button onClick={() => {
+                    navigate(`/update-user/${user.id}`)}}
                 >
                     Manage Profile
                 </button>

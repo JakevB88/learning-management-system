@@ -72,7 +72,7 @@ button:focus-visible {
 
 .pageContent {
     flex: 1;
-    background-color: #970f0f;
+    background-color: #d85252;
     padding: 1rem;
 }
 
@@ -82,4 +82,31 @@ button:focus-visible {
   font-family: 'inter', sans-serif; 
   font-size: clamp(2rem, 5vw, 4rem);
   color: #391c69;
+}
+
+
+
+/**********************Table layout********************/
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.data-table th {
+    background-color: #f4f4f4;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #b41919;
+}
+
+.data-table tr:hover {
+    background-color: #2764b9;
 }

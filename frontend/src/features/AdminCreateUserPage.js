@@ -161,7 +161,8 @@ export default function CreateUser() {
             <br></br>
             <br></br>
 
-            <button onClick={navigate/"update-user"}>
+            <button onClick={() => {
+                navigate("/update-user")}}>
                     Update users
             </button>
         </div>

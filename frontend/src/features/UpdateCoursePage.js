@@ -12,7 +12,6 @@ export default function UpdateCourse() {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
-    console.log("Create course:", user);
 
     const getCourse = async (e) => {
          try {

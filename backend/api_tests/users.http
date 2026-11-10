@@ -2,6 +2,10 @@
 GET http://127.0.0.1:8000/api/users/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzk0MTYzMzkyLCJpYXQiOjE3OTQxNTI1OTIsImp0aSI6IjY1MjFiOWU5ZGE4YjRlZThhZmQ2ODA2NGFmZTI0N2MyIiwidXNlcl9pZCI6IjEifQ.sqNEX-gMSCvL98ENnsOCDzcKIRlcxeWxzw8QFjyHnrc
 
+### get user2
+GET http://127.0.0.1:8000/api/users/2/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzk0MjM5MDc4LCJpYXQiOjE3OTQyMjgyNzgsImp0aSI6ImRlYjg0MzI4ZjQyZTQ5ZWQ4MmMwMDY1ZDExZTRiMDRmIiwidXNlcl9pZCI6IjEifQ.9ZSGUIujc23fTNCnlGe5krmMGoTeajkx3pCQNLJLl6o
+
 ### get one user
 GET http://127.0.0.1:8000/api/users/2/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzk0MTYzMzkyLCJpYXQiOjE3OTQxNTI1OTIsImp0aSI6IjY1MjFiOWU5ZGE4YjRlZThhZmQ2ODA2NGFmZTI0N2MyIiwidXNlcl9pZCI6IjEifQ.sqNEX-gMSCvL98ENnsOCDzcKIRlcxeWxzw8QFjyHnrc

@@ -7,6 +7,8 @@ export default function CoursesPage() {
     const { user } = useContext(AuthContext);
     const [courses, setCourses] = useState([]);
 
+    
+    
     const getCourses = async () => {
         try {
 
@@ -43,29 +45,61 @@ export default function CoursesPage() {
             <div className="courses">
                 <p>Summary of the courses available</p>
             </div>
+            <br></br>
+            <br></br>
+            <div>
+                {(user?.role === "admin"|| user?.role === "teacher") && (
+                    <button onClick={() => {
+                        navigate("/create-course")}}
+                    >
+                        Add course
+                    </button>
+                )}                
+            </div>
+            <br></br>
+            <br></br>
             <div className="courses">
-                {courses.map((course) => (
-                    <div key={course.id} className="course-item">
-                        <p className="courseTitle">Course Title: {course.title}</p>
-                        <p className= "courseId">Course ID: {course.id}</p>
-                        <p className="courseDescription">Course Description: {course.description}</p>
-                        <div>
-                            {(user?.role === "admin" || user?.id === course.teacher_id)
-                                ?<button onClick={() =>{
-                                    navigate(`/update-course/${course.id}`)}}
-                                >
-                                    Manage Course
-                                </button>
-                                :<br></br>
-                            }
-                        </div>
-                     
-                        <br></br>
-                        <br></br>
-                        <br></br>
-                        <br></br>
-                    </div>
-                ))}
+                <table className="data-table courses-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            {/*<th>Teacher</th>*/}
+                            <th>Title</th>
+                            <th>Description</th>
+                            {(user?.role === "admin" || user?.role === "teacher") && (
+                                <th>Actions</th>
+                            )}
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {courses.map((course) => (
+                            <tr key={course.id}>
+                                <td>{course.id}</td>
+                                {/*<td>{course.teacher_id}</td>*/}
+                                <td>{course.title}</td>
+                                <td>{course.description}</td>
+
+                                {(user?.role === "admin" ||
+                                    user?.id === course.teacher_id) ?(
+                                    <td>
+                                        <button
+                                            onClick={() =>
+                                                navigate(`/update-course/${course.id}`)
+                                            }
+                                        >
+                                            Manage Course
+                                        </button>
+                                    </td>
+                                    )
+                                    :(
+                                        <td>N/A</td>
+                                    )
+                                }
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     )

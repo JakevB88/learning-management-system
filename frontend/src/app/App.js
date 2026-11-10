@@ -1,6 +1,7 @@
 import HomePage from "../features/HomePage"
 import Login from "../features/LoginPage"
 import ProfilePage from "../features/ProfilePage";
+import UsersPage from "../features/UsersPage";
 import CoursesPage from "../features/CoursesPage"
 import CreateUser from "../features/CreateUserPage";
 import AdminCreateUser from "../features/AdminCreateUserPage";
@@ -36,44 +37,23 @@ function Sidebar() {
       </div>
       <div>
         <button onClick={() => {navigate("profile")}}>
-          <p>Profile</p>
+          {user && <p>Profile</p>}
         </button>
       </div>
       <div>
-        <button
-          onClick={() =>{
-            navigate(
-              user?.role === "admin"
-                ? "/create-user"
-                : "/signup"
-            )
-          }}
-        >
-          {user?.role === "admin"
-            ?<p>Create/update/delete User Account</p>
-            :<p>Sign Up</p>
-          }
-        </button>
-        <div>
-          {user?.role === "admin"
-            ?<button onClick={() =>{
-              navigate("/update-user")}}
-            >
-                Update Users
-            </button>
-            :<br></br>
-          }
-        </div>
-        <div>
-          {(user?.role === "admin"|| user?.role === "teacher")
-            ?<button onClick={() =>{
-              navigate("/create-course")}}
-            >
-                create course
-            </button>
-            :<br></br>
-          }
-        </div>
+        {["admin", "teacher"].includes(user?.role) && (
+          <button onClick={() => navigate("/users")}>
+            <p>{user.role === "admin" ? "Manage Users" : "Users"}</p>
+          </button>
+        )}
+      </div>
+      <div>
+        {!user && (
+          <button onClick={() => {navigate("/signup");}}>
+            <p>Sign up</p>
+          </button>
+        )}
+
       </div>
     </div>
   );
@@ -89,6 +69,7 @@ function Layout() {
     
     setUser(null);
     alert("Logged out");
+    navigate("/")
   };
 
   return (
@@ -126,9 +107,10 @@ const appRouter = createBrowserRouter(
     <Route path='login' element={ <Login/>} />
     <Route path='profile' element={ <ProfilePage/>} />
     <Route path='courses' element={ <CoursesPage/>} />
+    <Route path='users' element={ <UsersPage/>} />
     <Route path='signup' element={ <CreateUser/>} />
     <Route path='create-user' element={ <AdminCreateUser/>} />
-    <Route path='update-user' element={ <AdminUpdateUser/>} />
+    <Route path='update-user/:id' element={ <AdminUpdateUser/>} />
     <Route path='create-course' element={ <CreateCourse/>} />
     <Route path='update-course/:id' element={ <UpdateCourse/>} />
   </Route>

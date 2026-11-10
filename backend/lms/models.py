@@ -16,6 +16,9 @@ class User(AbstractUser):
         default="student"
     )
 
+    class Meta:
+        ordering = ["last_name"]
+
     def __str__(self):
         return self.username
 
