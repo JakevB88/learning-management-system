@@ -30,6 +30,9 @@ def get_user_profiles(request):
             {
                 "id": user["id"],
                 "username": user["username"],
+                "first_name": user["first_name"],
+                "last_name": user["last_name"],
+                "email": user["email"],
                 "role": user["role"],
             }
             for user in user_profiles
@@ -40,7 +43,7 @@ def get_user_profiles(request):
     return JsonResponse(user_profiles, safe=False)
     
 @api_view(["GET"])
-@permission_classes([IsAuthenticated, IsTeacherOrAdmin])
+@permission_classes([IsAuthenticated, IsAdmin])
 def get_user_profile(request, user_id):
     try:
         user_profile = User.objects.get(id=user_id)
@@ -185,10 +188,21 @@ def remove_user_profile(request, user_id):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_courses(request):
-    courses = list(
-        Course.objects.values()
-    )
-    return JsonResponse(courses, safe=False) # safe parameter to allow for the studenst list to be passed, without it only excepts dictionaries.
+    courses = []
+
+    for course in Course.objects.all():
+        courses.append({
+            "id": course.id,
+            "title": course.title,
+            "description": course.description,
+            "teacher_id": course.teacher_id,
+            "students": list(
+                course.students.values_list("id", flat=True)
+            )
+        })
+
+    return JsonResponse(courses, safe=False)
+
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
@@ -197,9 +211,24 @@ def get_course(requst, course_id):
         course = Course.objects.get(
             id= course_id
         )
-        return JsonResponse(
-            model_to_dict(course)
-        )
+        return JsonResponse({
+            "id": course.id,
+            "title": course.title,
+            "description": course.description,
+            "teacher_id": course.teacher_id,
+            "students": list(
+                course.students.values(
+                    "id",
+                    "username",
+                    "first_name",
+                    "last_name",
+                    "email"
+                )
+            )
+        })
+        #return JsonResponse(
+        #    model_to_dict(course)
+        #)
     except Course.DoesNotExist:
         return JsonResponse(
             {"error": "Course not found"},

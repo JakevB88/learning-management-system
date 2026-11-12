@@ -7,7 +7,8 @@ export default function UpdateCourse() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [teacher, setteacher] = useState("");
-    const [course, setCourse] = useState("")
+    const [course, setCourse] = useState("");
+    const [students, setStudents] = useState("");
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
@@ -29,6 +30,7 @@ export default function UpdateCourse() {
                 console.log("Course retreived: ", data)
                 setTitle(data.title);
                 setDescription(data.description);
+                setStudents(data.students)
             } 
             else {
                 alert("Course not found");
@@ -104,26 +106,30 @@ export default function UpdateCourse() {
 
     return (
         <div>
-            <form onSubmit={handleSubmitCourseUpdate}>
-                <p>Course ID: {id}</p>
-                <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                <br></br>
-                <input
-                    type="text"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-                <br></br>
-                <br></br>
-                <button type="submit">Update Course</button>
-                <br></br>
-                <br></br>
+            <div>
+                <form onSubmit={handleSubmitCourseUpdate}>
+                    <p>Course ID: {id}</p>
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <br></br>
+                    <input
+                        type="text"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <br></br>
+                    <br></br>
+                    <button type="submit">Update Course</button>
+                    <br></br>
+                    <br></br>
+                </form>
                 <button onClick={handleDeleteCourse}>Delete Course</button>
-            </form>
+            </div>
+            
+            
         </div>
     );
 }

@@ -44,34 +44,6 @@ export default function CreateUser() {
         }
     };
 
-    const handleDeleteCourse = async (e) => {
-        e.preventDefault();
-        if (!window.confirm(`Delete Course ${id}?`)) {
-            return;
-        }
-        const response = await fetch(
-            `http://127.0.0.1:8000/api/courses/${id}/remove/`,
-            {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log("course deleted: ", data)
-            alert("course Deleted!");
-            setId("");
-            navigate("/create-course");
-        } 
-        else {
-            alert("Invalid input");
-        }
-    };
 
     return (
         <div>
@@ -93,40 +65,6 @@ export default function CreateUser() {
                 <br></br>
                 <button type="submit">Create Course</button>
             </form>
-
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-
-            <form onSubmit={handleDeleteCourse}>
-                <input
-                    type="number"
-                    placeholder="User ID"
-                    value={id}
-                    onChange={(e) => setId(e.target.value)}
-                />
-                <br></br>
-                <br></br>
-                <button type = "submit">
-                    Delete Course
-                </button>
-            </form>
-            
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-
-            <button onClick={() => navigate("/update-course")}>
-                    Update Course
-            </button>
         </div>
     );
 }

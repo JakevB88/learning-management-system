@@ -50,13 +50,10 @@ export default function UsersPage() {
             <br></br>
             <br></br>
             <div>
-                {(user?.role === "admin"|| user?.role === "teacher")
-                    ?<button onClick={() =>{
-                        navigate("/create-user")}}
-                    >
+                {(user?.role === "admin" )&&
+                    <button onClick={() =>{navigate("/create-user")}}>
                         Add Student
                     </button>
-                    :<br></br>
                 }
             </div>
             <br></br>

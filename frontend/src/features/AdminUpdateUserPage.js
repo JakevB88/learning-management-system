@@ -83,6 +83,34 @@ export default function CreateUser() {
         }
     };
 
+    const handleDeleteUser = async (e) => {
+        e.preventDefault();
+        if (!window.confirm(`Delete user ${username}?`)) {
+            return;
+        }
+        const response = await fetch(
+            `http://127.0.0.1:8000/api/users/${id}/remove/`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log("user deleted: ", data)
+            alert("User Deleted!");
+            navigate("/users");
+        } 
+        else {
+            alert("Invalid input");
+        }
+    };
+
     useEffect(() => {
         getUser();
     }, [id]);
@@ -99,6 +127,15 @@ export default function CreateUser() {
                     onChange={(e) => setUsername(e.target.value)}
                 />
                 <br></br>
+                <label for="password">Password:  </label>
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <br></br>                
                 <label for="first name">First Name:  </label>
                 <input
                     id="first name"
@@ -141,6 +178,12 @@ export default function CreateUser() {
                 <br></br>
                 <button type="submit">Update User</button>
             </form>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <button onClick={handleDeleteUser}>Delete User</button>
+            
         </div>
     );
 }

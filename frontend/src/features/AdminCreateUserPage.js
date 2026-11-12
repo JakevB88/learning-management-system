@@ -7,10 +7,7 @@ export default function CreateUser() {
     const [first_name, setFirstname] = useState("");
     const [last_name, setLastname] = useState("");
     const [email, setEmail] = useState("");
-    const [isstaff, setIsStaff] = useState(false);
-    const [isactive, setIsActive] = useState(true);
     const [role, setRole] = useState("student");
-    const [id, setId] = useState("");
     const navigate = useNavigate();
     
     const handleSubmitUser = async (e) => {
@@ -44,35 +41,6 @@ export default function CreateUser() {
         if (response.ok) {
             console.log("user create response: ", data)
             alert("User Created!");
-            navigate("/create-user");
-        } 
-        else {
-            alert("Invalid input");
-        }
-    };
-
-    const handleDeleteUser = async (e) => {
-        e.preventDefault();
-        if (!window.confirm(`Delete user ${id}?`)) {
-            return;
-        }
-        const response = await fetch(
-            `http://127.0.0.1:8000/api/users/${id}/remove/`,
-            {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log("user deleted: ", data)
-            alert("User Deleted!");
-            setId("");
             navigate("/create-user");
         } 
         else {
@@ -130,41 +98,7 @@ export default function CreateUser() {
                 <br></br>
                 <button type="submit">Create User</button>
             </form>
-
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-
-            <form onSubmit={handleDeleteUser}>
-                <input
-                    type="number"
-                    placeholder="User ID"
-                    value={id}
-                    onChange={(e) => setId(e.target.value)}
-                />
-                <br></br>
-                <br></br>
-                <button type = "submit">
-                    Delete User
-                </button>
-            </form>
-            
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-
-            <button onClick={() => {
-                navigate("/update-user")}}>
-                    Update users
-            </button>
         </div>
+
     );
 }
