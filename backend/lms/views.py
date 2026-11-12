@@ -206,7 +206,7 @@ def get_courses(request):
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
-def get_course(requst, course_id):
+def get_course(request, course_id):
     try:
         course = Course.objects.get(
             id= course_id
@@ -324,8 +324,6 @@ def register_student_to_course(request, course_id):
             status=400
         )
     
-    course = Course.objects.get(id=course_id)
-
     course.students.add(request.user)
 
     return JsonResponse(

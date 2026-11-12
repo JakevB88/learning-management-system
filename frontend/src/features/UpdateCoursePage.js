@@ -8,7 +8,7 @@ export default function UpdateCourse() {
     const [description, setDescription] = useState("");
     const [teacher, setteacher] = useState("");
     const [course, setCourse] = useState("");
-    const [students, setStudents] = useState("");
+    const [students, setStudents] = useState([]);
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
@@ -100,6 +100,45 @@ export default function UpdateCourse() {
         }
     }
 
+    const handleDeRegistration = async (courseId, student) => {
+        console.log(`de register from ${id}`)
+        console.log(`student id: ${student.id}`)
+        if (!window.confirm(`De-register ${student.username} from course ${title}?`)) {
+            return;
+        }
+        try {
+
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/courses/${id}/deregister-admin/`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    },
+                    body: JSON.stringify({
+                        student_id: student.id
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log(`DeRegistered ${student.username} to course: `, data)
+                alert("Successfully deregistered");
+                await getCourse()
+            } 
+            else {
+                alert("Course not found");
+            }
+        } 
+        catch (error) {
+            console.error(error);
+            alert("Error deregistring to courses");
+        }
+    }
+
     useEffect(() => {
         getCourse();
     }, [id]);
@@ -129,6 +168,40 @@ export default function UpdateCourse() {
                 <button onClick={handleDeleteCourse}>Delete Course</button>
             </div>
             
+            <div className="users">
+                <table className="data-table users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            {user?.role === "admin" && <th>Actions</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {students.map((student) => (
+                            <tr key={student.id}>
+                                <td>{student.id}</td>
+                                <td>{student.username}</td>
+                                <td>{student.first_name}</td>
+                                <td>{student.last_name}</td>
+                                <td>{student.email}</td>
+
+                                {user?.role === "admin" && (
+                                    <td>
+                                        <button onClick={() => handleDeRegistration(course.id, student)}>
+                                            un assign user from course
+                                        </button>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                
+            </div>
             
         </div>
     );

@@ -70,7 +70,7 @@ export default function CoursesPage() {
         }
     }
 
-        const handleDeRegistration = async (id) => {
+    const handleDeRegistration = async (id) => {
         if (!window.confirm(`De-register to Course ${id}?`)) {
             return;
         }
@@ -169,8 +169,9 @@ export default function CoursesPage() {
                                             : "N/A"
                                         }
                                     </td>)
-                                    :(<td>
-                                        {course.students.includes(user.id) 
+                                    :(user?.role === "student" && 
+                                    <td>
+                                        {course.students.includes(user?.id) 
                                             ? (<button onClick={() => handleDeRegistration(course.id)}>
                                                     De Register
                                             </button>)
