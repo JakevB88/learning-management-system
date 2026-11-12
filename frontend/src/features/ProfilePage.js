@@ -55,11 +55,37 @@ export default function ProfilePage() {
 
     return (
         <div>
-            <div>{username}</div>
-            <div>{first_name}</div>
-            <div>{last_name}</div>
-            <div>{email}</div>
-            <div>{role}</div>
+            <div className="users">
+                <table className="data-table users-table">
+                    <tbody>
+                        <tr>
+                            <th>Username</th>
+                            <td>{username}</td>
+                        </tr>
+
+                        <tr>
+                            <th>First Name</th>
+                            <td>{first_name}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Last Name</th>
+                            <td>{last_name}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Email</th>
+                            <td>{email}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Role</th>
+                            <td>{role}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
             <br></br>
             <br></br>
             <br></br>

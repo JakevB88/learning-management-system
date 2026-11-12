@@ -52,7 +52,7 @@ export default function UsersPage() {
             <div>
                 {(user?.role === "admin" )&&
                     <button onClick={() =>{navigate("/create-user")}}>
-                        Add Student
+                        Add User
                     </button>
                 }
             </div>
@@ -90,7 +90,7 @@ export default function UsersPage() {
                                     <td>
                                         <button
                                             onClick={() =>
-                                                navigate(`/update-user/${userr.id}/`)
+                                                navigate(`/admin-update-user/${userr.id}/`)
                                             }
                                         >
                                             Manage User

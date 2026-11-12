@@ -145,7 +145,9 @@ def update_user_profile(request, user_id):
             )
 
         user.username = data["username"]
-        user.set_password(data["password"])
+        password = data.get("password")
+        if password:
+            user.set_password(password)
         user.first_name = data["first_name"]
         user.last_name = data["last_name"]
         user.email = data["email"]

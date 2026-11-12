@@ -9,6 +9,7 @@ import AdminUpdateUser from "../features/AdminUpdateUserPage";
 import CreateCourse from "../features/CreateCoursePage";
 import UpdateCourse from "../features/UpdateCoursePage";
 import AuthContext from "./AuthContext";
+import UpdateUser from "../features/UpdateUserPage";
 import { useState, useContext } from "react";
 import { 
   Route, 
@@ -110,7 +111,8 @@ const appRouter = createBrowserRouter(
     <Route path='users' element={ <UsersPage/>} />
     <Route path='signup' element={ <CreateUser/>} />
     <Route path='create-user' element={ <AdminCreateUser/>} />
-    <Route path='update-user/:id' element={ <AdminUpdateUser/>} />
+    <Route path='update-user/:id' element={ <UpdateUser/>} />
+    <Route path='admin-update-user/:id' element={ <AdminUpdateUser/>} />
     <Route path='create-course' element={ <CreateCourse/>} />
     <Route path='update-course/:id' element={ <UpdateCourse/>} />
   </Route>

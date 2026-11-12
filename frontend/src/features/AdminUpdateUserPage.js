@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function CreateUser() {
+export default function UpdateUserAdmin() { //was CreatUser
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [first_name, setFirstname] = useState("");
@@ -16,7 +16,7 @@ export default function CreateUser() {
     
     const getUser = async (e) => {
          try {
-            console.log("User ID transferred to update page" + id)
+            console.log("User ID transferred to update page: " + id)
             const response = await fetch(
                 `http://127.0.0.1:8000/api/users/${id}/`,
                 {
