@@ -25,22 +25,22 @@ def current_profile(request):
 def get_user_profiles(request):
     user_profiles = list(User.objects.values())
 
-    if request.user.role == "teacher":
-        users = [
-            {
-                "id": user["id"],
-                "username": user["username"],
-                "first_name": user["first_name"],
-                "last_name": user["last_name"],
-                "email": user["email"],
-                "role": user["role"],
-            }
-            for user in user_profiles
-        ]
+    #if request.user.role == "teacher":
+    users = [
+        {
+            "id": user["id"],
+            "username": user["username"],
+            "first_name": user["first_name"],
+            "last_name": user["last_name"],
+            "email": user["email"],
+            "role": user["role"],
+        }
+        for user in user_profiles
+    ]
 
-        return JsonResponse(users, safe=False)
+    return JsonResponse(users, safe=False)
 
-    return JsonResponse(user_profiles, safe=False)
+    #return JsonResponse(user_profiles, safe=False)
     
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdmin])
@@ -71,8 +71,6 @@ def create_staff_user_profile(request):
     data = request.data
     print("correct create user called")
     role = data.get("role")
-
-    # an admin should be able to also create students so this if statement is no longer required.
 
     user = User.objects.create_user(
         username=data["username"],

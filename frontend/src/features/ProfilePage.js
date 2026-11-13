@@ -169,7 +169,10 @@ export default function ProfilePage() {
             <br></br>
             <br></br>
             <br></br>
-            <h2>Your created courses</h2>
+            {user?.role === "student"
+                ?<h2>Your courses</h2>
+                :<h2>Your created courses</h2>
+            }
             <br></br>
             <div className="courses">
                 <table className="data-table courses-table">

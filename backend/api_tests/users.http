@@ -31,7 +31,7 @@ Content-Type: application/json
 
 ### Create user staff
 POST http://127.0.0.1:8000/api/users/create-staff/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkyNDk1ODE5LCJpYXQiOjE3OTI0OTUyMTksImp0aSI6IjMxOTFkNWVmMzQyOTQ0NWU5ZTI3MWViNWFkYWE1ZGY4IiwidXNlcl9pZCI6IjUifQ.5F4D9Ox4U8MNwbpPpZfjrkw3jF-b3hQTsB-2SSkw9sQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzk0NTgyMzc1LCJpYXQiOjE3OTQ1NzE1NzUsImp0aSI6ImNjOWY4MzMzYTcwMDRmMmJiMmRjMGE1ZWVjNjUxYjMxIiwidXNlcl9pZCI6IjIifQ.QBtPJLjA2vsa9IMoUUOoa8o-hMswmSHOMOTIbk39Yqs
 Content-Type: application/json
 
 {

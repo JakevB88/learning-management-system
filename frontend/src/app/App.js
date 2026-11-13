@@ -62,8 +62,8 @@ function Sidebar() {
 
 function Layout() {
   const navigate = useNavigate();
-
   const { setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const HandleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
@@ -77,13 +77,17 @@ function Layout() {
     <div className="appheader">
       <div className="header">
         <h1>JvB Courses</h1>
+        <h3>get more out of life</h3>
         <div className="headerIcons">
-          <button onClick={HandleLogout}>
-            <p>Log out</p>
-          </button>
-          <button onClick={() => {navigate("login")}}>
-            <p>Log in</p>
-          </button>
+          {user 
+            ?(
+            <button onClick={HandleLogout}>
+              <p>Log out</p>
+            </button>)
+            :(<button onClick={() => {navigate("login")}}>
+              <p>Log in</p>
+            </button>)
+          }
         </div>
       </div>
       <hr className="header-line" />
