@@ -173,7 +173,7 @@ export default function CoursesPage() {
                                     <td>
                                         {course.students.includes(user?.id) 
                                             ? (<button onClick={() => handleDeRegistration(course.id)}>
-                                                    De Register
+                                                    Deregister
                                             </button>)
                                             :(<button onClick={() => handleRegistration(course.id)}>
                                                     Register

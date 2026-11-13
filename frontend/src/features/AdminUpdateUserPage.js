@@ -126,16 +126,7 @@ export default function UpdateUserAdmin() { //was CreatUser
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
-                <br></br>
-                <label for="password">Password:  </label>
-                <input
-                    id="password"
-                    type="password"
-                    placeholder="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <br></br>                
+                <br></br>            
                 <label for="first name">First Name:  </label>
                 <input
                     id="first name"

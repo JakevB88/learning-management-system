@@ -9,6 +9,7 @@ export default function ProfilePage() {
     const [last_name, setLast_name] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
+    const [courses, setCourses] = useState([])
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
@@ -46,15 +47,82 @@ export default function ProfilePage() {
         }
     };
 
+    const handleDeRegistration = async (id) => {
+        if (!window.confirm(`De-register to Course ${id}?`)) {
+            return;
+        }
+        try {
+
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/courses/${id}/deregister/`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    }
+                }
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("DeRegistered to course: ", data)
+                alert("Successfully deregistered");
+                await getCourses();
+            } 
+            else {
+                alert("Course not found");
+            }
+        } 
+        catch (error) {
+            console.error(error);
+            alert("Error deregistring to courses");
+        }
+    }
+
     useEffect(() => {
         getUserProfile();
     }, [user.id]);
+
+    const getCourses = async () => {
+        try {
+
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/courses/`,
+                {
+                    method: "GET"
+                }
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Courses retreived: ", data)
+                console.log(data);
+                setCourses(data);
+            } 
+            else {
+                alert("Courses not found");
+            }
+        } 
+        catch (error) {
+            console.error(error);
+            alert("Error retrieving courses");
+        }
+    };
+
+    useEffect(() => {
+        getCourses();
+    }, [user.id]);
+
 
     console.log("profile page user: " + user.username)
     console.log("profile page user: " + first_name)
 
     return (
         <div>
+            <h1>Profile</h1>
             <div className="users">
                 <table className="data-table users-table">
                     <tbody>
@@ -97,6 +165,61 @@ export default function ProfilePage() {
                 </button>
                 <br></br>
                 
+            </div>
+            <br></br>
+            <br></br>
+            <br></br>
+            <h2>Your created courses</h2>
+            <br></br>
+            <div className="courses">
+                <table className="data-table courses-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            {/*<th>Teacher</th>*/}
+                            <th>Title</th>
+                            <th>Description</th>
+                            {(user?.role === "student") && (<th>Progress</th>)}
+                            <th>Actions</th>
+                            
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {courses.map((course) => (
+                            (user?.role === "student")
+                                ?course.students.includes(user?.id)
+                                    &&(<tr key={course.id}>
+                                            <td>{course.id}</td>
+                                            <td>{course.title}</td>
+                                            <td>{course.description}</td>
+                                            <td>80%</td>
+                                            <td>
+                                                <button onClick={() => handleDeRegistration(course.id)}>
+                                                        Deregister
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )
+                                :(user?.id === course.teacher_id)
+                                     &&(<tr key={course.id}>
+                                            <td>{course.id}</td>
+                                            <td>{course.title}</td>
+                                            <td>{course.description}</td>
+                                            <td>
+                                                <button
+                                                    onClick={() =>
+                                                        navigate(`/update-course/${course.id}`)
+                                                    }
+                                                >
+                                                    Manage Course
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     );

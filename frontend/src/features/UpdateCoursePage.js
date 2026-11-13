@@ -148,13 +148,17 @@ export default function UpdateCourse() {
             <div>
                 <form onSubmit={handleSubmitCourseUpdate}>
                     <p>Course ID: {id}</p>
+                    <label for="coursename">Course name: </label>
                     <input
+                        id="coursename"
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
                     <br></br>
+                    <label for="coursedescription">Course description: </label>
                     <input
+                        id="coursedescription"
                         type="text"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
@@ -192,7 +196,7 @@ export default function UpdateCourse() {
                                 {user?.role === "admin" && (
                                     <td>
                                         <button onClick={() => handleDeRegistration(course.id, student)}>
-                                            un assign user from course
+                                            Deregister user from course
                                         </button>
                                     </td>
                                 )}

@@ -72,13 +72,8 @@ def create_staff_user_profile(request):
     print("correct create user called")
     role = data.get("role")
 
-    # an admin should be able to als create students so this if statement is no longer required.
-    #if role not in ["teacher", "admin"]:
-    #    return JsonResponse(
-    #        {"error": "Role must be teacher or admin"},
-    #        status=400
-    #    )
-    
+    # an admin should be able to also create students so this if statement is no longer required.
+
     user = User.objects.create_user(
         username=data["username"],
         password=data["password"],
