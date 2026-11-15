@@ -25,7 +25,6 @@ def current_profile(request):
 def get_user_profiles(request):
     user_profiles = list(User.objects.values())
 
-    #if request.user.role == "teacher":
     users = [
         {
             "id": user["id"],
@@ -40,7 +39,6 @@ def get_user_profiles(request):
 
     return JsonResponse(users, safe=False)
 
-    #return JsonResponse(user_profiles, safe=False)
     
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdmin])
@@ -179,6 +177,8 @@ def remove_user_profile(request, user_id):
             status=404
         )
 
+
+
 #course model CRUD defenitions for Course model
 @api_view(["GET"])
 @permission_classes([AllowAny])
@@ -221,9 +221,6 @@ def get_course(request, course_id):
                 )
             )
         })
-        #return JsonResponse(
-        #    model_to_dict(course)
-        #)
     except Course.DoesNotExist:
         return JsonResponse(
             {"error": "Course not found"},
@@ -235,13 +232,19 @@ def get_course(request, course_id):
 def create_course(request):
     
     data = request.data
-
-    course = Course.objects.create(
-        title=data["title"],
-        description=data["description"],
-        teacher_id = request.user.id
-    )
-    return JsonResponse(model_to_dict(course),status=201)
+    try:
+        course = Course.objects.create(
+            title=data["title"],
+            description=data["description"],
+            teacher_id = request.user.id
+        )
+        return JsonResponse(model_to_dict(course),status=201)
+    
+    except KeyError:
+        return JsonResponse(
+            {"error": "Title and description are required"},
+            status=400
+        )
 
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated, IsTeacherOrAdmin])
@@ -259,8 +262,11 @@ def update_course(request, course_id):
                     status=403
                 )
             
-        course.title = data["title"]
-        course.description = data["description"]
+        if "title" in data:
+            course.title = data["title"]
+
+        if "description" in data:
+            course.description = data["description"]
 
         course.save() # writes changes to SQLite
 
@@ -292,7 +298,7 @@ def remove_course(request, course_id):
             
         course.delete()
         return JsonResponse({
-            "message": "Course deleted"
+            "message": "Course removed"
         })
 
     except Course.DoesNotExist:
