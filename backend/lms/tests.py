@@ -131,9 +131,9 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
     @patch.object(views.Course.objects, "get")
     def test_get_course_successfully(self, mock_get):
-
+        course_id = 1
         # Arrange: Creatge mock course data
-        mock_course = self.create_mock_course(1, "Python", "Learn Python", 5, [{
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 5, [{
             "id": 10,
             "username": "OttoTheOtter",
             "first_name": "Otto",
@@ -144,14 +144,14 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_get.return_value = mock_course
 
         # Act: Call get_courses
-        response = self.client.get(f"/api/courses/{mock_course.id}/")
+        response = self.client.get(f"/api/courses/{course_id}/")
 
         # Assert
         self.assertEqual(response.status_code, 200)
 
         data = response.json()
 
-        self.assertEqual(data["id"], 1)
+        self.assertEqual(data["id"], course_id)
         self.assertEqual(data["title"], "Python")
         self.assertEqual(data["description"], "Learn Python")
         self.assertEqual(data["teacher_id"], 5)
@@ -729,7 +729,6 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_get.assert_called_once_with(id=course_id)
         mock_course.delete.assert_called_once()
 
-    
     @patch.object(views.Course.objects, "get")
     def test_delete_course_successfully_as_teacher(self, mock_get):
 
@@ -850,3 +849,517 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.assertEqual(data["error"], "Course not found")
 
         mock_get.assert_called_once_with(id=course_id)
+
+# ------------------------------------------------------------------------------------------
+# TESTS FOR REGISTERING A STUDENT TO A COURSE
+# ------------------------------------------------------------------------------------------
+
+    @patch.object(views.Course.objects, "get")
+    def test_register_to_course_successfully_as_student(self, mock_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 5, [])
+
+        mock_get.return_value = mock_course
+
+        #mock student not already registered to the course
+        mock_course.students.filter.return_value.exists.return_value = False
+
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/register/")
+
+        # Assert
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertEqual(data["message"], "Successfully registered")
+        mock_get.assert_called_once_with(id=mock_course.id)
+        mock_course.students.add.assert_called_once_with(mock_student)
+
+    @patch.object(views.Course.objects, "get")
+    def test_register_to_course_unsuccessfully_as_student(self, mock_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 5, [])
+
+        mock_get.return_value = mock_course
+
+        #mock student not already registered to the course
+        mock_course.students.filter.return_value.exists.return_value = True
+
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/register/")
+
+        # Assert
+        self.assertEqual(response.status_code, 400)
+
+        data = response.json()
+        self.assertEqual(data["error"], "Already registered to this course")
+        mock_get.assert_called_once_with(id=mock_course.id)
+        mock_course.students.add.assert_not_called()
+
+    @patch.object(views.Course.objects, "get")
+    def test_register_to_course_unsuccessfully_as_teacher(self, mock_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 5, [])
+
+        mock_get.return_value = mock_course
+
+        #mock student not already registered to the course
+        mock_course.students.filter.return_value.exists.return_value = False
+
+        # Mock authentication as a teacher
+        mock_teacher = self.create_mock_user("teacher")
+        self.client.force_authenticate(user=mock_teacher)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/register/")
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+        mock_get.assert_not_called()
+        mock_course.students.add.assert_not_called()
+
+    @patch.object(views.Course.objects, "get")
+    def test_register_to_course_unsuccessfully_as_admin(self, mock_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 5, [])
+
+        mock_get.return_value = mock_course
+
+        #mock student not already registered to the course
+        mock_course.students.filter.return_value.exists.return_value = False
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/register/")
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+        mock_get.assert_not_called()
+        mock_course.students.add.assert_not_called()
+
+    def test_register_to_course_unsuccessfully_not_authenticated(self):
+
+        # Arrange:
+        course_id = 1
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/register/")
+
+        # Assert
+        self.assertEqual(response.status_code, 401)
+
+    @patch.object(views.Course.objects, "get")
+    def test_register_to_course_unsuccessfully_as_student_course_not_found(self, mock_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        mock_get.side_effect = views.Course.DoesNotExist
+
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/register/")
+
+        # Assert
+        self.assertEqual(response.status_code, 404)
+
+        data = response.json()
+        self.assertEqual(data["error"], "Course not found")
+        mock_get.assert_called_once_with(id=course_id)
+
+# ------------------------------------------------------------------------------------------
+# TESTS FOR DEREGISTERING A STUDENT FROM A COURSE
+# ------------------------------------------------------------------------------------------
+
+    @patch.object(views.Course.objects, "get")
+    def test_deregister_to_course_successfully_as_student(self, mock_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 5, [])
+
+        mock_get.return_value = mock_course
+
+        #mock student not already registered to the course
+        mock_course.students.filter.return_value.exists.return_value = True
+
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+
+        # Assert
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertEqual(data["message"], "Successfully de-registered")
+        mock_get.assert_called_once_with(id=course_id)
+        mock_course.students.remove.assert_called_once_with(mock_student)
+
+    
+    @patch.object(views.Course.objects, "get")
+    def test_deregister_to_course_unsuccessfully_as_student(self, mock_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 5, [])
+
+        mock_get.return_value = mock_course
+
+        #mock student not already registered to the course
+        mock_course.students.filter.return_value.exists.return_value = False
+
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+
+        # Assert
+        self.assertEqual(response.status_code, 404)
+
+        data = response.json()
+        self.assertEqual(data["error"], "Not registered to this course")
+        mock_get.assert_called_once_with(id=course_id)
+        mock_course.students.remove.assert_not_called()
+
+    @patch.object(views.Course.objects, "get")
+    def test_deregister_to_course_unsuccessfully_as_teacher(self, mock_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 5, [])
+
+        mock_get.return_value = mock_course
+
+        #mock student not already registered to the course
+        mock_course.students.filter.return_value.exists.return_value = True
+
+        # Mock authentication as a teacher
+        mock_teacher = self.create_mock_user("teacher")
+        self.client.force_authenticate(user=mock_teacher)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+        mock_get.assert_not_called()
+        mock_course.students.remove.assert_not_called()
+
+    @patch.object(views.Course.objects, "get")
+    def test_deregister_to_course_unsuccessfully_as_admin(self, mock_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 5, [])
+
+        mock_get.return_value = mock_course
+
+        #mock student not already registered to the course
+        mock_course.students.filter.return_value.exists.return_value = True
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+        mock_get.assert_not_called()
+        mock_course.students.remove.assert_not_called()
+
+    def test_deregister_to_course_unsuccessfully_not_authenticated(self):
+
+        # Arrange:
+        course_id = 1
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+
+        # Assert
+        self.assertEqual(response.status_code, 401)
+
+    @patch.object(views.Course.objects, "get")
+    def test_deregister_to_course_unsuccessfully_as_student_course_not_found(self, mock_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        mock_get.side_effect = views.Course.DoesNotExist
+
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+
+        # Assert
+        self.assertEqual(response.status_code, 404)
+
+        data = response.json()
+        self.assertEqual(data["error"], "Course not found")
+        mock_get.assert_called_once_with(id=course_id)
+
+# ------------------------------------------------------------------------------------------
+# TESTS FOR DEREGISTERING A STUDENT FROM A COURSE AS ADMIN
+# ------------------------------------------------------------------------------------------
+
+    @patch.object(views.Course.objects, "get")
+    @patch.object(views.User.objects, "get")
+    def test_deregister_student_from_course_successfully_as_admin(self, mock_user_get, mock_course_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        student_id = 4
+
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 6, [[{
+            "id": student_id,
+            "username": "OttoTheOtter",
+            "first_name": "Otto",
+            "last_name": "van Bezooijen",
+            "email": "otto@jvbcourses.com"
+        }]])
+        mock_course_get.return_value = mock_course
+
+        mock_user = self.create_mock_user("student")
+        mock_user.id = student_id
+        mock_user_get.return_value = mock_user
+
+        #mock student already registered to the course
+        mock_course.students.filter.return_value.exists.return_value = True
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+            {"student_id": student_id},
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertEqual(data["message"], "Successfully de-registered")
+        mock_course_get.assert_called_once_with(id=course_id)
+        mock_user_get.assert_called_once_with(id=student_id)
+        mock_course.students.filter.assert_called_once_with(id=student_id)
+        mock_course.students.remove.assert_called_once_with(mock_user)
+
+    @patch.object(views.Course.objects, "get")
+    @patch.object(views.User.objects, "get")
+    def test_deregister_student_from_course_unsuccessfully__as_admin__student_not_registered_to_course(self, mock_user_get, mock_course_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        student_id = 4
+
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 6, [[{
+            "id": student_id,
+            "username": "OttoTheOtter",
+            "first_name": "Otto",
+            "last_name": "van Bezooijen",
+            "email": "otto@jvbcourses.com"
+        }]])
+        mock_course_get.return_value = mock_course
+
+        mock_user = self.create_mock_user("student")
+        mock_user.id = student_id
+        mock_user_get.return_value = mock_user
+
+        #mock student not already registered to the course
+        mock_course.students.filter.return_value.exists.return_value = False
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+            {"student_id": student_id},
+            format="json"
+        )
+
+
+        # Assert
+        self.assertEqual(response.status_code, 404)
+
+        data = response.json()
+        self.assertEqual(data["error"], "Student not registered to this course")
+        mock_course_get.assert_called_once_with(id=course_id)
+        mock_user_get.assert_called_once_with(id=student_id)
+        mock_course.students.filter.assert_called_once_with(id=student_id)
+        mock_course.students.remove.assert_not_called()
+
+    @patch.object(views.Course.objects, "get")
+    @patch.object(views.User.objects, "get")
+    def test_deregister_student_from_course_unsuccessfully__as_admin__student_not_found(self, mock_user_get, mock_course_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        student_id = 4
+        
+        mock_course = self.create_mock_course(course_id, "Python", "Learn Python", 6, [[{
+            "id": student_id,
+            "username": "OttoTheOtter",
+            "first_name": "Otto",
+            "last_name": "van Bezooijen",
+            "email": "otto@jvbcourses.com"
+        }]])
+        mock_course_get.return_value = mock_course
+
+        mock_user_get.side_effect = views.User.DoesNotExist
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+            {"student_id": student_id},
+            format="json"
+        )
+
+
+        # Assert
+        self.assertEqual(response.status_code, 404)
+
+        data = response.json()
+        self.assertEqual(data["error"], "Student not found")
+        mock_course_get.assert_called_once_with(id=course_id)
+        mock_user_get.assert_called_once_with(id=student_id)
+        mock_course.students.filter.assert_not_called()
+        mock_course.students.remove.assert_not_called()
+
+    @patch.object(views.Course.objects, "get")
+    @patch.object(views.User.objects, "get")
+    def test_deregister_student_from_course_unsuccessfully__as_admin__course_not_found(self, mock_user_get, mock_course_get):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        student_id = 4
+        
+        mock_course_get.side_effect = views.Course.DoesNotExist
+
+        mock_user_get.side_effect = views.User.DoesNotExist
+
+        mock_user = self.create_mock_user("student")
+        mock_user.id = student_id
+        mock_user_get.return_value = mock_user
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+            {"student_id": student_id},
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 404)
+
+        data = response.json()
+        self.assertEqual(data["error"], "Course not found")
+        mock_course_get.assert_called_once_with(id=course_id)
+        mock_user_get.assert_not_called()
+
+    def test_deregister_student_from_course_unsuccessfully__as_teacher__forbidden(self):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        student_id = 4
+
+        # Mock authentication as a teacher
+        mock_teacher = self.create_mock_user("teacher")
+        self.client.force_authenticate(user=mock_teacher)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+            {"student_id": student_id},
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+
+    def test_deregister_student_from_course_unsuccessfully__as_student__forbidden(self):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        student_id = 4
+
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+            {"student_id": student_id},
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+
+    def test_deregister_student_from_course_unsuccessfully__unauthenticated(self):
+
+        # Arrange:
+        # data to be used to create a course
+        course_id = 1
+        student_id = 4
+
+        # Act: Call get_courses
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+            {"student_id": student_id},
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 401)

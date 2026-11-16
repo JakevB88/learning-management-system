@@ -353,7 +353,7 @@ def deregister_student_from_course(request, course_id):
     course.students.remove(request.user)
 
     return JsonResponse(
-        {"message": "Successfully de-regiseterd"},
+        {"message": "Successfully de-registered"},
         status=200
     )
 
@@ -388,6 +388,6 @@ def deregister_student_from_course_admin(request, course_id):
     course.students.remove(user)
 
     return JsonResponse(
-        {"message": "Successfully de-regiseterd"},
+        {"message": "Successfully de-registered"},
         status=200
     )
