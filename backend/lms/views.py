@@ -45,12 +45,12 @@ def get_user_profile(request, user_id):
     try:
         user_profile = User.objects.get(id=user_id)
 
-        if request.user.role == "teacher":
-            return JsonResponse({
-                "id": user_profile.id,
-                "username": user_profile.username,
-                "role": user_profile.role,
-            })
+        # if request.user.role == "teacher":
+        #     return JsonResponse({
+        #         "id": user_profile.id,
+        #         "username": user_profile.username,
+        #         "role": user_profile.role,
+        #     })
 
         return JsonResponse(
             model_to_dict(user_profile)
@@ -66,54 +66,63 @@ def get_user_profile(request, user_id):
 @permission_classes([IsAuthenticated, IsAdmin])
 def create_staff_user_profile(request):
     data = request.data
-    print("correct create user called")
-    role = data.get("role")
-
-    user = User.objects.create_user(
-        username=data["username"],
-        password=data["password"],
-        first_name=data["first_name"],
-        last_name=data["last_name"],
-        email=data["email"],
-        is_staff=True,
-        is_active=True,
-        role=data["role"]
-    )
-    return JsonResponse(
-        {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "role": user.role
-        },
-        status=201
-    )
+    try:
+        user = User.objects.create_user(
+            username=data["username"],
+            password=data["password"],
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+            email=data["email"],
+            is_staff=True,
+            is_active=True,
+            role=data["role"]
+        )
+        return JsonResponse(
+            {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "role": user.role
+            },
+            status=201
+        )
+    except KeyError:
+        return JsonResponse(
+            {"error": "Missing information in request"},
+            status=400
+        )
                                 
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_user_profile(request):
     data = request.data
-    print("incorrect create user called")
-    user = User.objects.create_user(
-        username=data["username"],
-        password=data["password"],
-        first_name=data["first_name"],
-        last_name=data["last_name"],
-        email=data["email"],
-        is_staff=False,
-        is_active=True,
-        role="student"
-    )
-    return JsonResponse(
-        {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "role": user.role
-        },
-        status=201
-    )
 
+    try:
+        user = User.objects.create_user(
+            username=data["username"],
+            password=data["password"],
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+            email=data["email"],
+            is_staff=False,
+            is_active=True,
+            role="student"
+        )
+        return JsonResponse(
+            {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "role": user.role
+            },
+            status=201
+        )
+    except KeyError:
+        return JsonResponse(
+            {"error": "Missing information in request"},
+            status=400
+        )
+   
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
 def update_user_profile(request, user_id):
@@ -123,7 +132,7 @@ def update_user_profile(request, user_id):
     try:
         user = User.objects.get(id=user_id)
 
-        # permission check
+        # Permission check
         if (
             request.user.id != user.id
             and request.user.role != "admin"
@@ -133,19 +142,33 @@ def update_user_profile(request, user_id):
                 status=403
             )
 
-        user.username = data["username"]
+        # Update only fields supplied in the request
+        if "username" in data:
+            user.username = data["username"]
+
         password = data.get("password")
         if password:
             user.set_password(password)
-        user.first_name = data["first_name"]
-        user.last_name = data["last_name"]
-        user.email = data["email"]
+
+        if "first_name" in data:
+            user.first_name = data["first_name"]
+
+        if "last_name" in data:
+            user.last_name = data["last_name"]
+
+        if "email" in data:
+            user.email = data["email"]
 
         # Only admin can modify these
         if request.user.role == "admin":
-            user.is_staff = data["is_staff"]
-            user.is_active = data["is_active"]
-            user.role = data["role"]
+            if "is_staff" in data:
+                user.is_staff = data["is_staff"]
+
+            if "is_active" in data:
+                user.is_active = data["is_active"]
+
+            if "role" in data:
+                user.role = data["role"]
 
         user.save()
 

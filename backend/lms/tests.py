@@ -34,7 +34,17 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         return mock_user
     
-    def create_mock_user_full(self, id, username, first_name, last_name, email, role):
+    def create_mock_user_full_object(self, id, username, first_name, last_name, email, role):
+        mock_user = MagicMock()
+        mock_user.id = id
+        mock_user.username = username
+        mock_user.first_name = first_name
+        mock_user.last_name = last_name
+        mock_user.email = email
+        mock_user.role = role
+        return mock_user
+
+    def create_mock_user_full_dict(self, id, username, first_name, last_name, email, role):
         mock_user =  {
             "id": id,
             "username": username,
@@ -108,7 +118,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         
         #Arrange: Create mock user data
         #when views.py calls User.objects.values(), return the mock_user instead, this was set up with @patch.object
-        mock_user_full = self.create_mock_user_full(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
+        mock_user_full = self.create_mock_user_full_dict(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
         mock_values.return_value = [mock_user_full]
         
         # Mock authentication as an admin
@@ -135,7 +145,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         
         #Arrange: Create mock user data
         #when views.py calls User.objects.values(), return the mock_user instead, this was set up with @patch.object
-        mock_user_full = self.create_mock_user_full(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
+        mock_user_full = self.create_mock_user_full_dict(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
         mock_values.return_value = [mock_user_full]
         
         # Mock authentication as a teacher
@@ -162,7 +172,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         
         #Arrange: Create mock user data
         #when views.py calls User.objects.values(), return the mock_user instead, this was set up with @patch.object
-        mock_user_full = self.create_mock_user_full(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
+        mock_user_full = self.create_mock_user_full_dict(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
         mock_values.return_value = [mock_user_full]
         
         # Mock authentication as a student
@@ -182,8 +192,8 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         
         #Arrange: Create mock user data
         #when views.py calls User.objects.values(), return the mock_user instead, this was set up with @patch.object
-        mock_user_full1 = self.create_mock_user_full(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
-        mock_user_full2 = self.create_mock_user_full(2, "SJohn", "Smith", "John", "sjohn@vbcourses.co.uk", "teacher")
+        mock_user_full1 = self.create_mock_user_full_dict(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
+        mock_user_full2 = self.create_mock_user_full_dict(2, "SJohn", "Smith", "John", "sjohn@vbcourses.co.uk", "teacher")
         mock_values.return_value = [mock_user_full1, mock_user_full2]
         
         # Mock authentication as an admin
@@ -230,6 +240,708 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.assertEqual(len(data), 0)
         # Verify the database query "mock_values" was called
         mock_values.assert_called_once()
+
+#------------------------------------------------------------------------------------------
+# TESTS FOR RETRIEVING ONE USER
+#------------------------------------------------------------------------------------------
+
+    @patch.object(views, "model_to_dict")
+    @patch.object(views.User.objects, "get")
+    def test_get_user_successfully__as_admin(self, mock_get, mock_model_to_dict):
+
+        # Arrange:
+        user_id = 1
+
+        mock_user = MagicMock()
+        mock_user.id = user_id
+        mock_user.username = "JSmith"
+        mock_user.first_name = "John"
+        mock_user.last_name = "Smith"
+        mock_user.email = "jsmith@vbcourses.co.uk"
+        mock_user.role = "student"
+
+        mock_get.return_value = mock_user
+
+        expected_response = {
+            "id": user_id,
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "student"
+        }
+
+        mock_model_to_dict.return_value = expected_response
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act:
+        response = self.client.get(f"/api/users/{user_id}/")
+
+        # Assert:
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+
+        self.assertEqual(data["id"], user_id)
+        self.assertEqual(data["username"], "JSmith")
+        self.assertEqual(data["first_name"], "John")
+        self.assertEqual(data["last_name"], "Smith")
+        self.assertEqual(data["email"], "jsmith@vbcourses.co.uk")
+        self.assertEqual(data["role"], "student")
+
+        mock_get.assert_called_once_with(id=user_id)
+
+    def test_get_user_unsuccessfully__as_teacher(self):
+
+        # Arrange:
+        user_id = 1
+        # Mock authentication as a teacher
+        mock_teacher = self.create_mock_user("teacher")
+        self.client.force_authenticate(user=mock_teacher)
+
+        # Act:
+        response = self.client.get(f"/api/users/{user_id}/")
+
+        # Assert:
+        self.assertEqual(response.status_code, 403)
+
+    def test_get_user_unsuccessfully__as_student(self):
+
+        # Arrange:
+        user_id = 1
+
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
+
+        # Act:
+        response = self.client.get(f"/api/users/{user_id}/")
+
+        # Assert:
+        self.assertEqual(response.status_code, 403)
+
+    @patch.object(views.User.objects, "get")
+    def test_get_user_unsuccessfully__as_admin__user_does_not_exsist(self, mock_get):
+
+        # Arrange:
+        user_id = 1
+        mock_get.side_effect = views.User.DoesNotExist
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act:
+        response = self.client.get(f"/api/users/{user_id}/")
+
+        # Assert:
+        self.assertEqual(response.status_code, 404)
+
+        data = response.json()
+
+        self.assertEqual(data, {"error": "User not found"})
+
+        mock_get.assert_called_once_with(id=user_id)
+
+    @patch.object(views.User.objects, "get")
+    def test_get_user_unsuccessfully__not_authenticated(self, mock_get):
+
+        # Arrange:
+        user_id = 1
+
+        # Act:
+        response = self.client.get(f"/api/users/{user_id}/")
+
+        # Assert:
+        self.assertEqual(response.status_code, 401)
+
+
+        mock_get.assert_not_called()
+
+
+#------------------------------------------------------------------------------------------
+# TESTS FOR CREATING STAFF USER PROFILE
+#------------------------------------------------------------------------------------------
+    
+    @patch.object(views.User.objects, "create_user")
+    def test_staff_create_user_successfully_as_admin(self, mock_create_user):
+        # Arrange
+        user_data = {
+            "password": "password",
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "teacher"
+        }
+
+        mock_user_full = self.create_mock_user_full_object(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "teacher")
+        mock_create_user.return_value = mock_user_full
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act
+        response = self.client.post(
+            "/api/users/create-staff/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 201)
+
+        data = response.json()
+
+        self.assertEqual(data["id"], 1)
+        self.assertEqual(data["username"], "JSmith")
+        self.assertEqual(data["email"], "jsmith@vbcourses.co.uk")
+        self.assertEqual(data["role"], "teacher")
+
+        mock_create_user.assert_called_once_with(
+            username="JSmith",
+            password="password",
+            first_name="John",
+            last_name="Smith",
+            email="jsmith@vbcourses.co.uk",
+            is_staff=True,
+            is_active=True,
+            role="teacher"
+        )
+
+    @patch.object(views.User.objects, "create_user")
+    def test_staff_create_user_unsuccessfully_as_teacher(self, mock_create_user):
+        # Arrange
+        user_data = {
+            "password": "password",
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "teacher"
+        }
+
+        # Mock authentication as a teacher
+        mock_teacher = self.create_mock_user("teacher")
+        self.client.force_authenticate(user=mock_teacher)
+
+        # Act
+        response = self.client.post(
+            "/api/users/create-staff/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+
+        data = response.json()
+
+        mock_create_user.assert_not_called()
+
+    @patch.object(views.User.objects, "create_user")
+    def test_staff_create_user_unsuccessfully_as_student(self, mock_create_user):
+        # Arrange
+        user_data = {
+            "password": "password",
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "teacher"
+        }
+
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
+
+        # Act
+        response = self.client.post(
+            "/api/users/create-staff/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+
+        data = response.json()
+
+        mock_create_user.assert_not_called()
+
+    @patch.object(views.User.objects, "create_user")
+    def test_staff_create_user_unsuccessfully_not_authenticated(self, mock_create_user):
+        # Arrange
+        user_data = {
+            "password": "password",
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "teacher"
+        }
+
+        # Act
+        response = self.client.post(
+            "/api/users/create-staff/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 401)
+
+        data = response.json()
+
+        mock_create_user.assert_not_called()
+
+    @patch.object(views.User.objects, "create_user")
+    def test_staff_create_user_unsuccessfully__as_admin__missing_information(self, mock_create_user):
+        # Arrange
+        user_data = {
+            "password": "password",
+            "username": "JSmith",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "teacher"
+        }
+
+        # Mock the user object created
+        mock_user_full = self.create_mock_user_full_object(
+            1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "teacher"
+        )
+        mock_create_user.return_value = mock_user_full
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act
+        response = self.client.post(
+            "/api/users/create-staff/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 400)
+
+        data = response.json()
+        
+        self.assertEqual(data["error"], "Missing information in request")
+
+        mock_create_user.assert_not_called()
+
+#------------------------------------------------------------------------------------------
+# TESTS FOR CREATING USER PROFILE
+#------------------------------------------------------------------------------------------
+
+    @patch.object(views.User.objects, "create_user")
+    def test_create_user_successfully_not_authenticated(self, mock_create_user):
+        # Arrange
+        user_data = {
+            "password": "password",
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk"
+        }
+
+        # Mock the user object created
+        mock_user_full = self.create_mock_user_full_object(
+            1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student"
+        )
+        mock_create_user.return_value = mock_user_full
+
+        # Act
+        response = self.client.post(
+            "/api/users/create/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 201)
+
+        data = response.json()
+
+        self.assertEqual(data["id"], 1)
+        self.assertEqual(data["username"], "JSmith")
+        self.assertEqual(data["email"], "jsmith@vbcourses.co.uk")
+        self.assertEqual(data["role"], "student")
+
+        mock_create_user.assert_called_once()
+        mock_create_user.assert_called_once_with(
+            username="JSmith",
+            password="password",
+            first_name="John",
+            last_name="Smith",
+            email="jsmith@vbcourses.co.uk",
+            is_staff=False,
+            is_active=True,
+            role="student"
+        )
+    
+    @patch.object(views.User.objects, "create_user")
+    def test_staff_create_user_unsuccessfully__missing_information(self, mock_create_user):
+        # Arrange
+        user_data = {
+            "password": "password",
+            "username": "JSmith",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "teacher"
+        }
+
+        # Mock the user object created
+        mock_user_full = self.create_mock_user_full_object(
+            1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "teacher"
+        )
+        mock_create_user.return_value = mock_user_full
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act
+        response = self.client.post(
+            "/api/users/create/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 400)
+
+        data = response.json()
+        
+        self.assertEqual(data["error"], "Missing information in request")
+
+        mock_create_user.assert_not_called()
+
+#------------------------------------------------------------------------------------------
+# TESTS FOR UPDATING USER PROFILE
+#------------------------------------------------------------------------------------------
+
+    @patch.object(views, "model_to_dict")
+    @patch.object(views.User.objects, "get")
+    def test_update_user_successfully_as_admin(self, mock_get, mock_model_to_dict):
+
+        # Arrange
+        user_id = 2
+        user_data = {
+            "username": "JSmith",
+            "password": "password",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "is_staff": True,
+            "is_active": True,
+            "role": "teacher"
+        }
+
+        mock_user = self.create_mock_user_full_object(user_id, "OldUsername", "John", "Smith", "oldemail@vbcourses.co.uk", "student")
+        mock_get.return_value = mock_user
+
+        expected_response = {
+            "id": user_id,
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "is_staff": True,
+            "is_active": True,
+            "role": "teacher"
+        }
+        mock_model_to_dict.return_value = expected_response
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act
+        response = self.client.patch(
+            f"/api/users/{user_id}/update/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertEqual(data, expected_response)
+
+        self.assertEqual(mock_user.username, "JSmith")
+        self.assertEqual(mock_user.first_name, "John")
+        self.assertEqual(mock_user.last_name, "Smith")
+        self.assertEqual(mock_user.email, "jsmith@vbcourses.co.uk")
+        self.assertEqual(mock_user.is_staff, True)
+        self.assertEqual(mock_user.is_active, True)
+        self.assertEqual(mock_user.role, "teacher")
+
+        mock_get.assert_called_once_with(id=user_id)
+        mock_user.set_password.assert_called_once_with("password")
+        mock_user.save.assert_called_once()
+        mock_model_to_dict.assert_called_once_with(mock_user)
+
+    @patch.object(views, "model_to_dict")
+    @patch.object(views.User.objects, "get")
+    def test_update_profile_successfully_as_teacher_own_id_update(self, mock_get, mock_model_to_dict):
+
+        # Arrange
+        user_id = 5
+        user_data = {
+            "username": "JSmith",
+            "password": "password",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "teacher"
+        }
+
+        mock_user = self.create_mock_user_full_object(user_id, "OldUsername", "John", "Smith", "oldemail@vbcourses.co.uk", "student")
+        mock_get.return_value = mock_user
+
+        expected_response = {
+            "id": user_id,
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "teacher"
+        }
+        mock_model_to_dict.return_value = expected_response
+
+        # Mock authentication as a teacher
+        mock_teacher = self.create_mock_user("teacher")
+        self.client.force_authenticate(user=mock_teacher)
+
+        # Act
+        response = self.client.patch(
+            f"/api/users/{user_id}/update/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertEqual(data, expected_response)
+
+        self.assertEqual(mock_user.username, "JSmith")
+        self.assertEqual(mock_user.first_name, "John")
+        self.assertEqual(mock_user.last_name, "Smith")
+        self.assertEqual(mock_user.email, "jsmith@vbcourses.co.uk")
+        self.assertEqual(mock_user.role, "student")
+
+        mock_get.assert_called_once_with(id=user_id)
+        mock_user.set_password.assert_called_once_with("password")
+        mock_user.save.assert_called_once()
+        mock_model_to_dict.assert_called_once_with(mock_user)
+
+    @patch.object(views, "model_to_dict")
+    @patch.object(views.User.objects, "get")
+    def test_update_profile_unsuccessfully_as_teacher_other_id_update(self, mock_get, mock_model_to_dict):
+
+        # Arrange
+        user_id = 4
+        user_data = {
+            "username": "JSmith",
+            "password": "password",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "teacher"
+        }
+
+        mock_user = self.create_mock_user_full_object(user_id, "OldUsername", "John", "Smith", "oldemail@vbcourses.co.uk", "student")
+        mock_get.return_value = mock_user
+
+        expected_response = {
+            "id": user_id,
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "teacher"
+        }
+        mock_model_to_dict.return_value = expected_response
+
+        # Mock authentication as a teacher
+        mock_teacher = self.create_mock_user("teacher")
+        self.client.force_authenticate(user=mock_teacher)
+
+        # Act
+        response = self.client.patch(
+            f"/api/users/{user_id}/update/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+
+        data = response.json()
+        
+        mock_get.assert_called_once_with(id=user_id)
+        mock_user.set_password.assert_not_called()
+        mock_user.save.assert_not_called()
+        mock_model_to_dict.assert_not_called()
+
+    @patch.object(views, "model_to_dict")
+    @patch.object(views.User.objects, "get")
+    def test_update_user_successfully_as_admin__missing_information(self, mock_get, mock_model_to_dict):
+
+        # Arrange
+        user_id = 2
+        user_data = {
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "role": "teacher"
+        }
+
+        mock_user = self.create_mock_user_full_object(user_id, "OldUsername", "John", "Smith", "oldemail@vbcourses.co.uk", "student")
+        mock_get.return_value = mock_user
+
+        expected_response = {
+            "id": user_id,
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "oldemail@vbcourses.co.uk",
+            "is_staff": True,
+            "is_active": True,
+            "role": "teacher"
+        }
+
+        mock_model_to_dict.return_value = expected_response
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act
+        response = self.client.patch(
+            f"/api/users/{user_id}/update/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertEqual(data, expected_response)
+        self.assertEqual(mock_user.username, "JSmith")
+        self.assertEqual(mock_user.first_name, "John")
+        self.assertEqual(mock_user.last_name, "Smith")
+        self.assertEqual(mock_user.email,"oldemail@vbcourses.co.uk")
+        self.assertEqual(mock_user.role, "teacher")
+
+        mock_user.set_password.assert_not_called()
+        mock_get.assert_called_once_with(id=user_id)
+        mock_user.save.assert_called_once()
+        mock_model_to_dict.assert_called_once_with(mock_user)
+
+    @patch.object(views, "model_to_dict")
+    @patch.object(views.User.objects, "get")
+    def test_update_user_unuccessfully_as_admin_user_not_found(self, mock_get, mock_model_to_dict):
+
+        # Arrange
+        user_id = 2
+        mock_get.side_effect = views.User.DoesNotExist
+        user_data = {
+            "username": "JSmith",
+            "password": "password",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "is_staff": True,
+            "is_active": True,
+            "role": "teacher"
+        }
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act
+        response = self.client.patch(
+            f"/api/users/{user_id}/update/",
+            user_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 404)
+
+        data = response.json()
+        self.assertEqual(data, {"error": "User not found"})
+
+        mock_get.assert_called_once_with(id=user_id)
+
+#------------------------------------------------------------------------------------------
+# TESTS FOR DELETING USER PROFILE
+#------------------------------------------------------------------------------------------
+    
+    @patch.object(views.User.objects, "get")
+    def test_delete_user_successfully_as_admin(self, mock_get):
+
+        # Arrange
+        user_id = 2
+
+        mock_user_full = self.create_mock_user_full_object(user_id, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "teacher")
+        mock_get.return_value = mock_user_full
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act
+        response = self.client.delete(
+            f"/api/users/{user_id}/remove/",
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertEqual(data["message"], "User deleted")
+
+        mock_get.assert_called_once_with(id=user_id)
+        mock_user_full.delete.assert_called_once()
+
+    @patch.object(views.User.objects, "get")
+    def test_delete_user_unsuccessfully_as_admin__user_not_found(self, mock_get):
+
+        # Arrange
+        user_id = 2
+        mock_get.side_effect = views.User.DoesNotExist
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act
+        response = self.client.delete(
+            f"/api/users/{user_id}/remove/",
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 404)
+
+        data = response.json()
+        self.assertEqual(data["error"], "User not found")
+
 
 #------------------------------------------------------------------------------------------
 # TESTS FOR RETREIVING ALL COURSES
