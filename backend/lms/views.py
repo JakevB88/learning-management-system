@@ -73,7 +73,7 @@ def create_staff_user_profile(request):
             first_name=data["first_name"],
             last_name=data["last_name"],
             email=data["email"],
-            is_staff=True,
+            is_staff=False,
             is_active=True,
             role=data["role"]
         )

@@ -96,7 +96,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         }
 
         # Act:
-        response = self.client.get("/api/users/profile/")
+        response = self.client.get("/api/users/profile")
 
         # Assert:
         self.assertEqual(response.status_code, 200)
@@ -105,7 +105,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
     def test_get_current_profile_unsuccessfully__unauthenticated(self):
         # Arrange not required
         # Act:
-        response = self.client.get("/api/users/profile/")
+        response = self.client.get("/api/users/profile")
         # Assert:
         self.assertEqual(response.status_code, 401)
     
@@ -126,7 +126,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_admin)
 
         # Act: Call get_users
-        response = self.client.get("/api/users/")
+        response = self.client.get("/api/users")
         # Assert: Check response
         self.assertEqual(response.status_code, 200)
         data = response.json() #convert SJON response into Python object
@@ -153,7 +153,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_teacher)
 
         # Act: Call get_users
-        response = self.client.get("/api/users/")
+        response = self.client.get("/api/users")
         # Assert: Check response
         self.assertEqual(response.status_code, 200)
         data = response.json() #convert SJON response into Python object
@@ -180,7 +180,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_student)
 
         # Act: Call get_users
-        response = self.client.get("/api/users/")
+        response = self.client.get("/api/users")
         # Assert: Check response
         self.assertEqual(response.status_code, 403)
      
@@ -200,7 +200,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_admin = self.create_mock_user("admin")
         self.client.force_authenticate(user=mock_admin)
         # Act: Call get_users
-        response = self.client.get("/api/users/")
+        response = self.client.get("/api/users")
         # Assert: Check response
         self.assertEqual(response.status_code, 200)
         data = response.json() #convert SJON response into Python object
@@ -232,7 +232,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_admin)
 
         # Act: Call get_users
-        response = self.client.get("/api/users/")
+        response = self.client.get("/api/users")
         # Assert: Check response
         self.assertEqual(response.status_code, 200)
 
@@ -278,7 +278,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_admin)
 
         # Act:
-        response = self.client.get(f"/api/users/{user_id}/")
+        response = self.client.get(f"/api/users/{user_id}")
 
         # Assert:
         self.assertEqual(response.status_code, 200)
@@ -303,7 +303,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_teacher)
 
         # Act:
-        response = self.client.get(f"/api/users/{user_id}/")
+        response = self.client.get(f"/api/users/{user_id}")
 
         # Assert:
         self.assertEqual(response.status_code, 403)
@@ -318,7 +318,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_student)
 
         # Act:
-        response = self.client.get(f"/api/users/{user_id}/")
+        response = self.client.get(f"/api/users/{user_id}")
 
         # Assert:
         self.assertEqual(response.status_code, 403)
@@ -335,7 +335,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_admin)
 
         # Act:
-        response = self.client.get(f"/api/users/{user_id}/")
+        response = self.client.get(f"/api/users/{user_id}")
 
         # Assert:
         self.assertEqual(response.status_code, 404)
@@ -353,7 +353,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         user_id = 1
 
         # Act:
-        response = self.client.get(f"/api/users/{user_id}/")
+        response = self.client.get(f"/api/users/{user_id}")
 
         # Assert:
         self.assertEqual(response.status_code, 401)
@@ -387,7 +387,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/users/create-staff/",
+            "/api/users/create-staff",
             user_data,
             format="json"
         )
@@ -408,7 +408,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
             first_name="John",
             last_name="Smith",
             email="jsmith@vbcourses.co.uk",
-            is_staff=True,
+            is_staff=False,
             is_active=True,
             role="teacher"
         )
@@ -431,7 +431,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/users/create-staff/",
+            "/api/users/create-staff",
             user_data,
             format="json"
         )
@@ -461,7 +461,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/users/create-staff/",
+            "/api/users/create-staff",
             user_data,
             format="json"
         )
@@ -487,7 +487,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/users/create-staff/",
+            "/api/users/create-staff",
             user_data,
             format="json"
         )
@@ -522,7 +522,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/users/create-staff/",
+            "/api/users/create-staff",
             user_data,
             format="json"
         )
@@ -559,7 +559,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/users/create/",
+            "/api/users/create",
             user_data,
             format="json"
         )
@@ -609,7 +609,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/users/create/",
+            "/api/users/create",
             user_data,
             format="json"
         )
@@ -665,7 +665,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.patch(
-            f"/api/users/{user_id}/update/",
+            f"/api/users/{user_id}/update",
             user_data,
             format="json"
         )
@@ -723,7 +723,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.patch(
-            f"/api/users/{user_id}/update/",
+            f"/api/users/{user_id}/update",
             user_data,
             format="json"
         )
@@ -779,7 +779,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.patch(
-            f"/api/users/{user_id}/update/",
+            f"/api/users/{user_id}/update",
             user_data,
             format="json"
         )
@@ -829,7 +829,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.patch(
-            f"/api/users/{user_id}/update/",
+            f"/api/users/{user_id}/update",
             user_data,
             format="json"
         )
@@ -874,7 +874,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.patch(
-            f"/api/users/{user_id}/update/",
+            f"/api/users/{user_id}/update",
             user_data,
             format="json"
         )
@@ -906,7 +906,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.delete(
-            f"/api/users/{user_id}/remove/",
+            f"/api/users/{user_id}/remove",
             format="json"
         )
 
@@ -932,7 +932,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.delete(
-            f"/api/users/{user_id}/remove/",
+            f"/api/users/{user_id}/remove",
             format="json"
         )
 
@@ -956,7 +956,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_all.return_value = [mock_course]
 
         # Act: Call get_courses
-        response = self.client.get(f"/api/courses/")
+        response = self.client.get(f"/api/courses")
 
         # Assert: Check response
         self.assertEqual(response.status_code, 200)
@@ -980,7 +980,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_all.return_value = []  # mock the emplty courses list
 
         # Act
-        response = self.client.get(f"/api/courses/")
+        response = self.client.get(f"/api/courses")
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -1001,7 +1001,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_all.return_value = [mock_course1, mock_course2]
 
         # Act
-        response = self.client.get(f"/api/courses/")
+        response = self.client.get(f"/api/courses")
 
         # Assert
         data = response.json()
@@ -1036,7 +1036,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_get.return_value = mock_course
 
         # Act: Call get_courses
-        response = self.client.get(f"/api/courses/{course_id}/")
+        response = self.client.get(f"/api/courses/{course_id}")
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -1060,7 +1060,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_get.side_effect = views.Course.DoesNotExist
 
         # Act
-        response = self.client.get(f"/api/courses/{course_id}/")
+        response = self.client.get(f"/api/courses/{course_id}")
         # Assert
         self.assertEqual(response.status_code, 404)
 
@@ -1106,7 +1106,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/courses/create/",
+            "/api/courses/create",
             course_data,
             format="json"
         )
@@ -1158,7 +1158,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/courses/create/",
+            "/api/courses/create",
             course_data,
             format="json"
         )
@@ -1197,7 +1197,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/courses/create/",
+            "/api/courses/create",
             course_data,
             format="json"
         )
@@ -1218,7 +1218,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/courses/create/",
+            "/api/courses/create",
             course_data,
             format="json"
         )
@@ -1242,7 +1242,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/courses/create/",
+            "/api/courses/create",
             course_data,
             format="json"
         )
@@ -1271,7 +1271,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.post(
-            "/api/courses/create/",
+            "/api/courses/create",
             course_data,
             format="json"
         )
@@ -1323,7 +1323,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.patch(
-            f"/api/courses/{course_id}/update/",
+            f"/api/courses/{course_id}/update",
             course_data,
             format="json"
         )
@@ -1377,7 +1377,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.patch(
-            f"/api/courses/{course_id}/update/",
+            f"/api/courses/{course_id}/update",
             course_data,
             format="json"
         )
@@ -1431,7 +1431,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.patch(
-            f"/api/courses/{course_id}/update/",
+            f"/api/courses/{course_id}/update",
             course_data,
             format="json"
         )
@@ -1481,7 +1481,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.patch(
-            f"/api/courses/{course_id}/update/",
+            f"/api/courses/{course_id}/update",
             course_data,
             format="json"
         )
@@ -1530,7 +1530,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.patch(
-            f"/api/courses/{course_id}/update/",
+            f"/api/courses/{course_id}/update",
             course_data,
             format="json"
         )
@@ -1572,7 +1572,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         
         # Act
         response = self.client.patch(
-            f"/api/courses/{course_id}/update/",
+            f"/api/courses/{course_id}/update",
             course_data,
             format="json"
         )
@@ -1608,7 +1608,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.delete(
-            f"/api/courses/{course_id}/remove/",
+            f"/api/courses/{course_id}/remove",
             format="json"
         )
 
@@ -1639,7 +1639,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.delete(
-            f"/api/courses/{course_id}/remove/",
+            f"/api/courses/{course_id}/remove",
             format="json"
         )
 
@@ -1670,7 +1670,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.delete(
-            f"/api/courses/{course_id}/remove/",
+            f"/api/courses/{course_id}/remove",
             format="json"
         )
 
@@ -1701,7 +1701,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.delete(
-            f"/api/courses/{course_id}/remove/",
+            f"/api/courses/{course_id}/remove",
             format="json"
         )
 
@@ -1730,7 +1730,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         # Act
         response = self.client.delete(
-            f"/api/courses/{course_id}/remove/",
+            f"/api/courses/{course_id}/remove",
             format="json"
         )
 
@@ -1764,7 +1764,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_student)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/register/")
+        response = self.client.put(f"/api/courses/{course_id}/register")
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -1792,7 +1792,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_student)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/register/")
+        response = self.client.put(f"/api/courses/{course_id}/register")
 
         # Assert
         self.assertEqual(response.status_code, 400)
@@ -1820,7 +1820,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_teacher)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/register/")
+        response = self.client.put(f"/api/courses/{course_id}/register")
 
         # Assert
         self.assertEqual(response.status_code, 403)
@@ -1845,7 +1845,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_admin)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/register/")
+        response = self.client.put(f"/api/courses/{course_id}/register")
 
         # Assert
         self.assertEqual(response.status_code, 403)
@@ -1858,7 +1858,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         course_id = 1
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/register/")
+        response = self.client.put(f"/api/courses/{course_id}/register")
 
         # Assert
         self.assertEqual(response.status_code, 401)
@@ -1876,7 +1876,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_student)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/register/")
+        response = self.client.put(f"/api/courses/{course_id}/register")
 
         # Assert
         self.assertEqual(response.status_code, 404)
@@ -1907,7 +1907,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_student)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+        response = self.client.put(f"/api/courses/{course_id}/deregister")
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -1936,7 +1936,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_student)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+        response = self.client.put(f"/api/courses/{course_id}/deregister")
 
         # Assert
         self.assertEqual(response.status_code, 404)
@@ -1964,7 +1964,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_teacher)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+        response = self.client.put(f"/api/courses/{course_id}/deregister")
 
         # Assert
         self.assertEqual(response.status_code, 403)
@@ -1989,7 +1989,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_admin)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+        response = self.client.put(f"/api/courses/{course_id}/deregister")
 
         # Assert
         self.assertEqual(response.status_code, 403)
@@ -2002,7 +2002,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         course_id = 1
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+        response = self.client.put(f"/api/courses/{course_id}/deregister")
 
         # Assert
         self.assertEqual(response.status_code, 401)
@@ -2020,7 +2020,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_student)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister/")
+        response = self.client.put(f"/api/courses/{course_id}/deregister")
 
         # Assert
         self.assertEqual(response.status_code, 404)
@@ -2063,7 +2063,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_admin)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin",
             {"student_id": student_id},
             format="json"
         )
@@ -2108,7 +2108,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_admin)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin",
             {"student_id": student_id},
             format="json"
         )
@@ -2149,7 +2149,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_admin)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin",
             {"student_id": student_id},
             format="json"
         )
@@ -2187,7 +2187,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_admin)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin",
             {"student_id": student_id},
             format="json"
         )
@@ -2212,7 +2212,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_teacher)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin",
             {"student_id": student_id},
             format="json"
         )
@@ -2232,7 +2232,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.client.force_authenticate(user=mock_student)
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin",
             {"student_id": student_id},
             format="json"
         )
@@ -2248,7 +2248,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         student_id = 4
 
         # Act: Call get_courses
-        response = self.client.put(f"/api/courses/{course_id}/deregister-admin/",
+        response = self.client.put(f"/api/courses/{course_id}/deregister-admin",
             {"student_id": student_id},
             format="json"
         )
