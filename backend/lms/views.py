@@ -39,7 +39,6 @@ def get_user_profiles(request):
 
     return JsonResponse(users, safe=False)
 
-    
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdmin])
 def get_user_profile(request, user_id):
@@ -89,8 +88,7 @@ def create_staff_user_profile(request):
         },
         status=201
     )
-
-                                      
+                                
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_user_profile(request):
@@ -159,7 +157,6 @@ def update_user_profile(request, user_id):
             status=404
         )
     
-
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated, IsAdmin])
 def remove_user_profile(request, user_id):
@@ -176,8 +173,6 @@ def remove_user_profile(request, user_id):
             {"error": "User not found"},
             status=404
         )
-
-
 
 #course model CRUD defenitions for Course model
 @api_view(["GET"])
@@ -197,7 +192,6 @@ def get_courses(request):
         })
 
     return JsonResponse(courses, safe=False)
-
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
@@ -306,7 +300,6 @@ def remove_course(request, course_id):
             {"error": "Course not found"},
             status=404
         )
-
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated, IsStudent])

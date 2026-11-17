@@ -33,6 +33,17 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_user.role = role
 
         return mock_user
+    
+    def create_mock_user_full(self, id, username, first_name, last_name, email, role):
+        mock_user =  {
+            "id": id,
+            "username": username,
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "role": role
+        }
+        return mock_user
 
     def create_mock_course(self, course_id, title, description, teacher_id, students):
         mock_course = MagicMock()
@@ -50,7 +61,176 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
             mock_course.students.values.return_value = []
 
         return mock_course
+
+#------------------------------------------------------------------------------------------
+# TESTS FOR RETREIVING CURRENT PROFILE
+#------------------------------------------------------------------------------------------
+    def test_get_current_profile_successfully(self):
+        # Arrange:
+        # Mock an authenticated student
+        mock_student = self.create_mock_user("student")
+        mock_student.id = 1
+        mock_student.username = "JSmith"
+        mock_student.first_name = "John"
+        mock_student.last_name = "Smith"
+        mock_student.email = "jsmith@vbcourses.co.uk"
+        self.client.force_authenticate(user=mock_student)
+
+        expected_response = {
+            "id": 1,
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "student"
+        }
+
+        # Act:
+        response = self.client.get("/api/users/profile/")
+
+        # Assert:
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), expected_response)
+
+    def test_get_current_profile_unsuccessfully__unauthenticated(self):
+        # Arrange not required
+        # Act:
+        response = self.client.get("/api/users/profile/")
+        # Assert:
+        self.assertEqual(response.status_code, 401)
     
+#------------------------------------------------------------------------------------------
+# TESTS FOR RETREIVING ALL USERS
+#------------------------------------------------------------------------------------------
+
+    @patch.object(views.User.objects, "values") #replace the "Users.objects.values():" line in views.py "get_users" with a temporarily mocked version as there is no actual database for this test to get the data from
+    def test_get_users_successfully__as_admin(self, mock_values): # "mock_all" is the mocked test function created by @patch.object(views.Users.objects, "values")
+        
+        #Arrange: Create mock user data
+        #when views.py calls User.objects.values(), return the mock_user instead, this was set up with @patch.object
+        mock_user_full = self.create_mock_user_full(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
+        mock_values.return_value = [mock_user_full]
+        
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act: Call get_users
+        response = self.client.get("/api/users/")
+        # Assert: Check response
+        self.assertEqual(response.status_code, 200)
+        data = response.json() #convert SJON response into Python object
+        self.assertEqual(len(data), 1) #confirm that one user is available in the users array
+        self.assertEqual(data[0]["id"], 1)
+        self.assertEqual(data[0]["username"], "JSmith")
+        self.assertEqual(data[0]["first_name"], "John")
+        self.assertEqual(data[0]["last_name"], "Smith")
+        self.assertEqual(data[0]["email"], "jsmith@vbcourses.co.uk")
+        self.assertEqual(data[0]["role"], "student")
+        # Verify the database query "mock_values" was called
+        mock_values.assert_called_once()
+
+    @patch.object(views.User.objects, "values") #replace the "Users.objects.values():" line in views.py "get_users" with a temporarily mocked version as there is no actual database for this test to get the data from
+    def test_get_users_successfully__as_teacher(self, mock_values): # "mock_all" is the mocked test function created by @patch.object(views.Users.objects, "values")
+        
+        #Arrange: Create mock user data
+        #when views.py calls User.objects.values(), return the mock_user instead, this was set up with @patch.object
+        mock_user_full = self.create_mock_user_full(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
+        mock_values.return_value = [mock_user_full]
+        
+        # Mock authentication as a teacher
+        mock_teacher = self.create_mock_user("teacher")
+        self.client.force_authenticate(user=mock_teacher)
+
+        # Act: Call get_users
+        response = self.client.get("/api/users/")
+        # Assert: Check response
+        self.assertEqual(response.status_code, 200)
+        data = response.json() #convert SJON response into Python object
+        self.assertEqual(len(data), 1) #confirm that one user is available in the users array
+        self.assertEqual(data[0]["id"], 1)
+        self.assertEqual(data[0]["username"], "JSmith")
+        self.assertEqual(data[0]["first_name"], "John")
+        self.assertEqual(data[0]["last_name"], "Smith")
+        self.assertEqual(data[0]["email"], "jsmith@vbcourses.co.uk")
+        self.assertEqual(data[0]["role"], "student")
+        # Verify the database query "mock_values" was called
+        mock_values.assert_called_once()
+
+    @patch.object(views.User.objects, "values") #replace the "Users.objects.values():" line in views.py "get_users" with a temporarily mocked version as there is no actual database for this test to get the data from
+    def test_get_users_unsuccessfully__as_student(self, mock_values): # "mock_all" is the mocked test function created by @patch.object(views.Users.objects, "values")
+        
+        #Arrange: Create mock user data
+        #when views.py calls User.objects.values(), return the mock_user instead, this was set up with @patch.object
+        mock_user_full = self.create_mock_user_full(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
+        mock_values.return_value = [mock_user_full]
+        
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
+
+        # Act: Call get_users
+        response = self.client.get("/api/users/")
+        # Assert: Check response
+        self.assertEqual(response.status_code, 403)
+     
+        # Verify the database query "mock_values" was called
+        mock_values.assert_not_called()
+
+    @patch.object(views.User.objects, "values") #replace the "Users.objects.values():" line in views.py "get_users" with a temporarily mocked version as there is no actual database for this test to get the data from
+    def test_get_multiple_users_successfully(self, mock_values): # "mock_all" is the mocked test function created by @patch.object(views.Users.objects, "values")
+        
+        #Arrange: Create mock user data
+        #when views.py calls User.objects.values(), return the mock_user instead, this was set up with @patch.object
+        mock_user_full1 = self.create_mock_user_full(1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student")
+        mock_user_full2 = self.create_mock_user_full(2, "SJohn", "Smith", "John", "sjohn@vbcourses.co.uk", "teacher")
+        mock_values.return_value = [mock_user_full1, mock_user_full2]
+        
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+        # Act: Call get_users
+        response = self.client.get("/api/users/")
+        # Assert: Check response
+        self.assertEqual(response.status_code, 200)
+        data = response.json() #convert SJON response into Python object
+        self.assertEqual(len(data), 2) #confirm that one user is available in the users array
+        self.assertEqual(data[0]["id"], 1)
+        self.assertEqual(data[0]["username"], "JSmith")
+        self.assertEqual(data[0]["first_name"], "John")
+        self.assertEqual(data[0]["last_name"], "Smith")
+        self.assertEqual(data[0]["email"], "jsmith@vbcourses.co.uk")
+        self.assertEqual(data[0]["role"], "student")
+
+        self.assertEqual(len(data), 2) #confirm that one user is available in the users array
+        self.assertEqual(data[1]["id"], 2)
+        self.assertEqual(data[1]["username"], "SJohn")
+        self.assertEqual(data[1]["first_name"], "Smith")
+        self.assertEqual(data[1]["last_name"], "John")
+        self.assertEqual(data[1]["email"], "sjohn@vbcourses.co.uk")
+        self.assertEqual(data[1]["role"], "teacher")
+        # Verify the database query "mock_values" was called
+        mock_values.assert_called_once()
+
+    @patch.object(views.User.objects, "values") #replace the "Users.objects.values():" line in views.py "get_users" with a temporarily mocked version as there is no actual database for this test to get the data from
+    def test_get_users_unsuccessfully_empty(self, mock_values): # "mock_all" is the mocked test function created by @patch.object(views.Users.objects, "values")
+        
+        #Arrange: Create mock user data
+        
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act: Call get_users
+        response = self.client.get("/api/users/")
+        # Assert: Check response
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json() #convert SJON response into Python object
+        self.assertEqual(len(data), 0)
+        # Verify the database query "mock_values" was called
+        mock_values.assert_called_once()
+
 #------------------------------------------------------------------------------------------
 # TESTS FOR RETREIVING ALL COURSES
 #------------------------------------------------------------------------------------------
@@ -299,9 +479,9 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         #no need to mock "create" and "model_to_dict" as the request will fail due to authentication issue
 
-        # Mock authentication as a teacher
-        mock_teacher = self.create_mock_user("student")
-        self.client.force_authenticate(user=mock_teacher)
+        # Mock authentication as a student
+        mock_student = self.create_mock_user("student")
+        self.client.force_authenticate(user=mock_student)
 
         # Act
         response = self.client.post(
