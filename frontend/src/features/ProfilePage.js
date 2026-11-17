@@ -122,7 +122,7 @@ export default function ProfilePage() {
 
     return (
         <div>
-            <h1>Profile</h1>
+            <h1>Your Profile</h1>
             <div className="users">
                 <table className="data-table users-table">
                     <tbody>

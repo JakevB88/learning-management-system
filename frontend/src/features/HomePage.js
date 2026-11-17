@@ -1,18 +1,26 @@
-import { useNavigate } from "react-router-dom";
-
 export default function HomePage() {
-    const navigate = useNavigate();
+    return (
+        <div className="contentPage - homepage">
+        <h2>Welcome to JvB Courses!</h2>
 
-    return(
-        <div className="homepage">
-            <h2>Welcome</h2>
-            <div className="quizzes">
-                    <div className="quiz-item">
-                        <p className="quizTitle">This application allows you to browse courses supplied by JvB Courses.</p>
+        <div>
+            <p>
+            At JvB Courses, you're sure to find opportunities to learn,
+            develop new skills and take the next step in your learning
+            journey.
+            </p>
 
-                    </div>
-            
-            </div>
+            <p>
+            Whether you're looking to build your knowledge, explore new
+            subjects or strengthen your existing skills, our courses provide
+            a place to learn at your own pace and work towards your goals.
+            </p>
+
+            <p>
+            Explore our courses, discover new opportunities and start
+            learning today!
+            </p>
         </div>
-    )
+        </div>
+    );
 }

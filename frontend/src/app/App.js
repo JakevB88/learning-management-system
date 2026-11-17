@@ -25,32 +25,36 @@ function Sidebar() {
   const { user } = useContext(AuthContext);
   console.log("Sidebar user:", user);
   return (
-    <div>
+    <div className="sidebar-menu">
       <div>
-        <button onClick={() => {navigate("/")}}>
-          <p>Home</p>
+        <button className="sidebar-btn" onClick={() => {navigate("/")}}>
+          Home
         </button>
       </div>
       <div>
-        <button onClick={() => {navigate("courses")}}>
-          <p>Courses</p>
+        <button className="sidebar-btn" onClick={() => {navigate("courses")}}>
+          Courses
         </button>
       </div>
-      <div>
-        <button onClick={() => {navigate("profile")}}>
-          {user && <p>Profile</p>}
-        </button>
-      </div>
-      <div>
-        {["admin", "teacher"].includes(user?.role) && (
-          <button onClick={() => navigate("/users")}>
-            <p>{user.role === "admin" ? "Manage Users" : "Users"}</p>
+      {user && 
+        <div>
+          
+            <button className="sidebar-btn" onClick={() => {navigate("profile")}}>
+              Profile
+            </button>
+          
+        </div>
+      }
+      {["admin", "teacher"].includes(user?.role) && (
+        <div>
+          <button className="sidebar-btn" onClick={() => navigate("/users")}>
+            {user.role === "admin" ? "Manage Users" : "Users"}
           </button>
-        )}
-      </div>
+        </div>
+      )}
       <div>
         {!user && (
-          <button onClick={() => {navigate("/signup");}}>
+          <button className="sidebar-btn" onClick={() => {navigate("/signup");}}>
             <p>Sign up</p>
           </button>
         )}
@@ -74,18 +78,20 @@ function Layout() {
   };
 
   return (
-    <div className="appheader">
+    <div className="page">
       <div className="header">
-        <h1>JvB Courses</h1>
-        <h3>get more out of life</h3>
+        <div className="header-title">
+          <h1>JvB Courses</h1>
+          <span>Learn new skills and boost your career</span>
+        </div>
         <div className="headerIcons">
           {user 
             ?(
-            <button onClick={HandleLogout}>
-              <p>Log out</p>
+            <button className="login-btn" onClick={HandleLogout}>
+              Log out
             </button>)
-            :(<button onClick={() => {navigate("login")}}>
-              <p>Log in</p>
+            :(<button className="login-btn" onClick={() => {navigate("login")}}>
+              Log in
             </button>)
           }
         </div>

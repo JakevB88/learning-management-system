@@ -118,7 +118,7 @@ export default function CoursesPage() {
             <br></br>
             <div>
                 {(user?.role === "admin"|| user?.role === "teacher") && (
-                    <button onClick={() => {
+                    <button className="update-btn" onClick={() => {
                         navigate("/create-course")}}
                     >
                         Add course
@@ -131,8 +131,7 @@ export default function CoursesPage() {
                 <table className="data-table courses-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            {/*<th>Teacher</th>*/}
+                            
                             <th>Title</th>
                             <th>Description</th>
                             {(user?.role === "admin" || user?.role === "teacher") 
@@ -148,8 +147,6 @@ export default function CoursesPage() {
                     <tbody>
                         {courses.map((course) => (
                             <tr key={course.id}>
-                                <td>{course.id}</td>
-                                {/*<td>{course.teacher_id}</td>*/}
                                 <td>{course.title}</td>
                                 <td>{course.description}</td>
 
@@ -158,7 +155,7 @@ export default function CoursesPage() {
                                         {(user?.role === "admin" ||
                                         user?.id === course.teacher_id)
                                             ? (
-                                                <button
+                                                <button className="table-btn"
                                                     onClick={() =>
                                                         navigate(`/update-course/${course.id}`)
                                                     }
@@ -172,10 +169,16 @@ export default function CoursesPage() {
                                     :(user?.role === "student" && 
                                     <td>
                                         {course.students.includes(user?.id) 
-                                            ? (<button onClick={() => handleDeRegistration(course.id)}>
+                                            ? (<button className="table-btn" 
+                                                onClick={() => 
+                                                    handleDeRegistration(course.id)
+                                                }>
                                                     Deregister
                                             </button>)
-                                            :(<button onClick={() => handleRegistration(course.id)}>
+                                            :(<button className="table-btn" 
+                                                onClick={() => 
+                                                    handleRegistration(course.id)
+                                                }>
                                                     Register
                                             </button>)
                                         }
