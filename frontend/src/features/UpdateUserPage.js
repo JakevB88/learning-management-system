@@ -17,7 +17,7 @@ export default function UpdateUser() {
          try {
 
             const response = await fetch(
-                `http://127.0.0.1:8000/api/users/profile/`,
+                `http://127.0.0.1:8000/api/users/profile`,
                 {
                     method: "GET",
                     headers: {
@@ -53,7 +53,7 @@ export default function UpdateUser() {
     const handleUpdateUser = async (e) => {
         e.preventDefault();
         const response = await fetch(
-            `http://127.0.0.1:8000/api/users/${user.id}/update/`,
+            `http://127.0.0.1:8000/api/users/${user.id}/update`,
             {
                 method: "PATCH",
                 headers: {
@@ -91,7 +91,7 @@ export default function UpdateUser() {
             return;
         }
         const response = await fetch(
-            `http://127.0.0.1:8000/api/users/${user.id}/remove/`,
+            `http://127.0.0.1:8000/api/users/${user.id}/remove`,
             {
                 method: "DELETE",
                 headers: {

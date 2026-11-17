@@ -18,7 +18,7 @@ export default function UpdateUserAdmin() { //was CreatUser
          try {
             console.log("User ID transferred to update page: " + id)
             const response = await fetch(
-                `http://127.0.0.1:8000/api/users/${id}/`,
+                `http://127.0.0.1:8000/api/users/${id}`,
                 {
                     method: "GET",
                     headers: {
@@ -51,7 +51,7 @@ export default function UpdateUserAdmin() { //was CreatUser
     const handleUpdateUser = async (e) => {
         e.preventDefault();
         const response = await fetch(
-            `http://127.0.0.1:8000/api/users/${id}/update/`,
+            `http://127.0.0.1:8000/api/users/${id}/update`,
             {
                 method: "PATCH",
                 headers: {
@@ -89,7 +89,7 @@ export default function UpdateUserAdmin() { //was CreatUser
             return;
         }
         const response = await fetch(
-            `http://127.0.0.1:8000/api/users/${id}/remove/`,
+            `http://127.0.0.1:8000/api/users/${id}/remove`,
             {
                 method: "DELETE",
                 headers: {

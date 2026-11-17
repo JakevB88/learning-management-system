@@ -17,7 +17,7 @@ export default function ProfilePage() {
          try {
 
             const response = await fetch(
-                `http://127.0.0.1:8000/api/users/profile/`,
+                `http://127.0.0.1:8000/api/users/profile`,
                 {
                     method: "GET",
                     headers: {
@@ -54,7 +54,7 @@ export default function ProfilePage() {
         try {
 
             const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/${id}/deregister/`,
+                `http://127.0.0.1:8000/api/courses/${id}/deregister`,
                 {
                     method: "PUT",
                     headers: {
@@ -89,7 +89,7 @@ export default function ProfilePage() {
         try {
 
             const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/`,
+                `http://127.0.0.1:8000/api/courses`,
                 {
                     method: "GET"
                 }

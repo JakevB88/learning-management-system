@@ -17,7 +17,7 @@ export default function CreateUser() {
         e.preventDefault();
 
         const response = await fetch(
-            `http://127.0.0.1:8000/api/courses/create/`,
+            `http://127.0.0.1:8000/api/courses/create`,
             {
                 method: "POST",
                 headers: {

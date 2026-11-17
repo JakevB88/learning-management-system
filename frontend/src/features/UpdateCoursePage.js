@@ -18,7 +18,7 @@ export default function UpdateCourse() {
          try {
 
             const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/${id}/`,
+                `http://127.0.0.1:8000/api/courses/${id}`,
                 {
                     method: "GET"
                 }
@@ -46,7 +46,7 @@ export default function UpdateCourse() {
         e.preventDefault();
 
         const response = await fetch(
-            `http://127.0.0.1:8000/api/courses/${id}/update/`,
+            `http://127.0.0.1:8000/api/courses/${id}/update`,
             {
                 method: "PATCH",
                 headers: {
@@ -78,7 +78,7 @@ export default function UpdateCourse() {
             return;
         }
         const response = await fetch(
-            `http://127.0.0.1:8000/api/courses/${id}/remove/`,
+            `http://127.0.0.1:8000/api/courses/${id}/remove`,
             {
                 method: "DELETE",
                 headers: {
@@ -109,7 +109,7 @@ export default function UpdateCourse() {
         try {
 
             const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/${id}/deregister-admin/`,
+                `http://127.0.0.1:8000/api/courses/${id}/deregister-admin`,
                 {
                     method: "PUT",
                     headers: {

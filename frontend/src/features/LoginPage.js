@@ -12,7 +12,7 @@ export default function Login() {
         e.preventDefault();
 
         const response = await fetch(
-            "http://127.0.0.1:8000/api/token/",
+            "http://127.0.0.1:8000/api/token",
             {
                 method: "POST",
                 headers: {
@@ -32,7 +32,7 @@ export default function Login() {
             localStorage.setItem("refresh_token", data.refresh);
 
             const profileResponse = await fetch(
-                "http://127.0.0.1:8000/api/users/profile/",
+                "http://127.0.0.1:8000/api/users/profile",
                 {
                     headers: {
                         Authorization: `Bearer ${data.access}`,

@@ -11,7 +11,7 @@ export default function UsersPage() {
         try {
             console.log("trying to retreive all users in UsersPage.js")
             const response = await fetch(
-                `http://127.0.0.1:8000/api/users/`,
+                `http://127.0.0.1:8000/api/users`,
                 {
                     method: "GET",
                     headers: {
