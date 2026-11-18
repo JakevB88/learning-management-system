@@ -49,54 +49,64 @@ export default function CreateUser() {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmitUser}>
+        <div className="contentpage createUserPage">
+            <h2>Create user</h2>
+            <form className="form createUser" onSubmit={handleSubmitUser}>
+                <label htmlFor="username">Username</label>
                 <input
+                    id="username"
                     type="text"
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
-                <br></br>
+                <label htmlFor="password">Password</label>
                 <input
+                    id="password"
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <br></br>
+                <label htmlFor="first name">First name</label>
                 <input
+                    id="first name"
                     type="text"
                     placeholder="first name"
                     value={first_name}
                     onChange={(e) => setFirstname(e.target.value)}
                 />
-                <br></br>
+                <label htmlFor="last name">Last name</label>
                 <input
+                    id="last name"
                     type="text"
                     placeholder="last name"
                     value={last_name}
                     onChange={(e) => setLastname(e.target.value)}
                 />
-                <br></br>
+                <label htmlFor="email">eMail</label>
                 <input
+                    id="email"
                     type="text"
                     placeholder="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <br></br>
-                <select
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                >
-                    <option value="student">Student</option>
-                    <option value="teacher">Teacher</option>
-                    <option value="admin">Admin</option>
-                </select>
-                <br></br>
-                <br></br>
-                <button type="submit">Create User</button>
+                <label htmlFor="role">Role</label>
+                <div>
+                    <select 
+                        id="role"
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                    >
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div>
+                    <button className="submit createUser" type="submit">Create User</button>
+                </div>
             </form>
         </div>
 

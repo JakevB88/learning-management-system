@@ -109,24 +109,12 @@ export default function CoursesPage() {
     }, []);
 
     return(
-        <div className="coursespage">
+        <div className="contentPage - courses">
             <h2>Courses</h2>
             <div className="courses">
                 <p>Summary of the courses available</p>
             </div>
-            <br></br>
-            <br></br>
-            <div>
-                {(user?.role === "admin"|| user?.role === "teacher") && (
-                    <button className="update-btn" onClick={() => {
-                        navigate("/create-course")}}
-                    >
-                        Add course
-                    </button>
-                )}                
-            </div>
-            <br></br>
-            <br></br>
+            
             <div className="courses">
                 <table className="data-table courses-table">
                     <thead>
@@ -155,7 +143,7 @@ export default function CoursesPage() {
                                         {(user?.role === "admin" ||
                                         user?.id === course.teacher_id)
                                             ? (
-                                                <button className="table-btn"
+                                                <button className="table-button"
                                                     onClick={() =>
                                                         navigate(`/update-course/${course.id}`)
                                                     }
@@ -163,19 +151,19 @@ export default function CoursesPage() {
                                                     Manage Course
                                                 </button>
                                             )
-                                            : "N/A"
+                                            : ""
                                         }
                                     </td>)
                                     :(user?.role === "student" && 
                                     <td>
                                         {course.students.includes(user?.id) 
-                                            ? (<button className="table-btn" 
+                                            ? (<button className="table-button" 
                                                 onClick={() => 
                                                     handleDeRegistration(course.id)
                                                 }>
                                                     Deregister
                                             </button>)
-                                            :(<button className="table-btn" 
+                                            :(<button className="table-button" 
                                                 onClick={() => 
                                                     handleRegistration(course.id)
                                                 }>
@@ -188,6 +176,15 @@ export default function CoursesPage() {
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div>
+                {(user?.role === "admin"|| user?.role === "teacher") && (
+                    <button className="submit update-btn" onClick={() => {
+                        navigate("/create-course")}}
+                    >
+                        Add course
+                    </button>
+                )}                
             </div>
         </div>
     )

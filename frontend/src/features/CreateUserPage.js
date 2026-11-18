@@ -47,44 +47,52 @@ export default function CreateUser() {
     };
 
     return (
-        <form onSubmit={handleSubmitUser}>
-            <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <br></br>
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <br></br>
-            <input
-                type="text"
-                placeholder="first name"
-                value={first_name}
-                onChange={(e) => setFirstname(e.target.value)}
-            />
-            <br></br>
-            <input
-                type="text"
-                placeholder="last name"
-                value={last_name}
-                onChange={(e) => setLastname(e.target.value)}
-            />
-            <br></br>
-            <input
-                type="text"
-                placeholder="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <br></br>
-            <br></br>
-            <button type="submit">Create User</button>
-        </form>
+        <div className="contentpage login">
+            <h2>Sign up to JvB Courses</h2>
+            <p>sign up to get access to all our courses</p>
+            <form className="form signup" onSubmit={handleSubmitUser}>
+                <label htmlFor="username">Username</label>
+                <input
+                    id="username"
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <label htmlFor="password">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <label htmlFor="first name">First name</label>
+                <input
+                    id="first name"
+                    type="text"
+                    placeholder="first name"
+                    value={first_name}
+                    onChange={(e) => setFirstname(e.target.value)}
+                />
+                <label htmlFor="last name">Last name</label>
+                <input
+                    id="last name"
+                    type="text"
+                    placeholder="last name"
+                    value={last_name}
+                    onChange={(e) => setLastname(e.target.value)}
+                />
+                <label htmlFor="email">eMail</label>
+                <input
+                    id="email"
+                    type="text"
+                    placeholder="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <button className="submit signup" type="submit">Create User</button>
+            </form>
+        </div>
     );
 }

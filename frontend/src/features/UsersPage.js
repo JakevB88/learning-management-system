@@ -42,24 +42,9 @@ export default function UsersPage() {
     }, []);
 
     return(
-        <div className="userspage">
+        <div className="contentpage userspage">
             <h2>Users</h2>
-            <div className="users">
-                <p>List of all users</p>
-            </div>
-            <br></br>
-            <br></br>
-            <div>
-                {(user?.role === "admin" )&&
-                    <button onClick={() =>{navigate("/create-user")}}>
-                        Add User
-                    </button>
-                }
-            </div>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
+            <p>List of all users</p>
             <div className="users">
                 <table className="data-table users-table">
                     <thead>
@@ -88,7 +73,7 @@ export default function UsersPage() {
 
                                 {user?.role === "admin" && (
                                     <td>
-                                        <button
+                                        <button className="table-button"
                                             onClick={() =>
                                                 navigate(`/admin-update-user/${userr.id}/`)
                                             }
@@ -101,7 +86,13 @@ export default function UsersPage() {
                         ))}
                     </tbody>
                 </table>
-                
+                <div>
+                {(user?.role === "admin" )&&
+                    <button className="submit adduser" onClick={() =>{navigate("/create-user")}}>
+                        Add User
+                    </button>
+                }
+            </div>
             </div>
         </div>
     )

@@ -102,8 +102,11 @@ function Layout() {
           <Sidebar />
         </div>
         <div className="pageContent">
-          <Outlet />
+          <Outlet /> 
         </div>
+      </div>
+      <div className="footer">
+        <p>Get more out of life with JvB courses</p>
       </div>
     </div>
   );

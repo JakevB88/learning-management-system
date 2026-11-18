@@ -46,24 +46,27 @@ export default function CreateUser() {
 
 
     return (
-        <div>
+        <div className="contentPage - updateCourse">
+            <h2>Manage course: {title}</h2>
             <form onSubmit={handleSubmitCourse}>
+                <label for="coursename">Course name: </label>
                 <input
-                    type="text"
+                    id="coursename"
                     placeholder="Title"
+                    type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
                 <br></br>
+                <label for="coursedescription">Course description: </label>
                 <input
+                    id="coursedescription"
                     type="text"
                     placeholder="description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
-                <br></br>
-                <br></br>
-                <button type="submit">Create Course</button>
+                <button className="submit updateCourse" type="submit">Create Course</button>
             </form>
         </div>
     );

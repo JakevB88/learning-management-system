@@ -1,23 +1,32 @@
 /* Default */
 
+/************************ General ************************/
 * {
-  margin: 0;
+  margin: 0 ;
   padding: 0;
   font-family: Arial, sans-serif;
 }
 
+
+
+h2 {
+  font-size: 2.3rem;
+  color: #222;
+  margin-bottom: 40px;
+}
 /* page */
 
 .page {
+  max-width: 1800px;
   min-height: 100vh;
-  margin: 0px auto;
+  margin: 0 auto;
   background: #f7f7f7;
   display: flex;
   flex-direction: column;
 }
 
 
-/* header */
+/************************ header ************************/
 
 .header {
   height: 80px;
@@ -30,13 +39,7 @@
   font-size: 2rem;
   font-weight: 700;
   margin-right: 20px;
-  color: #191919;
-}
-
-.header h3 {
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: #6b6666;
+  color: #222;
 }
 
 .headerIcons {
@@ -58,20 +61,20 @@
 }
 
 
-
-/* body */
+/************************ body ************************/
+/*- wraps the sidebar <sidebar /> and pagecontent <OUtlet />*/
 
 .body {
-  flex: 1;
-  display: flex;
+  flex: 1; /*make sure the page fills the screen*/
+  display: flex; /*make sure the sedbar and the main outlet are side by side*/
 }
 
 
-
-/* Sidebar */
+/************************ Sidebar ************************/
 
 .sideBar {
-  width: 150px;
+  width: 10%;
+  min-width: 80px;
   border-right: 3px solid #19191956;
   padding-top: 20px;
 }
@@ -98,54 +101,19 @@
   background: #ececec;
 }
 
-
-
-
-
-
-
-
-
-
-/*
-**********************************************
-CHECK BELOW PLESAE
-*********************************************
-/* content */
-
+/************************  Page-content ************************/
 .pageContent {
-  flex: 1;
+  flex: 1; /*take up the remaining space for the right of the sidebar*/
   padding: 30px 50px;
-  display: flex;
-  flex-direction: column;
-
-
-
-
-
-
-
-
-
-
 }
 
-
-
-/* homepage */
-
-.contentPage {
-  width: 100%;
-}
-
-.contentPage h2 {
+.pageContent h2 {
   font-size: 2.3rem;
   color: #222;
-
   margin-bottom: 40px;
 }
 
-.contentPage p {
+.pageContent p {
   max-width: 900px;
   font-size: 1.2rem;
   font-weight: 600;
@@ -154,31 +122,80 @@ CHECK BELOW PLESAE
   line-height: 1.4;
 }
 
-/* FOOTER*/
-
-.pageContent::after {
-  content: "Get more out of life with JvB courses";
-
-  margin-top: auto;
-
-  text-align: right;
-
-  font-size: 1.5rem;
-  font-weight: 700;
-
-  color: #222;
-
-  padding-top: 40px;
+form {
+  min-width: 200px;
+  width: 30%;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  padding: 20px;
+  background: #fafafa;
+  max-width: 100%;
 }
 
+label {
+  display: block;
+  margin-bottom: 4px;
+  margin-top: 15px;
+  font-weight: 600;
+  color: #333;
+  background: transparent;
+}
 
-/* table layout */
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #cfcfcf;
+  font-size: 1rem;
+  background: white;
+}
 
+.submit {
+  margin-top: 15px;
+  padding: 10px 18px;
+  border: none;
+  background: #222;
+  color: white;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.submit:hover {
+    background: #333;
+}
+
+.manageProfile {
+  margin-bottom: 50px;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cfcfcf;
+    background-color: white;
+    image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23666' fill='none' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+.updateUserButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.users {
+  margin-top: 60px;
+}
+/********************** table layout **********************/
 .data-table {
   width: 100%;
   border-collapse: collapse;
   background: white;
   margin-top: 20px;
+}
+
+.profile-table {
+  min-width: 200px;
+  width: 30%;
 }
 
 .data-table th,
@@ -204,3 +221,28 @@ CHECK BELOW PLESAE
 .dta-table td:last-child {
   width: 180px;
 }
+
+.table-button {
+  width: 150px;
+  padding: 6px 9px;
+  border: none;
+  background: #222;
+  color: white;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+/************************ footer ************************/
+
+.footer {
+  text-align: right;
+  bottom: 100px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222;
+  padding-top: 40px;
+}
+
+

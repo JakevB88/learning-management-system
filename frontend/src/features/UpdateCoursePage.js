@@ -144,35 +144,32 @@ export default function UpdateCourse() {
     }, [id]);
 
     return (
-        <div>
-            <div>
-                <form onSubmit={handleSubmitCourseUpdate}>
-                    <p>Course ID: {id}</p>
-                    <label for="coursename">Course name: </label>
-                    <input
-                        id="coursename"
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <br></br>
-                    <label for="coursedescription">Course description: </label>
-                    <input
-                        id="coursedescription"
-                        type="text"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                    <br></br>
-                    <br></br>
-                    <button type="submit">Update Course</button>
-                    <br></br>
-                    <br></br>
-                </form>
-                <button onClick={handleDeleteCourse}>Delete Course</button>
-            </div>
+        <div className="contentPage - updateCourse">
+            <h2>Manage course: {title}</h2>
+            <form onSubmit={handleSubmitCourseUpdate}>
+                <label for="coursename">Course name: </label>
+                <input
+                    id="coursename"
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+                <br></br>
+                <label for="coursedescription">Course description: </label>
+                <input
+                    id="coursedescription"
+                    type="text"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                <div className="updateUserButtons">
+                    <button className="submit updateCourse" type="submit">Update Course</button>
+                    <button className="submit deleteCourse" onClick={handleDeleteCourse}>Delete Course</button>
+                </div> 
+            </form>
             
             <div className="users">
+                <h2>Students registered to: {title}</h2>
                 <table className="data-table users-table">
                     <thead>
                         <tr>
@@ -195,7 +192,7 @@ export default function UpdateCourse() {
 
                                 {user?.role === "admin" && (
                                     <td>
-                                        <button onClick={() => handleDeRegistration(course.id, student)}>
+                                        <button className="table-button" onClick={() => handleDeRegistration(course.id, student)}>
                                             Deregister user from course
                                         </button>
                                     </td>

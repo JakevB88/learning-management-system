@@ -116,9 +116,10 @@ export default function UpdateUserAdmin() { //was CreatUser
     }, [id]);
 
     return (
-        <div>
-            <form onSubmit={handleUpdateUser}>
-                <label for="username">Username: </label>
+        <div className="contentpage createUserPage">
+            <h2>Update user</h2>
+            <form className="form createUser" onSubmit={handleUpdateUser}>
+                <label htmlFor="username">Username</label>
                 <input
                     id="username"
                     type="text"
@@ -126,8 +127,7 @@ export default function UpdateUserAdmin() { //was CreatUser
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
-                <br></br>            
-                <label for="first name">First Name:  </label>
+                <label htmlFor="first name">First name</label>
                 <input
                     id="first name"
                     type="text"
@@ -135,8 +135,7 @@ export default function UpdateUserAdmin() { //was CreatUser
                     value={first_name}
                     onChange={(e) => setFirstname(e.target.value)}
                 />
-                <br></br>
-                <label for="last name">Last Name: </label>
+                <label htmlFor="last name">Last name</label>
                 <input
                     id="last name"
                     type="text"
@@ -144,8 +143,7 @@ export default function UpdateUserAdmin() { //was CreatUser
                     value={last_name}
                     onChange={(e) => setLastname(e.target.value)}
                 />
-                <br></br>
-                <label for="email">eMail: </label>
+                <label htmlFor="email">eMail</label>
                 <input
                     id="email"
                     type="text"
@@ -153,28 +151,25 @@ export default function UpdateUserAdmin() { //was CreatUser
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <br></br>
-                <label for="role">Role: </label>
-                <select
-                    id="role"
-                    type="text"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                >
-                    <option value="student">Student</option>
-                    <option value="teacher">Teacher</option>
-                    <option value="admin">Admin</option>
-                </select>
-                <br></br>
-                <br></br>
-                <button type="submit">Update User</button>
+                <label htmlFor="role">Role</label>
+                <div>
+                    <select 
+                        id="role"
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                    >
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div className="updateUserButtons">
+                    <button className="submit createUser">Update User</button>
+                    <button className="submit deleteuser" onClick={handleDeleteUser}>Delete User</button>
+                </div>            
             </form>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <button onClick={handleDeleteUser}>Delete User</button>
             
         </div>
+        
     );
 }

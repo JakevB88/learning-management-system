@@ -121,10 +121,10 @@ export default function ProfilePage() {
     console.log("profile page user: " + first_name)
 
     return (
-        <div>
+        <div className="contentpage profile">
             <h1>Your Profile</h1>
             <div className="users">
-                <table className="data-table users-table">
+                <table className="data-table profile-table">
                     <tbody>
                         <tr>
                             <th>Username</th>
@@ -154,26 +154,19 @@ export default function ProfilePage() {
                 </table>
             </div>
             
-            <br></br>
-            <br></br>
-            <br></br>
             <div>
-                <button onClick={() => {
+                <button className="submit manageProfile" onClick={() => {
                     navigate(`/update-user/${user.id}`)}}
                 >
                     Manage Profile
                 </button>
                 <br></br>
                 
-            </div>
-            <br></br>
-            <br></br>
-            <br></br>
+            </div >
             {user?.role === "student"
                 ?<h2>Your courses</h2>
                 :<h2>Your created courses</h2>
             }
-            <br></br>
             <div className="courses">
                 <table className="data-table courses-table">
                     <thead>
@@ -184,8 +177,6 @@ export default function ProfilePage() {
                             <th>Description</th>
                             {(user?.role === "student") && (<th>Progress</th>)}
                             <th>Actions</th>
-                            
-                            
                         </tr>
                     </thead>
                     <tbody>
@@ -198,19 +189,19 @@ export default function ProfilePage() {
                                             <td>{course.description}</td>
                                             <td>80%</td>
                                             <td>
-                                                <button onClick={() => handleDeRegistration(course.id)}>
+                                                <button className="table-button" onClick={() => handleDeRegistration(course.id)}>
                                                         Deregister
                                                 </button>
                                             </td>
                                         </tr>
                                     )
                                 :(user?.id === course.teacher_id)
-                                     &&(<tr key={course.id}>
+                                    &&(<tr key={course.id}>
                                             <td>{course.id}</td>
                                             <td>{course.title}</td>
                                             <td>{course.description}</td>
                                             <td>
-                                                <button
+                                                <button className="table-button"
                                                     onClick={() =>
                                                         navigate(`/update-course/${course.id}`)
                                                     }
@@ -224,6 +215,7 @@ export default function ProfilePage() {
                     </tbody>
                 </table>
             </div>
+            
         </div>
     );
 }
