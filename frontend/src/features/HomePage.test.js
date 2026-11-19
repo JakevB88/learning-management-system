@@ -1,28 +1,21 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import AuthContext from "../app/AuthContext";
 import HomePage from "./HomePage";
 
-describe("HomePage", () => {
+describe("Validate HomePage", () => {
 
-    it("renders the welcome heading", () => {
-        render(<HomePage />);
-
-        const heading = screen.getByRole("heading", {
-            name: "Welcome"
-        });
-
-        expect(heading).toBeInTheDocument();
-    });
-
-    it("renders the homepage description", () => {
-        render(<HomePage />);
-
-        //act
-        const description = screen.getByText(
-            "This application allows you to browse courses supplied by JvB Courses."
+    it("render then home page", () => {
+        render(
+            <MemoryRouter>
+                <AuthContext.Provider>
+                    <HomePage />
+                </AuthContext.Provider>
+            </MemoryRouter>
         );
-        
-        //assert
-        expect(description).toBeInTheDocument();
-    });
 
+
+        expect(screen.getByRole("heading", {name: "Welcome to JvB Courses!"})).toBeInTheDocument();
+        expect(screen.getByText(/At JvB Courses/i)).toBeInTheDocument();
     });
+});

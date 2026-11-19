@@ -5,6 +5,7 @@ from django.forms.models import model_to_dict
 from .permissions import IsTeacherOrAdmin, IsAdmin, IsStudent
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
+from django.db.models.deletion import ProtectedError
 
 #Return data of current logged in user for validation
 @api_view(["GET"])
@@ -186,11 +187,28 @@ def remove_user_profile(request, user_id):
 
     try:
         user = User.objects.get(id=user_id)
+        if user.role == "admin":
+            admin_count = User.objects.filter(role="admin").count()
+            if admin_count <= 1:
+                return JsonResponse(
+                    {
+                        "error": "Cannot delete the last admin user."
+                    },
+                    status=400
+                )
+            
         user.delete()
         return JsonResponse({
             "message": "User deleted"
         })
-
+    
+    except ProtectedError:
+        return JsonResponse(
+            {
+                "error": "Cannot delete this user because they are assigned as a teacher or admin to one or more courses."
+            },
+            status=404
+        )
     except User.DoesNotExist:
         return JsonResponse(
             {"error": "User not found"},
@@ -249,19 +267,29 @@ def get_course(request, course_id):
 def create_course(request):
     
     data = request.data
-    try:
-        course = Course.objects.create(
-            title=data["title"],
-            description=data["description"],
-            teacher_id = request.user.id
-        )
-        return JsonResponse(model_to_dict(course),status=201)
-    
-    except KeyError:
+
+    title = data.get("title", "").strip()
+    description = data.get("description", "").strip()
+
+    if not title or not description:
         return JsonResponse(
             {"error": "Title and description are required"},
             status=400
         )
+    
+    if Course.objects.filter(title=data["title"]).exists():
+        return JsonResponse(
+            {"error": "A course with this title already exists."},
+            status=400
+        )
+    
+    course = Course.objects.create(
+        title=data["title"],
+        description=data["description"],
+        teacher_id = request.user.id
+    )
+    return JsonResponse(model_to_dict(course),status=201)
+
 
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated, IsTeacherOrAdmin])

@@ -47,6 +47,14 @@ You can then obtain a JWT token using the administrator credentials via:
 POST /api/token/
 ```
 ---
+## Code validation
+### CSS validation with W3C
+1 error found for "immage not found", this is the drop down icon and this error is expected as W3C has no access to this.
+When the immage refference is temporarily removed for the validation, W3C reports no errors.
+
+
+
+
 
 # Consuming the API
 # Authentication
@@ -384,3 +392,8 @@ PUT /api/courses/1/deregister-admin/
 | Register For Course | ❌ | ❌ | ✅ |
 | Deregister From Course | ❌ | ❌ | ✅ |
 | Deregister Any Student | ✅ | ❌ | ❌ |
+
+
+
+## Refferences
+- dropdown.png                                              https://uxwing.com/arrow-thin-chevron-bottom-icon/

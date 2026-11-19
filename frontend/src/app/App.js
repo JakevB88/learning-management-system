@@ -20,7 +20,7 @@ import {
   useNavigate
 } from 'react-router-dom';
 
-function Sidebar() {
+export function Sidebar() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   console.log("Sidebar user:", user);

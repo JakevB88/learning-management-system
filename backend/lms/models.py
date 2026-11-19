@@ -23,7 +23,7 @@ class User(AbstractUser):
         return self.username
 
 class Course(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     teacher = models.ForeignKey(
         User,

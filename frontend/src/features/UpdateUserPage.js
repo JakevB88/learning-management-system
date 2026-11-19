@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "../app/AuthContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function UpdateUser() {
     const [username, setUsername] = useState("");
@@ -47,9 +47,6 @@ export default function UpdateUser() {
         }
     };
 
-    
-   
-
     const handleUpdateUser = async (e) => {
         e.preventDefault();
         const response = await fetch(
@@ -85,34 +82,6 @@ export default function UpdateUser() {
         }
     };
 
-    const handleDeleteUser = async (e) => {
-        e.preventDefault();
-        if (!window.confirm(`Delete user ${username}?`)) {
-            return;
-        }
-        const response = await fetch(
-            `http://127.0.0.1:8000/api/users/${user.id}/remove`,
-            {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log("user deleted: ", data)
-            alert("User Deleted!");
-            navigate("/users");
-        } 
-        else {
-            alert("Invalid input");
-        }
-    };
-
     useEffect(() => {
         getUserProfile();
     }, [user.id]);
@@ -129,7 +98,7 @@ export default function UpdateUser() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
-                <label for="password">Password:  </label>
+                <label htmlFor="password">Password:  </label>
                 <input
                     id="password"
                     type="password"

@@ -942,6 +942,35 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         data = response.json()
         self.assertEqual(data["error"], "User not found")
 
+    @patch.object(views.User.objects, "get")
+    def test_delete_user_unsuccessfully__as_admin__teacher_with_courses(self, mock_get):
+
+        # Arrange
+        user_id = 2
+        mock_user = MagicMock()
+
+        mock_user.delete.side_effect = views.ProtectedError(
+            "protected",
+            []
+        )
+
+        mock_get.return_value = mock_user
+
+        # Mock authentication as an admin
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act
+        response = self.client.delete(
+            f"/api/users/{user_id}/remove",
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 404)
+
+        data = response.json()
+        self.assertEqual(data["error"], "Cannot delete this user because they are assigned as a teacher or admin to one or more courses.")
 
 #------------------------------------------------------------------------------------------
 # TESTS FOR RETREIVING ALL COURSES
@@ -1074,10 +1103,10 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 # ------------------------------------------------------------------------------------------
 # TESTS FOR CREATING A COURSE
 # ------------------------------------------------------------------------------------------
-
+    @patch.object(views.Course.objects, "filter")
     @patch.object(views, "model_to_dict")
     @patch.object(views.Course.objects, "create")
-    def test_create_course_successfully_as_teacher(self, mock_create, mock_model_to_dict):
+    def test_create_course_successfully_as_teacher(self, mock_create, mock_model_to_dict, mock_filter):
 
         # Arrange
         # data to be used as to create a course
@@ -1086,6 +1115,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
             "description": "Learn Python"
         }
 
+        mock_filter.return_value.exists.return_value = False
         #mock the course object created 
         mock_course = self.create_mock_course(1, "Python", "Learn Python", 5, None)
         mock_create.return_value = mock_course
@@ -1127,9 +1157,10 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
             teacher_id=5
         )
 
+    @patch.object(views.Course.objects, "filter")
     @patch.object(views, "model_to_dict")
     @patch.object(views.Course.objects, "create")
-    def test_create_course_successfully_as_admin(self, mock_create, mock_model_to_dict):
+    def test_create_course_successfully_as_admin(self, mock_create, mock_model_to_dict, mock_filter):
 
         # Arrange
         # data to be used as to create a course
@@ -1138,6 +1169,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
             "description": "Learn Python"
         }
 
+        mock_filter.return_value.exists.return_value = False
         #mock the course object created 
         mock_course = self.create_mock_course(1, "Python", "Learn Python", 5, None)
         mock_create.return_value = mock_course
@@ -1207,6 +1239,39 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         mock_create.assert_not_called()
 
+    @patch.object(views.Course.objects, "filter")
+    @patch.object(views, "model_to_dict")
+    def test_create_course_unsuccessfully_as_admin__duplicate_course(self, mock_model_to_dict, mock_filter):
+        # Arrange
+        course_data = {
+            "title": "Python",
+            "description": "Learn Python"
+        }
+
+        # Simulate course already existing
+        mock_filter.return_value.exists.return_value = True
+
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+
+        # Act
+        response = self.client.post(
+            "/api/courses/create",
+            course_data,
+            format="json"
+        )
+
+        # Assert
+        self.assertEqual(response.status_code, 400)
+
+        data = response.json()
+
+        self.assertEqual(
+            data["error"],
+            "A course with this title already exists."
+        )
+
+
     @patch.object(views.Course.objects, "create")
     def test_create_course_without_authentication(self, mock_create):
 
@@ -1228,13 +1293,16 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         mock_create.assert_not_called()
 
-    def test_create_course_unsuccessfull_missing_desctription(self):
+    @patch.object(views.Course.objects, "filter")
+    def test_create_course_unsuccessfull_missing_desctription(self, mock_filter):
 
         # Arrange
         # data to be used as to create a course, leave out description so the creation will fail
         course_data = {
             "title": "Python"
         }
+
+        mock_filter.return_value.exists.return_value = False
 
         # Mock authentication as a teacher
         mock_teacher = self.create_mock_user("teacher")

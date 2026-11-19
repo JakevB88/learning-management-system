@@ -173,7 +173,7 @@ select {
     padding: 12px;
     border: 1px solid #cfcfcf;
     background-color: white;
-    image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23666' fill='none' stroke-width='2'/%3E%3C/svg%3E");
+    image: url("//lib/images/dropdown.png")
 }
 
 .updateUserButtons {

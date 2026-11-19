@@ -7,8 +7,6 @@ export default function UpdateUserAdmin() { //was CreatUser
     const [first_name, setFirstname] = useState("");
     const [last_name, setLastname] = useState("");
     const [email, setEmail] = useState("");
-    const [isstaff, setIsStaff] = useState(false);
-    const [isactive, setIsActive] = useState(true);
     const [role, setRole] = useState("student");
     const { id } = useParams();
     const navigate = useNavigate();
@@ -16,7 +14,6 @@ export default function UpdateUserAdmin() { //was CreatUser
     
     const getUser = async (e) => {
          try {
-            console.log("User ID transferred to update page: " + id)
             const response = await fetch(
                 `http://127.0.0.1:8000/api/users/${id}`,
                 {
@@ -43,7 +40,6 @@ export default function UpdateUserAdmin() { //was CreatUser
             }
         } 
         catch (error) {
-            console.error(error);
             alert("Error retrieving user");
         }
     };
@@ -88,26 +84,30 @@ export default function UpdateUserAdmin() { //was CreatUser
         if (!window.confirm(`Delete user ${username}?`)) {
             return;
         }
-        const response = await fetch(
-            `http://127.0.0.1:8000/api/users/${id}/remove`,
-            {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/users/${id}/remove`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    }
                 }
+            );
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to delete user");
             }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log("user deleted: ", data)
-            alert("User Deleted!");
+            
+            alert("User deleted!");
             navigate("/users");
+
         } 
-        else {
-            alert("Invalid input");
+        catch (error) {
+            alert(error.message);
         }
     };
 

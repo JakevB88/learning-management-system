@@ -15,32 +15,35 @@ export default function CreateUser() {
 
     const handleSubmitCourse = async (e) => {
         e.preventDefault();
+        
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/courses/create`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    },
+                    body: JSON.stringify({
+                    title,
+                    description,
+                    teacher: user.id
+                    }),
+                }
+            );
 
-        const response = await fetch(
-            `http://127.0.0.1:8000/api/courses/create`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                },
-                body: JSON.stringify({
-                title,
-                description,
-                teacher: user.id
-                }),
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to create course, name and description required.");
             }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log("Course create response: ", data)
+            
             alert("Course Created!");
             navigate("/courses");
-        } 
-        else {
-            alert("Invalid input");
+        }
+        catch (error) {
+            alert(error.message);
         }
     };
 
