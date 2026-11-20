@@ -1,6 +1,7 @@
 import { useState, useEffect ,useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../app/AuthContext";
+import DisplayCourse from "./DisplayCourse";
 
 
 export default function ProfilePage() {
@@ -47,40 +48,6 @@ export default function ProfilePage() {
         }
     };
 
-    const handleDeRegistration = async (id) => {
-        if (!window.confirm(`De-register to Course ${id}?`)) {
-            return;
-        }
-        try {
-
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/${id}/deregister`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                    }
-                }
-            );
-
-            const data = await response.json();
-
-            if (response.ok) {
-                console.log("DeRegistered to course: ", data)
-                alert("Successfully deregistered");
-                await getCourses();
-            } 
-            else {
-                alert("Course not found");
-            }
-        } 
-        catch (error) {
-            console.error(error);
-            alert("Error deregistring to courses");
-        }
-    }
-
     useEffect(() => {
         getUserProfile();
     }, [user.id]);
@@ -122,7 +89,16 @@ export default function ProfilePage() {
 
     return (
         <div className="contentpage profile">
-            <h1>Your Profile</h1>
+            <div className="profileHeader">
+                <h2>Your Profile</h2>
+                <div>
+                    <button className="submit submitTopright" onClick={() => {
+                        navigate(`/update-user/${user.id}`)}}
+                    >
+                        Manage Profile
+                    </button>
+                </div>
+            </div>
             <div className="users">
                 <table className="data-table profile-table">
                     <tbody>
@@ -130,22 +106,18 @@ export default function ProfilePage() {
                             <th>Username</th>
                             <td>{username}</td>
                         </tr>
-
                         <tr>
                             <th>First Name</th>
                             <td>{first_name}</td>
                         </tr>
-
                         <tr>
                             <th>Last Name</th>
                             <td>{last_name}</td>
                         </tr>
-
                         <tr>
                             <th>Email</th>
                             <td>{email}</td>
                         </tr>
-
                         <tr>
                             <th>Role</th>
                             <td>{role}</td>
@@ -153,69 +125,14 @@ export default function ProfilePage() {
                     </tbody>
                 </table>
             </div>
-            
-            <div>
-                <button className="submit manageProfile" onClick={() => {
-                    navigate(`/update-user/${user.id}`)}}
-                >
-                    Manage Profile
-                </button>
-                <br></br>
-                
-            </div >
+            <div className="margintop">
             {user?.role === "student"
                 ?<h2>Your courses</h2>
                 :<h2>Your created courses</h2>
             }
-            <div className="courses">
-                <table className="data-table courses-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            {/*<th>Teacher</th>*/}
-                            <th>Title</th>
-                            <th>Description</th>
-                            {(user?.role === "student") && (<th>Progress</th>)}
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {courses.map((course) => (
-                            (user?.role === "student")
-                                ?course.students.includes(user?.id)
-                                    &&(<tr key={course.id}>
-                                            <td>{course.id}</td>
-                                            <td>{course.title}</td>
-                                            <td>{course.description}</td>
-                                            <td>80%</td>
-                                            <td>
-                                                <button className="table-button" onClick={() => handleDeRegistration(course.id)}>
-                                                        Deregister
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    )
-                                :(user?.id === course.teacher_id)
-                                    &&(<tr key={course.id}>
-                                            <td>{course.id}</td>
-                                            <td>{course.title}</td>
-                                            <td>{course.description}</td>
-                                            <td>
-                                                <button className="table-button"
-                                                    onClick={() =>
-                                                        navigate(`/update-course/${course.id}`)
-                                                    }
-                                                >
-                                                    Manage Course
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    )
-                        ))}
-                    </tbody>
-                </table>
+                <DisplayCourse courses={courses.filter(course => user?.id === course.teacher_id)}/>
             </div>
-            
         </div>
+            
     );
 }

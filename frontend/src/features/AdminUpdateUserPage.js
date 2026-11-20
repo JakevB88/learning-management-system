@@ -8,6 +8,7 @@ export default function UpdateUserAdmin() { //was CreatUser
     const [last_name, setLastname] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("student");
+    const [userId, setUserId] = useState("")
     const { id } = useParams();
     const navigate = useNavigate();
     
@@ -29,6 +30,7 @@ export default function UpdateUserAdmin() { //was CreatUser
 
             if (response.ok) {
                 console.log("User retreived: ", data)
+                setUserId(data.id)
                 setUsername(data.username);
                 setFirstname(data.first_name);
                 setLastname(data.last_name);
@@ -119,6 +121,7 @@ export default function UpdateUserAdmin() { //was CreatUser
         <div className="contentpage createUserPage">
             <h2>Update user</h2>
             <form className="form createUser" onSubmit={handleUpdateUser}>
+                <label htmlFor="username">User ID: {userId}</label>
                 <label htmlFor="username">Username</label>
                 <input
                     id="username"

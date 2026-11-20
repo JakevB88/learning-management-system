@@ -10,6 +10,7 @@ import CreateCourse from "../features/CreateCoursePage";
 import UpdateCourse from "../features/UpdateCoursePage";
 import AuthContext from "./AuthContext";
 import UpdateUser from "../features/UpdateUserPage";
+import UserPage from "../features/UserPage"
 import { useState, useContext } from "react";
 import { 
   Route, 
@@ -122,6 +123,7 @@ const appRouter = createBrowserRouter(
     <Route path='profile' element={ <ProfilePage/>} />
     <Route path='courses' element={ <CoursesPage/>} />
     <Route path='users' element={ <UsersPage/>} />
+    <Route path='user/:id' element={ <UserPage/>} />
     <Route path='signup' element={ <CreateUser/>} />
     <Route path='create-user' element={ <AdminCreateUser/>} />
     <Route path='update-user/:id' element={ <UpdateUser/>} />

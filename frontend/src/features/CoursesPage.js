@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../app/AuthContext";
+import DisplayCourse from "./DisplayCourse";
 
 export default function CoursesPage() {
     const navigate = useNavigate();
@@ -109,82 +110,25 @@ export default function CoursesPage() {
     }, []);
 
     return(
-        <div className="contentPage - courses">
-            <h2>Courses</h2>
-            <div className="courses">
+        <div className="contentPage courses">
+            <div className="courseCardHeader">
+                <h2>Courses</h2>
+                <div>
+                    {(user?.role === "admin"|| user?.role === "teacher") && (
+                        <button className="submit submitTopright" onClick={() => {
+                            navigate("/create-course")}}
+                        >
+                            Add course
+                        </button>
+                    )}                
+                </div>
+            </div>
+            <div className="courses margintop">
                 <p>Summary of the courses available</p>
             </div>
-            
-            <div className="courses">
-                <table className="data-table courses-table">
-                    <thead>
-                        <tr>
-                            
-                            <th>Title</th>
-                            <th>Description</th>
-                            {(user?.role === "admin" || user?.role === "teacher") 
-                                ? (
-                                    <th>Actions</th>
-                                )
-                                :((user?.role === "student") && (<th>Register</th>))
-                            }
-                            
-                        </tr>
-                    </thead>
 
-                    <tbody>
-                        {courses.map((course) => (
-                            <tr key={course.id}>
-                                <td>{course.title}</td>
-                                <td>{course.description}</td>
-
-                                {(user?.role === "admin" || user?.role === "teacher") 
-                                    ?(<td>
-                                        {(user?.role === "admin" ||
-                                        user?.id === course.teacher_id)
-                                            ? (
-                                                <button className="table-button"
-                                                    onClick={() =>
-                                                        navigate(`/update-course/${course.id}`)
-                                                    }
-                                                >
-                                                    Manage Course
-                                                </button>
-                                            )
-                                            : ""
-                                        }
-                                    </td>)
-                                    :(user?.role === "student" && 
-                                    <td>
-                                        {course.students.includes(user?.id) 
-                                            ? (<button className="table-button" 
-                                                onClick={() => 
-                                                    handleDeRegistration(course.id)
-                                                }>
-                                                    Deregister
-                                            </button>)
-                                            :(<button className="table-button" 
-                                                onClick={() => 
-                                                    handleRegistration(course.id)
-                                                }>
-                                                    Register
-                                            </button>)
-                                        }
-                                    </td>)
-                                }
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
             <div>
-                {(user?.role === "admin"|| user?.role === "teacher") && (
-                    <button className="submit update-btn" onClick={() => {
-                        navigate("/create-course")}}
-                    >
-                        Add course
-                    </button>
-                )}                
+                <DisplayCourse courses={courses}/>
             </div>
         </div>
     )

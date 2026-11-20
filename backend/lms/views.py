@@ -41,17 +41,10 @@ def get_user_profiles(request):
     return JsonResponse(users, safe=False)
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated, IsAdmin])
+@permission_classes([IsAuthenticated, IsTeacherOrAdmin])
 def get_user_profile(request, user_id):
     try:
         user_profile = User.objects.get(id=user_id)
-
-        # if request.user.role == "teacher":
-        #     return JsonResponse({
-        #         "id": user_profile.id,
-        #         "username": user_profile.username,
-        #         "role": user_profile.role,
-        #     })
 
         return JsonResponse(
             model_to_dict(user_profile)

@@ -43,56 +43,46 @@ export default function UsersPage() {
 
     return(
         <div className="contentpage userspage">
-            <h2>Users</h2>
-            <p>List of all users</p>
+            <div className="usersHeader">
+                <h2>Users</h2>
+                <div>
+                    {(user?.role === "admin" )&&
+                        <button className="submit submitTopright" onClick={() =>{navigate("/create-user")}}>
+                            Add User
+                        </button>
+                    }
+                </div>
+            </div>
+            <p className="margintop">List of all users</p>
             <div className="users">
                 <table className="data-table users-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Username</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email</th>
+                            <th>Name</th>
                             {user?.role === "admin" && <th>Role</th>}
-                            {user?.role === "admin" && <th>Actions</th>}
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((userr) => (
-                            <tr key={userr.id}>
-                                <td>{userr.id}</td>
+                            <tr
+                                className={user?.role === "admin" || user?.role === "teacher" ? "admin-row" : ""}
+                                key={userr.id}     
+                                onClick={() => {
+                                navigate(`/user/${userr.id}/`);
+                                
+                            }}>
                                 <td>{userr.username}</td>
-                                <td>{userr.first_name}</td>
-                                <td>{userr.last_name}</td>
-                                <td>{userr.email}</td>
+                                <td>{userr.first_name} {userr.last_name}</td>
 
                                 {user?.role === "admin" && (
                                     <td>{userr.role}</td>
-                                )}
-
-                                {user?.role === "admin" && (
-                                    <td>
-                                        <button className="table-button"
-                                            onClick={() =>
-                                                navigate(`/admin-update-user/${userr.id}/`)
-                                            }
-                                        >
-                                            Manage User
-                                        </button>
-                                    </td>
                                 )}
                             </tr>
                         ))}
                     </tbody>
                 </table>
-                <div>
-                {(user?.role === "admin" )&&
-                    <button className="submit adduser" onClick={() =>{navigate("/create-user")}}>
-                        Add User
-                    </button>
-                }
-            </div>
+                
             </div>
         </div>
     )

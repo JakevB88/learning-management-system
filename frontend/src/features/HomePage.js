@@ -3,7 +3,7 @@ export default function HomePage() {
         <div className="contentPage - homepage">
             <h2>Welcome to JvB Courses!</h2>
 
-            <div>
+            <div className="margintop">
                 <p>
                 At JvB Courses, you're sure to find opportunities to learn,
                 develop new skills and take the next step in your learning
