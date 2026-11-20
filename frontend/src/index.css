@@ -154,12 +154,20 @@ input {
     background: #BFD2F2;
 }
 
-.submit.deleteCourse {
+.submit.delete {
   background: #F5C9D8;
 }
 
-.submit.deleteCourse:hover {
+.submit.delete:hover {
     background: #F2BFCF;
+}
+
+.submit.update {
+  background: #C9F2D8;
+}
+
+.submit.update:hover {
+    background: #B6EBC9;
 }
 
 .submitTopright {

@@ -167,8 +167,8 @@ export default function UpdateUserAdmin() { //was CreatUser
                     </select>
                 </div>
                 <div className="updateUserButtons">
-                    <button className="submit createUser">Update User</button>
-                    <button className="submit deleteuser" onClick={handleDeleteUser}>Delete User</button>
+                    <button className="submit update">Update User</button>
+                    <button className="submit delete" onClick={handleDeleteUser}>Delete User</button>
                 </div>            
             </form>
             

@@ -163,45 +163,42 @@ export default function UpdateCourse() {
                     onChange={(e) => setDescription(e.target.value)}
                 />
                 <div className="updateUserButtons">
-                    <button className="submit updateCourse" type="submit">Update Course</button>
-                    <button className="submit deleteCourse" onClick={handleDeleteCourse}>Delete Course</button>
+                    <button className="submit update" type="submit">Update Course</button>
+                    <button className="submit delete" onClick={handleDeleteCourse}>Delete Course</button>
                 </div> 
             </form>
             
             <div className="users margintop">
-                <h2>Students registered to: {title}</h2>
+                {students?.length === 1
+                    ?<h2> {students?.length} student registered to: {title}</h2>
+                    :<h2> {students?.length} students registered to: {title}</h2>
+                }
                 {students.length > 0 ?
-                    <table className="data-table users-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Username</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                {user?.role === "admin" && <th>Actions</th>}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {students.map((student) => (
-                                <tr key={student.id}>
-                                    <td>{student.id}</td>
-                                    <td>{student.username}</td>
-                                    <td>{student.first_name}</td>
-                                    <td>{student.last_name}</td>
-                                    <td>{student.email}</td>
-
-                                    {user?.role === "admin" && (
-                                        <td>
-                                            <button className="table-button" onClick={() => handleDeRegistration(course.id, student)}>
-                                                Deregister user from course
-                                            </button>
-                                        </td>
-                                    )}
+                    <div className="users">
+                        <table className="data-table users-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Name</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {students.map((userr) => (
+                                    <tr
+                                        className={user?.role === "admin" || user?.role === "teacher" ? "admin-row" : ""}
+                                        key={userr.id}     
+                                        onClick={() => {
+                                        navigate(`/user/${userr.id}/`);
+                                        
+                                    }}>
+                                        <td>{userr.username}</td>
+                                        <td>{userr.first_name} {userr.last_name}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        
+                    </div>
                     : <p className="margintop">No students are registered to this course. </p>
                 }
                 

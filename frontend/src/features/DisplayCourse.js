@@ -110,7 +110,7 @@ export default function DisplayCourse({courses}) {
                         )}
                     </div>
                     <h4 className="courseDescription">{course.description}</h4>
-                    
+                    <h5>students: {course.students.length}</h5>
                     </div>
                 ))}
         </div>
