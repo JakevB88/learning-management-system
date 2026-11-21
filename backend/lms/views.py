@@ -60,6 +60,22 @@ def get_user_profile(request, user_id):
 @permission_classes([IsAuthenticated, IsAdmin])
 def create_staff_user_profile(request):
     data = request.data
+
+    required_fields = [
+        "username",
+        "password",
+        "first_name",
+        "last_name",
+        "email",
+        "role"
+    ]
+    for field in required_fields:
+        if not data.get(field):
+            return JsonResponse(
+                {"error": f"{field.replace('_', ' ').title()} is required."},
+                status=400
+            )
+
     try:
         user = User.objects.create_user(
             username=data["username"],
@@ -82,7 +98,7 @@ def create_staff_user_profile(request):
         )
     except KeyError:
         return JsonResponse(
-            {"error": "Missing information in request"},
+            {"error": "Failed to create user"},
             status=400
         )
                                 
@@ -125,55 +141,53 @@ def update_user_profile(request, user_id):
 
     try:
         user = User.objects.get(id=user_id)
-
-        # Permission check
-        if (
-            request.user.id != user.id
-            and request.user.role != "admin"
-        ):
-            return JsonResponse(
-                {"error": "Permission denied"},
-                status=403
-            )
-
-        # Update only fields supplied in the request
-        if "username" in data:
-            user.username = data["username"]
-
-        password = data.get("password")
-        if password:
-            user.set_password(password)
-
-        if "first_name" in data:
-            user.first_name = data["first_name"]
-
-        if "last_name" in data:
-            user.last_name = data["last_name"]
-
-        if "email" in data:
-            user.email = data["email"]
-
-        # Only admin can modify these
-        if request.user.role == "admin":
-            if "is_staff" in data:
-                user.is_staff = data["is_staff"]
-
-            if "is_active" in data:
-                user.is_active = data["is_active"]
-
-            if "role" in data:
-                user.role = data["role"]
-
-        user.save()
-
-        return JsonResponse(model_to_dict(user))
-
     except User.DoesNotExist:
+            return JsonResponse(
+                {"error": "User not found"},
+                status=404
+            )
+    # Permission check
+    if (
+        request.user.id != user.id
+        and request.user.role != "admin"
+    ):
         return JsonResponse(
-            {"error": "User not found"},
-            status=404
+            {"error": "Permission denied"},
+            status=403
         )
-    
+
+    # Update only fields supplied in the request
+    if "username" in data:
+        user.username = data["username"]
+
+    password = data.get("password")
+    if password:
+        user.set_password(password)
+
+    if "first_name" in data:
+        user.first_name = data["first_name"]
+
+    if "last_name" in data:
+        user.last_name = data["last_name"]
+
+    if "email" in data:
+        user.email = data["email"]
+
+    # Only admin can modify these
+    if request.user.role == "admin":
+        if "is_staff" in data:
+            user.is_staff = data["is_staff"]
+
+        if "is_active" in data:
+            user.is_active = data["is_active"]
+
+        if "role" in data:
+            user.role = data["role"]
+
+    user.save()
+
+    return JsonResponse(model_to_dict(user))
+
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated, IsAdmin])
 def remove_user_profile(request, user_id):

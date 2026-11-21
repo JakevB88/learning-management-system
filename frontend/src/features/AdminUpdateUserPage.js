@@ -42,43 +42,48 @@ export default function UpdateUserAdmin() { //was CreatUser
             }
         } 
         catch (error) {
+            console.error(error);
             alert("Error retrieving user");
         }
     };
 
     const handleUpdateUser = async (e) => {
         e.preventDefault();
-        const response = await fetch(
-            `http://127.0.0.1:8000/api/users/${id}/update`,
-            {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                },
-                body: JSON.stringify({
-                username,
-                password,
-                first_name,
-                last_name,
-                email,
-                is_staff: false,
-                is_active: true,
-                role
-                }),
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/users/${id}/update`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    },
+                    body: JSON.stringify({
+                    username,
+                    password,
+                    first_name,
+                    last_name,
+                    email,
+                    is_staff: false,
+                    is_active: true,
+                    role
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to update user.");
             }
-        );
 
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log("user aupdate response: ", data)
             alert("User Updated: " + username);
             navigate("/users");
-        } 
-        else {
-            alert("Invalid input");
         }
+        catch (error) {
+            console.error(error);
+            alert(error.message);
+        }        
     };
 
     const handleDeleteUser = async (e) => {
@@ -109,6 +114,7 @@ export default function UpdateUserAdmin() { //was CreatUser
 
         } 
         catch (error) {
+            console.error(error);
             alert(error.message);
         }
     };

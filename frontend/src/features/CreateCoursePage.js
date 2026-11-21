@@ -43,6 +43,7 @@ export default function CreateUser() {
             navigate("/courses");
         }
         catch (error) {
+            console.error(error);
             alert(error.message);
         }
     };

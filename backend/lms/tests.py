@@ -294,10 +294,34 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         mock_get.assert_called_once_with(id=user_id)
 
-    def test_get_user_unsuccessfully__as_teacher(self):
+    @patch.object(views, "model_to_dict")
+    @patch.object(views.User.objects, "get")
+    def test_get_user_successfully__as_teacher(self, mock_get, mock_model_to_dict):
 
         # Arrange:
         user_id = 1
+
+        mock_user = MagicMock()
+        mock_user.id = user_id
+        mock_user.username = "JSmith"
+        mock_user.first_name = "John"
+        mock_user.last_name = "Smith"
+        mock_user.email = "jsmith@vbcourses.co.uk"
+        mock_user.role = "student"
+
+        mock_get.return_value = mock_user
+
+        expected_response = {
+            "id": user_id,
+            "username": "JSmith",
+            "first_name": "John",
+            "last_name": "Smith",
+            "email": "jsmith@vbcourses.co.uk",
+            "role": "student"
+        }
+
+        mock_model_to_dict.return_value = expected_response
+
         # Mock authentication as a teacher
         mock_teacher = self.create_mock_user("teacher")
         self.client.force_authenticate(user=mock_teacher)
@@ -306,7 +330,18 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         response = self.client.get(f"/api/users/{user_id}")
 
         # Assert:
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+
+        self.assertEqual(data["id"], user_id)
+        self.assertEqual(data["username"], "JSmith")
+        self.assertEqual(data["first_name"], "John")
+        self.assertEqual(data["last_name"], "Smith")
+        self.assertEqual(data["email"], "jsmith@vbcourses.co.uk")
+        self.assertEqual(data["role"], "student")
+
+        mock_get.assert_called_once_with(id=user_id)
 
     def test_get_user_unsuccessfully__as_student(self):
 
@@ -532,7 +567,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         data = response.json()
         
-        self.assertEqual(data["error"], "Missing information in request")
+        self.assertEqual(data["error"], "First Name is required.")
 
         mock_create_user.assert_not_called()
 

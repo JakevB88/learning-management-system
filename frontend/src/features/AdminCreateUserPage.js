@@ -12,36 +12,39 @@ export default function CreateUser() {
     
     const handleSubmitUser = async (e) => {
         e.preventDefault();
-        const response = await fetch(
-            `http://127.0.0.1:8000/api/users/create-staff`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                },
-                body: JSON.stringify({
-                username,
-                password,
-                first_name,
-                last_name,
-                email,
-                is_staff: false,
-                is_active: true,
-                role
-                }),
+        try{
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/users/create-staff`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    },
+                    body: JSON.stringify({
+                    username,
+                    password,
+                    first_name,
+                    last_name,
+                    email,
+                    is_staff: false,
+                    is_active: true,
+                    role
+                    }),
+                }
+            );
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to create user, make sure all fields are filled out.");
             }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log("user create response: ", data)
             alert("User Created!");
             navigate("/create-user");
-        } 
-        else {
-            alert("Invalid input");
+            
+        }
+        catch (error){
+            console.error(error);
+            alert(error.message)
         }
     };
 
