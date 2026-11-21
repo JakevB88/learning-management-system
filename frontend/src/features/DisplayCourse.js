@@ -2,11 +2,12 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../app/AuthContext";
 import settingsIcon from "../lib/images/settings-icon.png";
+import tickIcon from "../lib/images/tick-icon.png";
+import UpdateCourse from "./UpdateCoursePage";
 
-export default function DisplayCourse({courses}) {
+export default function DisplayCourse({courses = []}) {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
-
 
     const handleRegistration = async (id) => {
         if (!window.confirm(`Register to Course ${id}?`)) {
@@ -28,7 +29,6 @@ export default function DisplayCourse({courses}) {
             const data = await response.json();
 
             if (response.ok) {
-                console.log("Registered to course: ", data)
                 alert("Successfully registered");
                 //await getCourses();
             } 
@@ -62,7 +62,6 @@ export default function DisplayCourse({courses}) {
             const data = await response.json();
 
             if (response.ok) {
-                console.log("DeRegistered to course: ", data)
                 alert("Successfully deregistered");
                 //await getCourses();
             } 
@@ -76,6 +75,7 @@ export default function DisplayCourse({courses}) {
         }
     }
 
+
     return(
         <div className="coursesTiles">
                 {courses.map((course) => (
@@ -84,8 +84,10 @@ export default function DisplayCourse({courses}) {
                         className={
                             user?.role === "admin" || user?.id === course.teacher_id
                                 ? "course-item-admin" 
-                                : course.students.includes(user?.id) 
-                                    ?"course-item-student"
+                                : user?.role=== "student"
+                                    ?course.students.includes(user?.id) 
+                                        ?"course-item-student-registered"
+                                        :"course-item-student"
                                     :"course-item"
                         }
                         onClick={
@@ -100,14 +102,19 @@ export default function DisplayCourse({courses}) {
                     >
                     <div className="courseCardHeader">
                         <h3 className="courseTitle">{course.title}</h3>
-
-                        {(user?.role === "admin" || user?.id === course.teacher_id) && (
-                            <img
-                                className="settingsIcon"
-                                src={settingsIcon}
-                                alt="settings"
-                            />
-                        )}
+                        {(user?.role === "admin" || user?.id === course.teacher_id) 
+                            ? <img
+                                    className="settingsIcon"
+                                    src={settingsIcon}
+                                    alt="settings"
+                                />
+                            :course.students.includes(user?.id)
+                                &&<img
+                                    className="settingsIcon"
+                                    src={tickIcon}
+                                    alt="tick"
+                                />
+                        }
                     </div>
                     <h4 className="courseDescription">{course.description}</h4>
                     <h5>students: {course.students.length}</h5>

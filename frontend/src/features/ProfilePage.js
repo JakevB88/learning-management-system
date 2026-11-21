@@ -83,9 +83,27 @@ export default function ProfilePage() {
         getCourses();
     }, [user.id]);
 
+    let displayedCourses = [...courses];
+
+        if (user?.role === "student") {
+            const registered = [];
+            const notRegistered = [];
+
+            for (const course of courses) {
+                if (course.students.includes(user.id)) {
+                    registered.push(course);
+                } else {
+                    notRegistered.push(course);
+                }
+            }
+
+            displayedCourses = [...registered, ...notRegistered];
+        }
 
     console.log("profile page user: " + user.username)
     console.log("profile page user: " + first_name)
+    console.log("User ID:", user?.id);
+    console.log("Courses:", courses);
 
     return (
         <div className="contentpage profile">
@@ -130,7 +148,8 @@ export default function ProfilePage() {
                 ?<h2>Your courses</h2>
                 :<h2>Your created courses</h2>
             }
-                <DisplayCourse courses={courses.filter(course => user?.id === course.teacher_id)}/>
+                <DisplayCourse courses={displayedCourses}/>
+                
             </div>
         </div>
             
