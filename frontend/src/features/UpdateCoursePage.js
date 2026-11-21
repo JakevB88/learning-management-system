@@ -100,45 +100,6 @@ export default function UpdateCourse() {
         }
     }
 
-    const handleDeRegistration = async (courseId, student) => {
-        console.log(`de register from ${id}`)
-        console.log(`student id: ${student.id}`)
-        if (!window.confirm(`De-register ${student.username} from course ${title}?`)) {
-            return;
-        }
-        try {
-
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/${id}/deregister-admin`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                    },
-                    body: JSON.stringify({
-                        student_id: student.id
-                    })
-                }
-            );
-
-            const data = await response.json();
-
-            if (response.ok) {
-                console.log(`DeRegistered ${student.username} to course: `, data)
-                alert("Successfully deregistered");
-                await getCourse()
-            } 
-            else {
-                alert("Course not found");
-            }
-        } 
-        catch (error) {
-            console.error(error);
-            alert("Error deregistring to courses");
-        }
-    }
-
     useEffect(() => {
         getCourse();
     }, [id]);

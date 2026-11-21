@@ -11,15 +11,33 @@ import UpdateCourse from "../features/UpdateCoursePage";
 import AuthContext from "./AuthContext";
 import UpdateUser from "../features/UpdateUserPage";
 import UserPage from "../features/UserPage"
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { 
   Route, 
   RouterProvider, 
   createBrowserRouter, 
   createRoutesFromElements,
   Outlet,
-  useNavigate
+  useNavigate,
+  Navigate
 } from 'react-router-dom';
+
+export function ProtectedRoute({
+    children,
+    roles = []
+  }) {
+    const { user } = useContext(AuthContext);
+    console.log("ProtectedRoute user:", user);
+    if (!user) {
+      return <Navigate to="/" replace />;
+    }
+
+    if (roles.length && !roles.includes(user.role)) {
+      return <Navigate to="/" replace />;
+    }
+    
+    return children;
+}
 
 export function Sidebar() {
   const navigate = useNavigate();
@@ -72,7 +90,7 @@ function Layout() {
   const HandleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    
+    console.log("Logout clicked");
     setUser(null);
     alert("Logged out");
     navigate("/")
@@ -120,16 +138,55 @@ const appRouter = createBrowserRouter(
   <Route path="/" element={ <Layout /> }>
     <Route index element={ <HomePage/> } />
     <Route path='login' element={ <Login/>} />
-    <Route path='profile' element={ <ProfilePage/>} />
+    <Route path='profile' element={ 
+      <ProtectedRoute roles={["admin", "teacher", "student"]}>
+        <ProfilePage/>
+      </ProtectedRoute>
+      } 
+    />
     <Route path='courses' element={ <CoursesPage/>} />
-    <Route path='users' element={ <UsersPage/>} />
-    <Route path='user/:id' element={ <UserPage/>} />
+    <Route path='users' element={
+      <ProtectedRoute roles={["admin", "teacher"]}>
+        <UsersPage/>
+      </ProtectedRoute>
+    }/> 
+
+    <Route path='user/:id' element={ 
+      <ProtectedRoute roles={["admin", "teacher", "student"]}>
+        <UserPage/>
+      </ProtectedRoute>
+    }/>
+
     <Route path='signup' element={ <CreateUser/>} />
-    <Route path='create-user' element={ <AdminCreateUser/>} />
-    <Route path='update-user/:id' element={ <UpdateUser/>} />
-    <Route path='admin-update-user/:id' element={ <AdminUpdateUser/>} />
-    <Route path='create-course' element={ <CreateCourse/>} />
-    <Route path='update-course/:id' element={ <UpdateCourse/>} />
+    <Route path='create-user' element={ 
+      <ProtectedRoute roles={["admin"]}>
+        <AdminCreateUser />
+      </ProtectedRoute>
+      }
+    />
+    <Route path='admin-update-user/:id' element={
+      <ProtectedRoute roles={["admin"]}>
+        <AdminUpdateUser />
+      </ProtectedRoute>
+      }
+    />
+    <Route path='update-user/:id' element={
+      <ProtectedRoute roles={["admin", "teacher", "student"]}>
+        <UpdateUser/>
+      </ProtectedRoute>
+      } 
+    />
+    <Route path='create-course' element={ 
+      <ProtectedRoute roles={["admin", "teacher"]}>
+        <CreateCourse/>
+      </ProtectedRoute>
+      } 
+    />
+    <Route path='update-course/:id' element={ 
+      <ProtectedRoute roles={["admin", "teacher"]}>
+        <UpdateCourse/>
+      </ProtectedRoute>
+    } />
   </Route>
   ),
   //required to use for github pages 
@@ -139,6 +196,37 @@ const appRouter = createBrowserRouter(
 
 function App() {
   const [user, setUser] = useState(null);
+    
+  async function getCurrentUser() {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/users/profile",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setUser(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+
+      if (token) {
+          getCurrentUser();
+      }
+  }, []);
 
   return (
     <AuthContext.Provider
