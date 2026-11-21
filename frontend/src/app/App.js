@@ -11,6 +11,7 @@ import UpdateCourse from "../features/UpdateCoursePage";
 import AuthContext from "./AuthContext";
 import UpdateUser from "../features/UpdateUserPage";
 import UserPage from "../features/UserPage"
+import burgermenu from "../lib/images/burgermenu.png"
 import { useState, useContext, useEffect } from "react";
 import { 
   Route, 
@@ -27,7 +28,6 @@ export function ProtectedRoute({
     roles = []
   }) {
     const { user } = useContext(AuthContext);
-    console.log("ProtectedRoute user:", user);
     if (!user) {
       return <Navigate to="/" replace />;
     }
@@ -39,26 +39,43 @@ export function ProtectedRoute({
     return children;
 }
 
-export function Sidebar() {
+export function Sidebar({ setMenuOpen }) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-  console.log("Sidebar user:", user);
   return (
     <div className="sidebar-menu">
       <div>
-        <button className="sidebar-btn" onClick={() => {navigate("/")}}>
+        <button 
+          className="sidebar-btn"   
+          onClick={() => {
+            navigate("/");
+            setMenuOpen(false);
+          }}
+        >
           Home
         </button>
       </div>
       <div>
-        <button className="sidebar-btn" onClick={() => {navigate("courses")}}>
+        <button 
+          className="sidebar-btn" 
+          onClick={() => {
+            navigate("courses"); 
+            setMenuOpen(false);
+          }}
+        >
           Courses
         </button>
       </div>
       {user && 
         <div>
           
-            <button className="sidebar-btn" onClick={() => {navigate("profile")}}>
+            <button 
+              className="sidebar-btn" 
+              onClick={() => {
+                navigate("profile")
+                setMenuOpen(false);
+              }}
+            >
               Profile
             </button>
           
@@ -66,14 +83,26 @@ export function Sidebar() {
       }
       {["admin", "teacher"].includes(user?.role) && (
         <div>
-          <button className="sidebar-btn" onClick={() => navigate("/users")}>
+          <button 
+            className="sidebar-btn" 
+            onClick={() =>  {
+              navigate("/users");
+              setMenuOpen(false);
+            }}
+          >
             {user.role === "admin" ? "Manage Users" : "Users"}
           </button>
         </div>
       )}
       <div>
         {!user && (
-          <button className="sidebar-btn" onClick={() => {navigate("/signup");}}>
+          <button 
+            className="sidebar-btn" 
+            onClick={() => {
+              navigate("/signup");
+              setMenuOpen(false);
+            }}
+          >
             <p>Sign up</p>
           </button>
         )}
@@ -86,19 +115,29 @@ export function Sidebar() {
 function Layout() {
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { user } = useContext(AuthContext);
   const HandleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    console.log("Logout clicked");
     setUser(null);
     alert("Logged out");
     navigate("/")
   };
-
+  
   return (
     <div className="page">
       <div className="header">
+        <button
+          className="burger-btn"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <img
+            className="settingsIcon"
+            src={burgermenu}
+            alt="menu"
+        />
+        </button>
         <div className="header-title">
           <h1>JvB Courses</h1>
           <span>Learn new skills and boost your career</span>
@@ -115,10 +154,16 @@ function Layout() {
           }
         </div>
       </div>
-      <hr className="header-line" />
       <div className="body">
-        <div className="sideBar">
-          <Sidebar />
+        {menuOpen && (
+          <div
+            className="menu-overlay"
+            onClick={() => setMenuOpen(!menuOpen)
+            }
+          />
+        )}
+        <div className={`sideBar ${menuOpen ? "open" : ""}`}>
+          <Sidebar setMenuOpen={setMenuOpen}/>
         </div>
         <div className="pageContent">
           <Outlet /> 

@@ -25,6 +25,11 @@
   display: flex;
   align-items: center;
   padding: 12px 20px;
+  background: #f7f7f7;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 3px solid #19191956;
 }
 
 .header h1 {
@@ -32,6 +37,10 @@
   font-weight: 700;
   margin-right: 20px;
   color: #222;
+}
+
+.burger-btn {
+  margin-right: 20px;
 }
 
 .headerIcons {
@@ -46,10 +55,11 @@
   text-decoration: underline;
   margin: 0;
 }
-
-.header-line {
-  border: none;
-  border-top: 3px solid #19191956;
+@media (max-width: 768px){
+  
+  .header h1{
+    font-size: 1rem;
+  }
 }
 
 
@@ -75,6 +85,10 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+
+  position: sticky;
+  top: 127px;
+
 }
 
 .sidebar-btn {
@@ -93,6 +107,49 @@
   background: #ececec;
 }
 
+.burger-btn {
+  display: none;
+  border: none;
+  background: transparent;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 8px;
+}
+.menu-overlay {
+  display: none;
+}
+
+/************************ Sidebar Mobile ************************/
+@media (max-width: 768px) {
+
+  .burger-btn {
+      display: block;
+  }
+
+  .sideBar {
+      position: fixed;
+      top: 107px;
+      left: -260px;
+      width: 100px;
+      background: #f7f7f7;
+      height: 100vh;
+      transition: left 0.3s ease;
+      z-index: 1000;
+  }
+
+  .sideBar.open {
+      left: 0;
+  }
+  .menu-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(222, 236, 249, 0.3);
+    z-index: 999;
+  }
+}
+
+
 /************************  Page-content ************************/
 .pageContent {
   flex: 1; /*take up the remaining space for the right of the sidebar*/
@@ -104,6 +161,15 @@
   color: #222;
 }
 
+@media (max-width: 768px) {
+  .pageContent {
+    padding: 15px 25px
+  }
+  .pageContent h2 {
+    font-size: 1.1rem;
+  }
+}
+
 .pageContent p {
   max-width: 900px;
   font-size: 1.2rem;
@@ -112,6 +178,13 @@
   margin-bottom: 30px;
   line-height: 1.4;
 }
+
+@media (max-width: 768px) {
+  .pageContent p {
+    font-size: 0.8rem;
+  }
+}
+
 
 form {
   min-width: 200px;
@@ -141,6 +214,8 @@ input {
   background: white;
   caret-color: auto;
 }
+
+
 
 .submit {
   margin-top: 20px;
@@ -193,17 +268,29 @@ select {
 .margintop {
   margin-top: 40px;
 }
+
+@media (max-width: 768px) {
+  label,
+  input,
+  .submit,
+  span {
+    font-size: 0.8rem;
+  }
+  input {
+    padding: 8px
+  }
+}
+
 /********************** table layout **********************/
 .data-table {
   width: 100%;
+  max-width: 500px;
   border-collapse: collapse;
   background: white;
   margin-top: 20px;
-}
-
-.profile-table {
-  min-width: 200px;
-  width: 30%;
+  table-layout: auto;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .data-table th,
@@ -253,6 +340,11 @@ select {
   color: #222;
   padding-top: 40px;
 }
+@media (max-width: 768px) {
+  .footer  {
+    font-size: 0.8rem;
+  }
+}
 
 
 /************************ Course cards ************************/
@@ -262,56 +354,19 @@ select {
     gap: 24px;
     padding-top: 20px;
 }
-
-.course-item-admin {
-    background: #C9D8F5;
-    border: 2px solid #dcdcdcbd;
-    border-radius: 5px;
-    padding: 20px;
-    max-width: 300px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+@media (max-width: 768px) {
+  .coursesTiles {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }
 
-.course-item-student-registered {
-    background: #C9D8F5;
-    border: 2px solid #dcdcdcbd;
-    border-radius: 5px;
-    padding: 20px;
-    max-width: 300px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.course-item-student {
-    background: #DEECF9;
-    border: 2px solid #dcdcdcbd;
-    border-radius: 5px;
-    padding: 20px;
-    max-width: 300px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
+.course-item-admin,
+.course-item-student-registered,
+.course-item-student,
 .course-item {
     background: #DEECF9;
-    border: 1px solid #dcdcdcbd;
-    border-radius: 1px;
+    border: 2px solid #dcdcdcbd;
+    border-radius: 5px;
     padding: 20px;
     max-width: 300px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -322,6 +377,14 @@ select {
 
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.course-item-student-registered,
+.course-item-admin {
+    background: #C9D8F5;
+}
+
+
+
 
 .course-item-admin:hover,
 .course-item-student:hover,
@@ -357,3 +420,15 @@ select {
     justify-content: space-between;
     align-items: center;
 }
+
+@media (max-width: 768px) {
+  .studentnumber,
+  .courseDescription{
+    font-size: 0.8rem;
+  }
+
+  .courseTitle{
+    font-size: 1rem;
+  }
+}
+

@@ -396,4 +396,7 @@ PUT /api/courses/1/deregister-admin/
 
 
 ## Refferences
-- dropdown.png                                              https://uxwing.com/arrow-thin-chevron-bottom-icon/
+- dropdown.png            https://uxwing.com/arrow-thin-chevron-bottom-icon/
+- burgermenu.png          https://uxwing.com/three-horizontal-lines-icon/ 
+- dropdown.png            https://uxwing.com/line-angle-down-icon/
+- tick-icon.png           https://uxwing.com/check-mark-box-line-icon/   
