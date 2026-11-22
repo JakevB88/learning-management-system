@@ -276,6 +276,7 @@ function App() {
       value={{
         user,
         setUser,
+        getCurrentUser,
       }}
     >
       <RouterProvider router={appRouter} />

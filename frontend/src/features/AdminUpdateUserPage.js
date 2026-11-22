@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import AuthContext from "../app/AuthContext";
 
 export default function UpdateUserAdmin() { //was CreatUser
     const [username, setUsername] = useState("");
@@ -10,6 +11,7 @@ export default function UpdateUserAdmin() { //was CreatUser
     const [role, setRole] = useState("student");
     const [userId, setUserId] = useState("")
     const { id } = useParams();
+    const { user, setUser, getCurrentUser  } = useContext(AuthContext)
     const navigate = useNavigate();
     
     
@@ -47,6 +49,11 @@ export default function UpdateUserAdmin() { //was CreatUser
         }
     };
 
+    useEffect(() => {
+        getUser();
+    }, [id]);
+
+
     const handleUpdateUser = async (e) => {
         e.preventDefault();
         try {
@@ -78,7 +85,13 @@ export default function UpdateUserAdmin() { //was CreatUser
             }
 
             alert("User Updated: " + username);
-            navigate("/users");
+            if (role !== "admin" && Number(id) === user?.id) {
+                await getCurrentUser();
+                navigate("/profile");
+            }
+            else {
+                navigate("/users");
+            }
         }
         catch (error) {
             console.error(error);
@@ -108,10 +121,20 @@ export default function UpdateUserAdmin() { //was CreatUser
             if (!response.ok) {
                 throw new Error(data.error || "Failed to delete user");
             }
-            
-            alert("User deleted!");
-            navigate("/users");
 
+            alert("User deleted!");
+
+            if (Number(id) === user?.id) {
+                localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
+
+                setUser(null);
+                navigate("/profile");
+            }
+            else {
+                navigate("/users");
+            }
+            
         } 
         catch (error) {
             console.error(error);
@@ -119,9 +142,6 @@ export default function UpdateUserAdmin() { //was CreatUser
         }
     };
 
-    useEffect(() => {
-        getUser();
-    }, [id]);
 
     return (
         <div className="contentpage createUserPage">

@@ -48,29 +48,24 @@ export default function ProfilePage() {
     };
 
     useEffect(() => {
+        getCourses();
+    }, [user.id]);
+
+
+    useEffect(() => {
         getUserProfile();
     }, [user.id]);
 
     const getCourses = async () => {
         try {
-
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/courses`,
-                {
-                    method: "GET"
-                }
-            );
+            const response = await fetch(`http://127.0.0.1:8000/api/courses`,{method: "GET"});
 
             const data = await response.json();
 
             if (!response.ok) {
                 throw new Error(data.error || "Failed to fetch courses.");
             }
-
-            console.log("Courses retreived: ", data)
-            console.log(data);
             setCourses(data);
-            
         }
         catch (error){
             console.error(error);
@@ -78,12 +73,8 @@ export default function ProfilePage() {
         };
     };
 
-    useEffect(() => {
-        getCourses();
-    }, [user.id]);
 
     let displayedCourses = [...courses];
-
         if (user?.role === "student") {
             const registered = [];
             const notRegistered = [];
@@ -91,18 +82,22 @@ export default function ProfilePage() {
             for (const course of courses) {
                 if (course.students.includes(user.id)) {
                     registered.push(course);
-                } else {
-                    notRegistered.push(course);
-                }
+                } 
             }
 
             displayedCourses = [...registered, ...notRegistered];
         }
+        else if (user?.role === "teacher") {
+            const teachersCourse = [];
 
-    console.log("profile page user: " + user.username)
-    console.log("profile page user: " + first_name)
-    console.log("User ID:", user?.id);
-    console.log("Courses:", courses);
+            for (const course of courses) {
+                if (course.teacher_id === user.id) {
+                    teachersCourse.push(course);
+                } 
+            }
+
+            displayedCourses = [...teachersCourse];
+        }
 
     return (
         <div className="contentpage profile">
@@ -110,7 +105,11 @@ export default function ProfilePage() {
                 <h2>Your Profile</h2>
                 <div>
                     <button className="submit submitTopright" onClick={() => {
-                        navigate(`/update-user/${user.id}`)}}
+                        {user?.role === "admin"
+                            ? navigate(`/admin-update-user/${user.id}`)
+                            : navigate(`/update-user/${user.id}`)
+                        }
+                    }}
                     >
                         Manage Profile
                     </button>

@@ -190,13 +190,16 @@ def update_user_profile(request, user_id):
 
     # Only admin can modify these
     if request.user.role == "admin":
-        if "is_staff" in data:
-            user.is_staff = data["is_staff"]
-
-        if "is_active" in data:
-            user.is_active = data["is_active"]
-
         if "role" in data:
+            if data["role"] != "admin":
+                admin_count = User.objects.filter(role="admin").count()
+                if admin_count <= 1:
+                    return JsonResponse(
+                        {
+                            "error": f"You are the last admin and therefore cannot change yourself to '{data['role']}'. Please assign another admin first."
+                        },
+                        status=400
+                    )
             user.role = data["role"]
 
     user.save()
