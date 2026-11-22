@@ -45,7 +45,7 @@ export default function CreateUser() {
         }
         catch (error){
             console.error(error);
-            alert(error.message)
+            alert(error.message);
         };
     };
 

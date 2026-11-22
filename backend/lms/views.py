@@ -312,7 +312,6 @@ def create_course(request):
     )
     return JsonResponse(model_to_dict(course),status=201)
 
-
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated, IsTeacherOrAdmin])
 def update_course(request, course_id):
@@ -337,10 +336,21 @@ def update_course(request, course_id):
 
         course.save() # writes changes to SQLite
 
-        return JsonResponse(
-            model_to_dict(course)
-        )
-
+        return JsonResponse({
+            "id": course.id,
+            "title": course.title,
+            "description": course.description,
+            "teacher_id": course.teacher_id,
+            "students": list(
+                course.students.values(
+                    "id",
+                    "username",
+                    "first_name",
+                    "last_name",
+                    "email"
+                )
+            )
+        })
     except Course.DoesNotExist:
         return JsonResponse(
             {"error": "Course not found"},

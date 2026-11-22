@@ -29,23 +29,22 @@ export default function ProfilePage() {
             );
 
             const data = await response.json();
-
-            if (response.ok) {
-                console.log("User Profile retreived: ", data)
-                setUsername(data.username);
-                setFirst_Name(data.first_name);
-                setLast_name(data.last_name);
-                setEmail(data.email);
-                setRole(data.role);
-            } 
-            else {
-                alert("User not found");
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch user profile.");
             }
+
+            console.log("User Profile retreived: ", data)
+            setUsername(data.username);
+            setFirst_Name(data.first_name);
+            setLast_name(data.last_name);
+            setEmail(data.email);
+            setRole(data.role);
+        
         } 
-        catch (error) {
+        catch (error){
             console.error(error);
-            alert("Error retrieving user");
-        }
+            alert(error.message)
+        };
     };
 
     useEffect(() => {
@@ -64,19 +63,19 @@ export default function ProfilePage() {
 
             const data = await response.json();
 
-            if (response.ok) {
-                console.log("Courses retreived: ", data)
-                console.log(data);
-                setCourses(data);
-            } 
-            else {
-                alert("Courses not found");
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch courses.");
             }
-        } 
-        catch (error) {
-            console.error(error);
-            alert("Error retrieving courses");
+
+            console.log("Courses retreived: ", data)
+            console.log(data);
+            setCourses(data);
+            
         }
+        catch (error){
+            console.error(error);
+            alert(error.message)
+        };
     };
 
     useEffect(() => {

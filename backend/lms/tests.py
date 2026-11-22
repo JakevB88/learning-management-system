@@ -654,7 +654,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         data = response.json()
         
-        self.assertEqual(data["error"], "Missing information in request")
+        self.assertEqual(data["error"], "First Name is required.")
 
         mock_create_user.assert_not_called()
 
@@ -1306,7 +1306,6 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
             "A course with this title already exists."
         )
 
-
     @patch.object(views.Course.objects, "create")
     def test_create_course_without_authentication(self, mock_create):
 
@@ -1393,9 +1392,8 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 # TESTS FOR UPDATING A COURSE
 # ------------------------------------------------------------------------------------------
 
-    @patch.object(views, "model_to_dict")
     @patch.object(views.Course.objects, "get")
-    def test_update_course_successfully_as_admin(self, mock_get, mock_model_to_dict):
+    def test_update_course_successfully_as_admin(self, mock_get):
 
         # Arrange
         # data to be used as to create a course
@@ -1410,7 +1408,6 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         mock_get.return_value = mock_course
 
-        # mock the model_to_dict function call
         expectedResponse = {
             "id": course_id,
             "title": "Python",
@@ -1418,7 +1415,6 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
             "teacher": course_teacher_id,
             "students": None
         }
-        mock_model_to_dict.return_value = expectedResponse
 
         # Mock authentication as an admin
         mock_admin = self.create_mock_user("admin")
@@ -1439,17 +1435,15 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.assertEqual(data["id"], 2)
         self.assertEqual(data["title"], "Python")
         self.assertEqual(data["description"], "Learn Python")
-        self.assertEqual(data["teacher"], course_teacher_id)
+        self.assertEqual(data["teacher_id"], course_teacher_id)
         self.assertEqual(mock_course.title, "Python")
         self.assertEqual(mock_course.description, "Learn Python")
 
         mock_get.assert_called_once_with(id=course_id)
         mock_course.save.assert_called_once()
-        mock_model_to_dict.assert_called_once_with(mock_course)
         
-    @patch.object(views, "model_to_dict")
     @patch.object(views.Course.objects, "get")
-    def test_update_course_successfully_as_teacher(self, mock_get, mock_model_to_dict):
+    def test_update_course_successfully_as_teacher(self, mock_get):
 
         # Arrange
         # data to be used as to create a course
@@ -1463,16 +1457,6 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_course = self.create_mock_course(course_id, "JavaScript", "Learn JavaScript", course_teacher_id, None)
 
         mock_get.return_value = mock_course
-
-        # mock the model_to_dict function call
-        expectedResponse = {
-            "id": course_id,
-            "title": "Python",
-            "description": "Learn Python",
-            "teacher": course_teacher_id,
-            "students": None
-        }
-        mock_model_to_dict.return_value = expectedResponse
 
         # Mock authentication as a teacher
         mock_teacher = self.create_mock_user("teacher")
@@ -1493,17 +1477,15 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.assertEqual(data["id"], course_id)
         self.assertEqual(data["title"], "Python")
         self.assertEqual(data["description"], "Learn Python")
-        self.assertEqual(data["teacher"], course_teacher_id)
+        self.assertEqual(data["teacher_id"], course_teacher_id)
         self.assertEqual(mock_course.title, "Python")
         self.assertEqual(mock_course.description, "Learn Python")
 
         mock_get.assert_called_once_with(id=course_id)
         mock_course.save.assert_called_once()
-        mock_model_to_dict.assert_called_once_with(mock_course)
 
-    @patch.object(views, "model_to_dict")
     @patch.object(views.Course.objects, "get")
-    def test_update_course_unsuccessfully_as_teacher(self, mock_get, mock_model_to_dict):
+    def test_update_course_unsuccessfully_as_teacher(self, mock_get):
 
         # Arrange
         # data to be used as to create a course
@@ -1517,16 +1499,6 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_course = self.create_mock_course(course_id, "JavaScript", "Learn JavaScript", course_teacher_id, None)
 
         mock_get.return_value = mock_course
-
-        # mock the model_to_dict function call
-        expectedResponse = {
-            "id": course_id,
-            "title": "JavaScript",
-            "description": "Learn JavaScript",
-            "teacher": course_teacher_id,
-            "students": None
-        }
-        mock_model_to_dict.return_value = expectedResponse
 
         # Mock authentication as a teacher
         mock_teacher = self.create_mock_user("teacher")
@@ -1549,7 +1521,6 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         mock_get.assert_called_once_with(id=course_id)
         mock_course.save.assert_not_called()
-        mock_model_to_dict.assert_not_called()
 
     @patch.object(views, "model_to_dict")
     @patch.object(views.Course.objects, "get")
@@ -1601,9 +1572,8 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_course.save.assert_not_called()
         mock_model_to_dict.assert_not_called()
         
-    @patch.object(views, "model_to_dict")
     @patch.object(views.Course.objects, "get")
-    def test_update_course_successfully_as_admin_missing_description(self, mock_get, mock_model_to_dict):
+    def test_update_course_successfully_as_admin_missing_description(self, mock_get):
 
         # Arrange
         # data to be used as to create a course
@@ -1616,16 +1586,6 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_course = self.create_mock_course(course_id, "JavaScript", "Learn JavaScript", course_teacher_id, None)
 
         mock_get.return_value = mock_course
-
-        # mock the model_to_dict function call
-        expectedResponse = {
-            "id": course_id,
-            "title": "Python",
-            "description": "Learn JavaScript",
-            "teacher": course_teacher_id,
-            "students": None
-        }
-        mock_model_to_dict.return_value = expectedResponse
 
         # Mock authentication as an admin
         mock_admin = self.create_mock_user("admin")
@@ -1646,13 +1606,12 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.assertEqual(data["id"], course_id)
         self.assertEqual(data["title"], "Python")
         self.assertEqual(data["description"], "Learn JavaScript")
-        self.assertEqual(data["teacher"], course_teacher_id)
+        self.assertEqual(data["teacher_id"], course_teacher_id)
         self.assertEqual(mock_course.title, "Python")
         self.assertEqual(mock_course.description, "Learn JavaScript")
 
         mock_get.assert_called_once_with(id=course_id)
         mock_course.save.assert_called_once()
-        mock_model_to_dict.assert_called_with(mock_course)
         
     @patch.object(views, "model_to_dict")
     @patch.object(views.Course.objects, "get")

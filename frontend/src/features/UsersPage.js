@@ -22,19 +22,17 @@ export default function UsersPage() {
             );
 
             const data = await response.json();
-
-            if (response.ok) {
-                console.log("Users retreived: ", data)
-                setUsers(data);
-            } 
-            else {
-                alert("Users not found");
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch all users.");
             }
+            console.log("Users retreived: ", data)
+            setUsers(data);
+            
         } 
-        catch (error) {
+        catch (error){
             console.error(error);
-            alert("Error retrieving users");
-        }
+            alert(error.message);
+        };
     };
 
     useEffect(() => {

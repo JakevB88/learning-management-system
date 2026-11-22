@@ -29,23 +29,22 @@ export default function UpdateUserAdmin() { //was CreatUser
             );
 
             const data = await response.json();
-
-            if (response.ok) {
-                console.log("User retreived: ", data)
-                setUserId(data.id)
-                setUsername(data.username);
-                setFirstname(data.first_name);
-                setLastname(data.last_name);
-                setEmail(data.email);
-                setRole(data.role);
-            } 
-            else {
-                alert("User not found");
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch user.");
             }
+            console.log("User retreived: ", data)
+            setUserId(data.id)
+            setUsername(data.username);
+            setFirstname(data.first_name);
+            setLastname(data.last_name);
+            setEmail(data.email);
+            setRole(data.role);
+            
         } 
-        catch (error) {
-            alert("Error retrieving user");
-        }
+        catch (error){
+            console.error(error);
+            alert(error.message);
+        };
     };
 
     useEffect(() => {

@@ -26,50 +26,52 @@ export default function UpdateCourse() {
 
             const data = await response.json();
 
-            if (response.ok) {
-                console.log("Course retreived: ", data)
-                setTitle(data.title);
-                setDescription(data.description);
-                setStudents(data.students)
-            } 
-            else {
-                alert("Course not found");
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch course.");
             }
+            
+            console.log("Course retreived: ", data)
+            setTitle(data.title);
+            setDescription(data.description);
+            setStudents(data.students)
         } 
-        catch (error) {
+
+        catch (error){
             console.error(error);
-            alert("Error retrieving course");
-        }
+            alert(error.message)
+        };
     };
 
     const handleSubmitCourseUpdate = async (e) => {
         e.preventDefault();
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/courses/${id}/update`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    },
+                    body: JSON.stringify({
+                        title,
+                        description,
+                    }),
+                }
+            );
 
-        const response = await fetch(
-            `http://127.0.0.1:8000/api/courses/${id}/update`,
-            {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                },
-                body: JSON.stringify({
-                    title,
-                    description,
-                }),
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to update course.");
             }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log("Course create response: ", data)
             alert("Course Updated!");
             navigate("/courses");
         } 
-        else {
-            alert("Invalid input");
-        }
+        catch (error){
+            console.error(error);
+            alert(error.message)
+        };
     };
 
     const handleDeleteCourse = async (e) => {
@@ -77,28 +79,34 @@ export default function UpdateCourse() {
         if (!window.confirm(`Delete Course ${id}?`)) {
             return;
         }
-        const response = await fetch(
-            `http://127.0.0.1:8000/api/courses/${id}/remove`,
-            {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/courses/${id}/remove`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                    }
                 }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to delete course.");
             }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log("course deleted: ", data)
+            
+            
             alert("course Deleted!");
             navigate("/courses");
-        } 
-        else {
-            alert("Invalid input");
         }
-    }
+        catch (error){
+            console.error(error);
+            alert(error.message);
+        };
+    };
 
     useEffect(() => {
         getCourse();
