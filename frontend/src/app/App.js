@@ -68,7 +68,6 @@ export function Sidebar({ setMenuOpen }) {
       </div>
       {user && 
         <div>
-          
             <button 
               className="sidebar-btn" 
               onClick={() => {
@@ -121,7 +120,6 @@ function Layout() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     setUser(null);
-    alert("Logged out");
     navigate("/")
   };
   

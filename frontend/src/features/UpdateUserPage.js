@@ -130,18 +130,7 @@ export default function UpdateUser() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <label htmlFor="role">Role</label>
-                <div>
-                    <select 
-                        id="role"
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                    >
-                        <option value="student">Student</option>
-                        <option value="teacher">Teacher</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
+                <label htmlFor="role">Role: {user.role}</label>
                 <div className="updateUserButtons">
                     <button className="submit createUser">Update Account</button>
                 </div>            
