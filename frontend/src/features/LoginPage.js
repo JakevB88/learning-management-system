@@ -11,26 +11,31 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await fetch(
-            "http://127.0.0.1:8000/api/token",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                username,
-                password,
-                }),
+        try {
+            const response = await fetch(
+                "http://127.0.0.1:8000/api/token",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                    username,
+                    password,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to sign in, please confirm username and password.");
             }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
+      
+        
             localStorage.setItem("access_token", data.access);
             localStorage.setItem("refresh_token", data.refresh);
-
+        
             const profileResponse = await fetch(
                 "http://127.0.0.1:8000/api/users/profile",
                 {
@@ -39,23 +44,22 @@ export default function Login() {
                     },
                 }
             );
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to create user, make sure all fields are filled out.");
+            }
 
             if (profileResponse.ok) {
-
                 const profileData = await profileResponse.json();
-
-                console.log(profileData);
-
                 setUser(profileData);
             }
 
-            alert("Logged in!");
-
             navigate("/profile");
         }
-        else {
-            alert("Invalid credentials");
-        }
+        catch (error){
+            console.error(error);
+            alert(error.message)
+        };
+
     };
 
     return (

@@ -21,15 +21,13 @@ export default function CoursesPage() {
             );
 
             const data = await response.json();
-
-            if (response.ok) {
-                console.log("Courses retreived: ", data)
-                console.log(data);
-                setCourses(data);
-            } 
-            else {
-                alert("Courses not found");
+            
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch courses")
             }
+
+            setCourses(data);
+            
         } 
         catch (error) {
             console.error(error);

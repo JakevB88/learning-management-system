@@ -10,9 +10,11 @@ export default function DisplayCourse({courses = []}) {
     const { user } = useContext(AuthContext);
 
     const handleRegistration = async (id) => {
+
         if (!window.confirm(`Register to Course ${id}?`)) {
             return;
         }
+
         try {
 
             const response = await fetch(
@@ -27,20 +29,20 @@ export default function DisplayCourse({courses = []}) {
             );
 
             const data = await response.json();
-
-            if (response.ok) {
-                alert("Successfully registered");
-                //await getCourses();
-            } 
-            else {
-                alert("Course not found");
+            
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to register to course.")
             }
+
+            alert("Successfully registered");
+            //await getCourses();
+           
         } 
-        catch (error) {
+        catch (error){
             console.error(error);
-            alert("Error registring to courses");
-        }
-    }
+            alert(error.message)
+        };
+    };
 
     const handleDeRegistration = async (id) => {
         if (!window.confirm(`De-register to Course ${id}?`)) {
@@ -61,18 +63,18 @@ export default function DisplayCourse({courses = []}) {
 
             const data = await response.json();
 
-            if (response.ok) {
-                alert("Successfully deregistered");
-                //await getCourses();
-            } 
-            else {
-                alert("Course not found");
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to deregister to course.")
             }
+
+            alert("Successfully Deregistered");
+            //await getCourses();
+
         } 
-        catch (error) {
+        catch (error){
             console.error(error);
-            alert("Error deregistring to courses");
-        }
+            alert(error.message)
+        };
     }
 
 

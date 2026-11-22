@@ -35,17 +35,18 @@ export default function CreateUser() {
             );
 
             const data = await response.json();
+
             if (!response.ok) {
                 throw new Error(data.error || "Failed to create user, make sure all fields are filled out.");
             }
             alert("User Created!");
-            navigate("/create-user");
+            navigate("/users");
             
         }
         catch (error){
             console.error(error);
             alert(error.message)
-        }
+        };
     };
 
     return (

@@ -107,6 +107,21 @@ def create_staff_user_profile(request):
 def create_user_profile(request):
     data = request.data
 
+    required_fields = [
+        "username",
+        "password",
+        "first_name",
+        "last_name",
+        "email",
+    ]
+
+    for field in required_fields:
+        if not data.get(field):
+            return JsonResponse(
+                {"error": f"{field.replace('_', ' ').title()} is required."},
+                status=400
+            )
+        
     try:
         user = User.objects.create_user(
             username=data["username"],
@@ -129,7 +144,7 @@ def create_user_profile(request):
         )
     except KeyError:
         return JsonResponse(
-            {"error": "Missing information in request"},
+            {"error": "Failed to create course"},
             status=400
         )
    

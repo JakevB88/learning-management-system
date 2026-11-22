@@ -14,36 +14,41 @@ export default function CreateUser() {
     
     const handleSubmitUser = async (e) => {
         e.preventDefault();
+        try {
+            const response = await fetch(
+                "http://127.0.0.1:8000/api/users/create",
+                {
+                    method: "POST",
+                    headers: {
+                    "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                    username,
+                    password,
+                    first_name,
+                    last_name,
+                    email,
+                    is_staff: false,
+                    is_active: true,
+                    role: "student"
+                    }),
+                }
+            );
 
-        const response = await fetch(
-            "http://127.0.0.1:8000/api/users/create",
-            {
-                method: "POST",
-                headers: {
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                username,
-                password,
-                first_name,
-                last_name,
-                email,
-                is_staff: false,
-                is_active: true,
-                role: "student"
-                }),
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to create user")
             }
-        );
 
-        const data = await response.json();
-
-        if (response.ok) {
             alert("User Created!");
             navigate("/");
-        } 
-        else {
-            alert("Invalid input");
+        
         }
+        catch (error) {
+            console.error(error);
+            alert(error.message);
+        };
     };
 
     return (
