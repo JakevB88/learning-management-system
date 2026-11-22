@@ -1,9 +1,8 @@
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../app/AuthContext";
-import settingsIcon from "../lib/images/settings-icon.png";
-import tickIcon from "../lib/images/tick-icon.png";
-import UpdateCourse from "./UpdateCoursePage";
+import AuthContext from "../../app/AuthContext";
+import settingsIcon from "../../lib/images/settings-icon.png";
+import tickIcon from "../../lib/images/tick-icon.png";
 
 export default function DisplayCourse({courses = []}) {
     const navigate = useNavigate();

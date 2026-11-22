@@ -1,43 +1,26 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../app/AuthContext";
+import AuthContext from "../../app/AuthContext";
 import DisplayCourse from "./DisplayCourse";
+import { getCourses } from "../../services/courseService";
 
 export default function CoursesPage() {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
     const [courses, setCourses] = useState([]);
 
-    
-    
-    const getCourses = async () => {
-        try {
-
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/courses`,
-                {
-                    method: "GET"
-                }
-            );
-
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to fetch courses")
-            }
-
-            setCourses(data);
-            
-        } 
-        catch (error) {
-            console.error(error);
-            alert("Error retrieving courses");
-        }
-    };
-
-
     useEffect(() => {
-        getCourses();
+        const loadCourses = async () => {
+            try {
+                const data = await getCourses();
+                setCourses(data);
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        };
+
+        loadCourses();
     }, []);
 
     return(

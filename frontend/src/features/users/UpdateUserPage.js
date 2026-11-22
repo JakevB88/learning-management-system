@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import AuthContext from "../app/AuthContext";
+import AuthContext from "../../app/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function UpdateUser() {

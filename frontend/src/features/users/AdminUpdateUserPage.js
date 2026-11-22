@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import AuthContext from "../app/AuthContext";
+import AuthContext from "../../app/AuthContext";
 
 export default function UpdateUserAdmin() { //was CreatUser
     const [username, setUsername] = useState("");

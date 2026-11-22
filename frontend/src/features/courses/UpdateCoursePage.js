@@ -1,46 +1,33 @@
 import { useState, useEffect ,useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import AuthContext from "../app/AuthContext";
-
+import AuthContext from "../../app/AuthContext";
+import { getCourse } from "../../services/courseService";
 
 export default function UpdateCourse() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [teacher, setteacher] = useState("");
-    const [course, setCourse] = useState("");
     const [students, setStudents] = useState([]);
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
+    useEffect(() => {
+        const loadCourse = async () => {
+            try {
+                const data = await getCourse(id);
 
-    const getCourse = async (e) => {
-         try {
+                setTitle(data.title);
+                setDescription(data.description);
+                setStudents(data.students);
 
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/${id}`,
-                {
-                    method: "GET"
-                }
-            );
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to fetch course.");
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
             }
-            
-            console.log("Course retreived: ", data)
-            setTitle(data.title);
-            setDescription(data.description);
-            setStudents(data.students)
-        } 
-
-        catch (error){
-            console.error(error);
-            alert(error.message)
         };
-    };
+
+        loadCourse();
+    }, [id]);
 
     const handleSubmitCourseUpdate = async (e) => {
         e.preventDefault();
@@ -108,9 +95,7 @@ export default function UpdateCourse() {
         };
     };
 
-    useEffect(() => {
-        getCourse();
-    }, [id]);
+
 
     return (
         <div className="contentPage - updateCourse">

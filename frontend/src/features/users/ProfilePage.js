@@ -1,39 +1,28 @@
 import { useState, useEffect ,useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import AuthContext from "../app/AuthContext";
-import DisplayCourse from "./DisplayCourse";
+import AuthContext from "../../app/AuthContext";
+import DisplayCourse from "../courses/DisplayCourse";
+import { getCourses } from "../../services/courseService";
 
 
 export default function ProfilePage() {
-    const [username, setUsername] = useState("");
-    const [first_name, setFirst_Name] = useState("");
-    const [last_name, setLast_name] = useState("");
-    const [email, setEmail] = useState("");
-    const [role, setRole] = useState("");
     const [courses, setCourses] = useState([])
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
-    const getCourses = async () => {
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/api/courses`,{method: "GET"});
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to fetch courses.");
-            }
-            setCourses(data);
-        }
-        catch (error){
-            console.error(error);
-            alert(error.message)
-        };
-    };
-
     useEffect(() => {
-    getCourses();
-    }, [user.id]);
+        const loadCourses = async () => {
+            try {
+                const data = await getCourses();
+                setCourses(data);
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        };
+
+        loadCourses();
+    }, []);
 
     let displayedCourses = [...courses];
         if (user?.role === "student") {
@@ -48,7 +37,7 @@ export default function ProfilePage() {
 
             displayedCourses = [...registered, ...notRegistered];
         }
-        else if (user?.role === "teacher") {
+        else if (user?.role === "teacher" || user?.role === "admin") {
             const teachersCourse = [];
 
             for (const course of courses) {
@@ -56,7 +45,7 @@ export default function ProfilePage() {
                     teachersCourse.push(course);
                 } 
             }
-
+            
             displayedCourses = [...teachersCourse];
         }
 

@@ -1,16 +1,16 @@
 import HomePage from "../features/HomePage"
-import Login from "../features/LoginPage"
-import ProfilePage from "../features/ProfilePage";
-import UsersPage from "../features/UsersPage";
-import CoursesPage from "../features/CoursesPage"
-import CreateUser from "../features/CreateUserPage";
-import AdminCreateUser from "../features/AdminCreateUserPage";
-import AdminUpdateUser from "../features/AdminUpdateUserPage";
-import CreateCourse from "../features/CreateCoursePage";
-import UpdateCourse from "../features/UpdateCoursePage";
+import Login from "../features/authentication/LoginPage"
+import ProfilePage from "../features/users/ProfilePage";
+import UsersPage from "../features/users/UsersPage";
+import CoursesPage from "../features/courses/CoursesPage"
+import CreateUser from "../features/users/CreateUserPage";
+import AdminCreateUser from "../features/users/AdminCreateUserPage";
+import AdminUpdateUser from "../features/users/AdminUpdateUserPage";
+import CreateCourse from "../features/courses/CreateCoursePage";
+import UpdateCourse from "../features/courses/UpdateCoursePage";
 import AuthContext from "./AuthContext";
-import UpdateUser from "../features/UpdateUserPage";
-import UserPage from "../features/UserPage"
+import UpdateUser from "../features/users/UpdateUserPage";
+import UserPage from "../features/users/UserPage"
 import burgermenu from "../lib/images/burgermenu.png"
 import { useState, useContext, useEffect } from "react";
 import { 

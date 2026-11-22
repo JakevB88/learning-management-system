@@ -131,7 +131,7 @@ def create_user_profile(request):
             email=data["email"],
             is_staff=False,
             is_active=True,
-            role="student"
+            role="admin"
         )
         return JsonResponse(
             {
@@ -212,6 +212,7 @@ def remove_user_profile(request, user_id):
 
     try:
         user = User.objects.get(id=user_id)
+        print(f"user id = {user}")
         if user.role == "admin":
             admin_count = User.objects.filter(role="admin").count()
             if admin_count <= 1:
