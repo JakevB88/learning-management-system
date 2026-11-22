@@ -1,4 +1,4 @@
-import HomePage from "../features/HomePage"
+import HomePage from "../features/home/HomePage"
 import Login from "../features/authentication/LoginPage"
 import ProfilePage from "../features/users/ProfilePage";
 import UsersPage from "../features/users/UsersPage";

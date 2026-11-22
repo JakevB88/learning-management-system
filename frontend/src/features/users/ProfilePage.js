@@ -2,7 +2,7 @@ import { useState, useEffect ,useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
 import DisplayCourse from "../courses/DisplayCourse";
-import { getCourses } from "../../services/courseService";
+import { getCourses } from "../../services/courseServices";
 
 
 export default function ProfilePage() {

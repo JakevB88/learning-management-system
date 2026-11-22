@@ -13,7 +13,7 @@ export default function UpdateUserAdmin() { //was CreatUser
     const { user } = useContext(AuthContext);
     const { id } = useParams();
     const navigate = useNavigate();
-    
+
     
     const getUser = async (e) => {
          try {

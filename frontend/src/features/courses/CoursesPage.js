@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
 import DisplayCourse from "./DisplayCourse";
-import { getCourses } from "../../services/courseService";
+import { getCourses } from "../../services/courseServices";
 
 export default function CoursesPage() {
     const navigate = useNavigate();

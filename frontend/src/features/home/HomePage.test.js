@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import AuthContext from "../app/AuthContext";
+import AuthContext from "../../app/AuthContext";
 import HomePage from "./HomePage";
 
 describe("Validate HomePage", () => {

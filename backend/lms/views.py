@@ -131,7 +131,7 @@ def create_user_profile(request):
             email=data["email"],
             is_staff=False,
             is_active=True,
-            role="admin"
+            role="student"
         )
         return JsonResponse(
             {
@@ -188,10 +188,10 @@ def update_user_profile(request, user_id):
     if "email" in data:
         user.email = data["email"]
 
-    # Only admin can modify these
+    # Only admin can modify role
     if request.user.role == "admin":
         if "role" in data:
-            if data["role"] != "admin":
+            if (user.role == "admin" and data["role"] != "admin"):
                 admin_count = User.objects.filter(role="admin").count()
                 if admin_count <= 1:
                     return JsonResponse(
@@ -211,9 +211,8 @@ def update_user_profile(request, user_id):
 def remove_user_profile(request, user_id):
 
     try:
-        user = User.objects.get(id=user_id)
-        print(f"user id = {user}")
-        if user.role == "admin":
+        user = User.objects.get(id=user_id) #user is the user to be deleted in the database
+        if user.role == "admin": #user role from the database
             admin_count = User.objects.filter(role="admin").count()
             if admin_count <= 1:
                 return JsonResponse(

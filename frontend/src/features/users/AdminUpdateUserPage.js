@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
+import { getUser } from "../../services/userServices";
 
 export default function UpdateUserAdmin() { //was CreatUser
     const [username, setUsername] = useState("");
@@ -15,42 +16,63 @@ export default function UpdateUserAdmin() { //was CreatUser
     const navigate = useNavigate();
     
     
-    const getUser = async (e) => {
-         try {
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/users/${id}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                    },
-                }
-            );
+    // const getUser = async (e) => {
+    //      try {
+    //         const response = await fetch(
+    //             `http://127.0.0.1:8000/api/users/${id}`,
+    //             {
+    //                 method: "GET",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+    //                 },
+    //             }
+    //         );
 
-            const data = await response.json();
+    //         const data = await response.json();
 
-            if (response.ok) {
-                console.log("User retreived: ", data)
-                setUserId(data.id)
+    //         if (response.ok) {
+    //             console.log("User retreived: ", data)
+    //             setUserId(data.id)
+    //             setUsername(data.username);
+    //             setFirstname(data.first_name);
+    //             setLastname(data.last_name);
+    //             setEmail(data.email);
+    //             setRole(data.role);
+    //         } 
+    //         else {
+    //             alert("User not found");
+    //         }
+    //     } 
+    //     catch (error) {
+    //         console.error(error);
+    //         alert("Error retrieving user");
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     getUser();
+    // }, [id]);
+
+    useEffect(() => {
+        const loadUser = async () => {
+            try {
+                const data = await getUser(id);
+
+                setUserId(data.id);
                 setUsername(data.username);
                 setFirstname(data.first_name);
                 setLastname(data.last_name);
                 setEmail(data.email);
                 setRole(data.role);
-            } 
-            else {
-                alert("User not found");
-            }
-        } 
-        catch (error) {
-            console.error(error);
-            alert("Error retrieving user");
-        }
-    };
 
-    useEffect(() => {
-        getUser();
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        };
+
+        loadUser();
     }, [id]);
 
 

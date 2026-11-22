@@ -1,7 +1,7 @@
 import { useState, useEffect ,useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
-import { getCourse } from "../../services/courseService";
+import { getCourse } from "../../services/courseServices";
 
 export default function UpdateCourse() {
     const [title, setTitle] = useState("");
