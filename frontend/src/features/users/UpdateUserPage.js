@@ -56,8 +56,8 @@ export default function UpdateUser() {
                 <input
                     id="username"
                     type="text"
-                    placeholder="Username"
-                    value={user?.username}
+                    placeholder={user?.username}
+                    value={username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
                 <label htmlFor="password">Password:  </label>
@@ -65,31 +65,31 @@ export default function UpdateUser() {
                     id="password"
                     type="password"
                     placeholder="password"
-                    value={user?.password}
+                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <label htmlFor="first name">First name</label>
                 <input
                     id="first name"
                     type="text"
-                    placeholder="first name"
-                    value={user?.first_name}
+                    placeholder={user?.first_name}
+                    value={first_name}
                     onChange={(e) => setFirstname(e.target.value)}
                 />
                 <label htmlFor="last name">Last name</label>
                 <input
                     id="last name"
                     type="text"
-                    placeholder="last name"
-                    value={user?.last_name}
+                    placeholder={user?.last_name}
+                    value={last_name}
                     onChange={(e) => setLastname(e.target.value)}
                 />
                 <label htmlFor="email">eMail</label>
                 <input
                     id="email"
                     type="text"
-                    placeholder="email"
-                    value={user?.email}
+                    placeholder={user?.email}
+                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <label htmlFor="role">Role: {user.role}</label>

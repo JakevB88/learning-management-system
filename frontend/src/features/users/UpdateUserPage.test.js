@@ -19,17 +19,6 @@ beforeEach(() => {
 beforeEach(() => {
     jest.clearAllMocks();
     global.fetch = jest.fn()
-        // GET profile
-        .mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({
-                username: "testuser",
-                first_name: "John",
-                last_name: "Smith",
-                email: "john@test.com",
-                role: "student"
-            })
-        })
         // PATCH update
         .mockResolvedValueOnce({
             ok: true,
@@ -53,7 +42,7 @@ describe("validate UpdateUsersPage", () => {
         expect(screen.getByRole("button", { name: /Update/i })).toBeInTheDocument();
         expect(screen.getByLabelText("Username")).toBeInTheDocument();
         expect(screen.getByLabelText("eMail")).toBeInTheDocument();
-        expect(screen.getByLabelText("Role")).toBeInTheDocument();
+        expect(screen.getByText("Role: admin")).toBeInTheDocument();
     });
 
 });
@@ -65,7 +54,14 @@ describe("UpdateUserPage", () => {
         render(
             <MemoryRouter>
                 <AuthContext.Provider
-                    value={{user: {id: 1,role: "student"}}}
+                    value={{user: {
+                        id: 1,
+                        username: "testuser",
+                        first_name: "John",
+                        last_name: "Smith",
+                        email: "john@test.com",
+                        role: "student",
+                    }}}
                 >
                     <UpdateUserPage />
                 </AuthContext.Provider>
@@ -86,23 +82,21 @@ describe("UpdateUserPage", () => {
         await userEvent.click(screen.getByRole("button", {name: "Update Account"}));
 
         //assert
-        //fetch should have been called twice for the "get" and "patch"
-        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(fetch).toHaveBeenCalledTimes(1);
         
-        expect(fetch).toHaveBeenNthCalledWith(
-            2,
+        expect(fetch).toHaveBeenCalledWith(
             "http://127.0.0.1:8000/api/users/1/update",
             expect.objectContaining({
-                method: "PATCH"
+                method: "PATCH",
             })
         );
         expect(mockNavigate).toHaveBeenCalledWith("/profile");
 
         expect(
             JSON.parse(
-                fetch.mock.calls[1][1].body
+                fetch.mock.calls[0][1].body
             ).username)
         .toBe("updateduser");
     });
-});
+});  
     

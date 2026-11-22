@@ -111,7 +111,7 @@ export function Sidebar({ setMenuOpen }) {
   );
 }
 
-function Layout() {
+export function Layout() {
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);

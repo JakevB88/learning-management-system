@@ -1,16 +1,15 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
-import AuthContext from "../app/AuthContext";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
+import AuthContext from "./AuthContext";
 import "@testing-library/jest-dom";
-import { Sidebar } from "./App"
-import App from "./App";
+import App, { Sidebar, Layout, ProtectedRoute } from "./App"
 
 //Mock pages to test routing and layout
-jest.mock("../features/HomePage", () => () => <div>Home Page</div>);
-jest.mock("../features/LoginPage", () => () => <div>Login Page</div>);
-jest.mock("../features/CoursesPage", () => () => <div>Courses Page</div>);
-jest.mock("../features/CreateUserPage", () => () => <div>Create User Page</div>);
+jest.mock("../features/home/HomePage", () => () => <div>Home Page</div>);
+jest.mock("../features/authentication/LoginPage", () => () => <div>Login Page</div>);
+jest.mock("../features/courses/CoursesPage", () => () => <div>Courses Page</div>);
+jest.mock("../features/users/CreateUserPage", () => () => <div>Create User Page</div>);
 
 describe("validate sidebar rendering", () => {
   it("renders the basic sidebar layout", () => {
@@ -18,7 +17,7 @@ describe("validate sidebar rendering", () => {
 
     <MemoryRouter>
       <AuthContext.Provider value={{ user: null }}>
-        <Sidebar />
+        <Sidebar setMenuOpen={jest.fn()}/>
       </AuthContext.Provider>
     </MemoryRouter>
     );
@@ -32,7 +31,7 @@ describe("validate sidebar rendering", () => {
     render(
       <MemoryRouter>
         <AuthContext.Provider value={{ user: {role: "admin"} }}>
-          <Sidebar />
+          <Sidebar setMenuOpen={jest.fn()}/>
         </AuthContext.Provider>
       </MemoryRouter>
     );
@@ -47,7 +46,7 @@ describe("validate sidebar rendering", () => {
     render(    
       <MemoryRouter>  
         <AuthContext.Provider value={{ user: {role: "teacher"} }}>
-          <Sidebar />
+          <Sidebar setMenuOpen={jest.fn()}/>
         </AuthContext.Provider>
       </MemoryRouter>
     );
@@ -62,7 +61,7 @@ describe("validate sidebar rendering", () => {
     render(      
       <MemoryRouter>
         <AuthContext.Provider value={{ user: {role: "student"} }}>
-          <Sidebar />
+          <Sidebar setMenuOpen={jest.fn()}/>
         </AuthContext.Provider>
       </MemoryRouter>
     );
@@ -73,7 +72,7 @@ describe("validate sidebar rendering", () => {
   });
 });
 
-describe("validate sidebar button navigation", () => {
+describe("validate application button navigation", () => {
   it("navigates to Home page", async () => {
     //arrange
     render(<App />);
@@ -109,5 +108,105 @@ describe("validate sidebar button navigation", () => {
     //assert
     expect(screen.getByText("Courses Page")).toBeInTheDocument();
   });
+});
 
+describe("validate header rendering", () => {
+  it("shows logout button when authenticated", () => {
+    render(
+      <MemoryRouter>
+        <AuthContext.Provider
+          value={{
+            user: { role: "student" },
+            setUser: jest.fn(),
+          }}
+        >
+          <Layout />
+        </AuthContext.Provider>
+      </MemoryRouter>
+    );
+
+    expect(
+        screen.getByRole("button", { name: /log out/i })
+    ).toBeInTheDocument();
+  });
+});
+
+
+
+describe("validate protected routes", () => {
+  it("redirects unauthenticated users", () => {
+    render(
+      //create fake protected route and mock a text that a non user can not get to
+      <MemoryRouter initialEntries={["/protected"]}>
+        <AuthContext.Provider value={{ user: null }}>
+          <Routes>
+            <Route path="/" element={<div>Courses</div>} />
+            <Route
+              path="/protected"
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <div>Update user</div>
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </AuthContext.Provider>
+      </MemoryRouter>
+    );
+
+      expect(screen.queryByText("Update user"))
+          .not.toBeInTheDocument();
+
+      expect(screen.getByText("Courses"))
+          .toBeInTheDocument();
+  });
+
+  it("allows authorised users", () => {
+    render(
+      <MemoryRouter initialEntries={["/protected"]}>
+        <AuthContext.Provider
+          value={{ user: { role: "admin" } }}
+        >
+          <Routes>
+            <Route
+              path="/protected"
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <div>Protected Content</div>
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </AuthContext.Provider>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Protected Content"))
+        .toBeInTheDocument();
+  });
+
+  it("redirects users with incorrect role", () => {
+    render(
+      <MemoryRouter initialEntries={["/protected"]}>
+        <AuthContext.Provider
+          value={{ user: { role: "student" } }}
+        >
+          <Routes>
+            <Route path="/" element={<div>Home Page</div>} />
+            <Route
+              path="/protected"
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <div>Protected Content</div>
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </AuthContext.Provider>
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByText("Protected Content")).not.toBeInTheDocument();
+    expect(screen.getByText("Home Page")).toBeInTheDocument();
+  });
 });

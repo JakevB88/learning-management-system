@@ -18,4 +18,4 @@ describe("Validate HomePage", () => {
         expect(screen.getByRole("heading", {name: "Welcome to JvB Courses!"})).toBeInTheDocument();
         expect(screen.getByText(/At JvB Courses/i)).toBeInTheDocument();
     });
-});
+}); 
