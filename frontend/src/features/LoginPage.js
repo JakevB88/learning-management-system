@@ -5,7 +5,7 @@ import AuthContext from "../app/AuthContext";
 export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { setUser } = useContext(AuthContext);
+    const { setUser, getCurrentUser } = useContext(AuthContext);
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
@@ -36,23 +36,8 @@ export default function Login() {
             localStorage.setItem("access_token", data.access);
             localStorage.setItem("refresh_token", data.refresh);
         
-            const profileResponse = await fetch(
-                "http://127.0.0.1:8000/api/users/profile",
-                {
-                    headers: {
-                        Authorization: `Bearer ${data.access}`,
-                    },
-                }
-            );
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to create user, make sure all fields are filled out.");
-            }
-
-            if (profileResponse.ok) {
-                const profileData = await profileResponse.json();
-                setUser(profileData);
-            }
-
+            await getCurrentUser();
+        
             navigate("/profile");
         }
         catch (error){

@@ -35,7 +35,6 @@ export default function DisplayCourse({courses = []}) {
             }
 
             alert("Successfully registered");
-            //await getCourses();
            
         } 
         catch (error){
@@ -68,7 +67,6 @@ export default function DisplayCourse({courses = []}) {
             }
 
             alert("Successfully Deregistered");
-            //await getCourses();
 
         } 
         catch (error){

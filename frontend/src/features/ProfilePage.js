@@ -14,48 +14,6 @@ export default function ProfilePage() {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
-    const getUserProfile = async (e) => {
-         try {
-
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/users/profile`,
-                {
-                    method: "GET",
-                    headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                }
-                }
-            );
-
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to fetch user profile.");
-            }
-
-            console.log("User Profile retreived: ", data)
-            setUsername(data.username);
-            setFirst_Name(data.first_name);
-            setLast_name(data.last_name);
-            setEmail(data.email);
-            setRole(data.role);
-        
-        } 
-        catch (error){
-            console.error(error);
-            alert(error.message)
-        };
-    };
-
-    useEffect(() => {
-        getCourses();
-    }, [user.id]);
-
-
-    useEffect(() => {
-        getUserProfile();
-    }, [user.id]);
-
     const getCourses = async () => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/api/courses`,{method: "GET"});
@@ -73,6 +31,9 @@ export default function ProfilePage() {
         };
     };
 
+    useEffect(() => {
+    getCourses();
+    }, [user.id]);
 
     let displayedCourses = [...courses];
         if (user?.role === "student") {
@@ -120,23 +81,23 @@ export default function ProfilePage() {
                     <tbody>
                         <tr>
                             <th>Username</th>
-                            <td>{username}</td>
+                            <td>{user?.username}</td>
                         </tr>
                         <tr>
                             <th>First Name</th>
-                            <td>{first_name}</td>
+                            <td>{user?.first_name}</td>
                         </tr>
                         <tr>
                             <th>Last Name</th>
-                            <td>{last_name}</td>
+                            <td>{user?.last_name}</td>
                         </tr>
                         <tr>
                             <th>Email</th>
-                            <td>{email}</td>
+                            <td>{user?.email}</td>
                         </tr>
                         <tr>
                             <th>Role</th>
-                            <td>{role}</td>
+                            <td>{user?.role}</td>
                         </tr>
                     </tbody>
                 </table>

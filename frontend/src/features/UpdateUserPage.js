@@ -11,41 +11,6 @@ export default function UpdateUser() {
     const [role, setRole] = useState("student");
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
-    
-
-    const getUserProfile = async (e) => {
-         try {
-
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/users/profile`,
-                {
-                    method: "GET",
-                    headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                }
-                }
-            );
-
-            const data = await response.json();
-
-            if (response.ok) {
-                console.log("User Profile retreived: ", data)
-                setUsername(data.username);
-                setFirstname(data.first_name);
-                setLastname(data.last_name);
-                setEmail(data.email);
-                setRole(data.role);
-            } 
-            else {
-                alert("User not found");
-            }
-        } 
-        catch (error) {
-            console.error(error);
-            alert("Error retrieving user");
-        }
-    };
 
     const handleUpdateUser = async (e) => {
         e.preventDefault();
@@ -81,10 +46,7 @@ export default function UpdateUser() {
             alert("Invalid input");
         }
     };
-
-    useEffect(() => {
-        getUserProfile();
-    }, [user.id]);
+;
 
     return (
         <div className="contentpage createUserPage">
@@ -95,7 +57,7 @@ export default function UpdateUser() {
                     id="username"
                     type="text"
                     placeholder="Username"
-                    value={username}
+                    value={user?.username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
                 <label htmlFor="password">Password:  </label>
@@ -103,7 +65,7 @@ export default function UpdateUser() {
                     id="password"
                     type="password"
                     placeholder="password"
-                    value={password}
+                    value={user?.password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <label htmlFor="first name">First name</label>
@@ -111,7 +73,7 @@ export default function UpdateUser() {
                     id="first name"
                     type="text"
                     placeholder="first name"
-                    value={first_name}
+                    value={user?.first_name}
                     onChange={(e) => setFirstname(e.target.value)}
                 />
                 <label htmlFor="last name">Last name</label>
@@ -119,7 +81,7 @@ export default function UpdateUser() {
                     id="last name"
                     type="text"
                     placeholder="last name"
-                    value={last_name}
+                    value={user?.last_name}
                     onChange={(e) => setLastname(e.target.value)}
                 />
                 <label htmlFor="email">eMail</label>
@@ -127,7 +89,7 @@ export default function UpdateUser() {
                     id="email"
                     type="text"
                     placeholder="email"
-                    value={email}
+                    value={user?.email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <label htmlFor="role">Role: {user.role}</label>
