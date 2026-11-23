@@ -47,7 +47,17 @@ def get_user_profile(request, user_id):
         user_profile = User.objects.get(id=user_id)
 
         return JsonResponse(
-            model_to_dict(user_profile)
+            model_to_dict(
+                user_profile,
+                fields=[
+                    "id",
+                    "username",
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "role",
+                ],
+            )
         )
 
     except User.DoesNotExist:

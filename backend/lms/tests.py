@@ -715,8 +715,6 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         self.assertEqual(mock_user.first_name, "John")
         self.assertEqual(mock_user.last_name, "Smith")
         self.assertEqual(mock_user.email, "jsmith@vbcourses.co.uk")
-        self.assertEqual(mock_user.is_staff, True)
-        self.assertEqual(mock_user.is_active, True)
         self.assertEqual(mock_user.role, "teacher")
 
         mock_get.assert_called_once_with(id=user_id)

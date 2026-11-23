@@ -5,7 +5,7 @@ import AuthContext from "../../app/AuthContext";
 export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { setUser, getCurrentUser } = useContext(AuthContext);
+    const { getCurrentUser } = useContext(AuthContext);
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {

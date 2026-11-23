@@ -6,8 +6,6 @@ import AuthContext from "../../app/AuthContext";
 export default function CreateUser() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [teacher, setteacher] = useState("");
-    const [id, setId] = useState("")
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
@@ -51,9 +49,9 @@ export default function CreateUser() {
 
     return (
         <div className="contentPage - updateCourse">
-            <h2>Manage course: {title}</h2>
+            <h2>Create Course {title}</h2>
             <form onSubmit={handleSubmitCourse}>
-                <label for="coursename">Course name: </label>
+                <label htmlFor="coursename">Course name: </label>
                 <input
                     id="coursename"
                     placeholder="Title"
@@ -62,7 +60,7 @@ export default function CreateUser() {
                     onChange={(e) => setTitle(e.target.value)}
                 />
                 <br></br>
-                <label for="coursedescription">Course description: </label>
+                <label htmlFor="coursedescription">Course description: </label>
                 <input
                     id="coursedescription"
                     type="text"

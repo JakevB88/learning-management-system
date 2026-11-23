@@ -8,7 +8,7 @@ export default function UpdateUser() {
     const [first_name, setFirstname] = useState("");
     const [last_name, setLastname] = useState("");
     const [email, setEmail] = useState("");
-    const [role, setRole] = useState("student");
+    const [role] = useState("student");
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
 

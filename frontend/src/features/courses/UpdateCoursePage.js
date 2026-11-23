@@ -101,7 +101,7 @@ export default function UpdateCourse() {
         <div className="contentPage - updateCourse">
             <h2>Manage course: {title}</h2>
             <form onSubmit={handleSubmitCourseUpdate}>
-                <label for="coursename">Course name: </label>
+                <label htmlFor="coursename">Course name: </label>
                 <input
                     id="coursename"
                     type="text"
@@ -109,7 +109,7 @@ export default function UpdateCourse() {
                     onChange={(e) => setTitle(e.target.value)}
                 />
                 <br></br>
-                <label for="coursedescription">Course description: </label>
+                <label htmlFor="coursedescription">Course description: </label>
                 <input
                     id="coursedescription"
                     type="text"

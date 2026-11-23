@@ -54,7 +54,7 @@ export default function UpdateUserAdmin() { //was CreatUser
     return (
         <div className="contentpage createUserPage">
             <div className="usersHeader">
-                <h2>Users</h2>
+                <h2>User: {userId}</h2>
                 <div>
                     {(user?.role === "admin" )&&
                         <button className="submit submitTopright" onClick={() =>{navigate(`/admin-update-user/${userId}`)}}>
