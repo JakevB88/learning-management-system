@@ -1390,8 +1390,9 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 # TESTS FOR UPDATING A COURSE
 # ------------------------------------------------------------------------------------------
 
+    @patch.object(views.Course.objects, "filter")
     @patch.object(views.Course.objects, "get")
-    def test_update_course_successfully_as_admin(self, mock_get):
+    def test_update_course_successfully_as_admin(self, mock_get, mock_filter):
 
         # Arrange
         # data to be used as to create a course
@@ -1405,6 +1406,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_course = self.create_mock_course(course_id, "JavaScript", "Learn JavaScript", course_teacher_id, None)
 
         mock_get.return_value = mock_course
+        mock_filter.return_value.exclude.return_value.exists.return_value = False
 
         expectedResponse = {
             "id": course_id,
@@ -1439,9 +1441,10 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         mock_get.assert_called_once_with(id=course_id)
         mock_course.save.assert_called_once()
-        
+
+    @patch.object(views.Course.objects, "filter")
     @patch.object(views.Course.objects, "get")
-    def test_update_course_successfully_as_teacher(self, mock_get):
+    def test_update_course_successfully_as_teacher(self, mock_get, mock_filter):
 
         # Arrange
         # data to be used as to create a course
@@ -1455,6 +1458,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_course = self.create_mock_course(course_id, "JavaScript", "Learn JavaScript", course_teacher_id, None)
 
         mock_get.return_value = mock_course
+        mock_filter.return_value.exclude.return_value.exists.return_value = False
 
         # Mock authentication as a teacher
         mock_teacher = self.create_mock_user("teacher")
@@ -1569,9 +1573,10 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_get.assert_not_called()
         mock_course.save.assert_not_called()
         mock_model_to_dict.assert_not_called()
-        
+
+    @patch.object(views.Course.objects, "filter")
     @patch.object(views.Course.objects, "get")
-    def test_update_course_successfully_as_admin_missing_description(self, mock_get):
+    def test_update_course_successfully_as_admin_missing_description(self, mock_get, mock_filter):
 
         # Arrange
         # data to be used as to create a course
@@ -1584,6 +1589,7 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
         mock_course = self.create_mock_course(course_id, "JavaScript", "Learn JavaScript", course_teacher_id, None)
 
         mock_get.return_value = mock_course
+        mock_filter.return_value.exclude.return_value.exists.return_value = False
 
         # Mock authentication as an admin
         mock_admin = self.create_mock_user("admin")
@@ -1645,6 +1651,44 @@ class GetCoursesTest(SimpleTestCase): #inherrit from SimpleTestCase
 
         mock_get.assert_called_once_with(id=course_id)
         mock_model_to_dict.assert_not_called()
+
+    @patch.object(views.Course.objects, "filter")
+    @patch.object(views.Course.objects, "get")
+    def test_update_course_unsuccessfully_duplicate_title(self,mock_get,mock_filter):
+        # Arrange
+        course_id = 1
+        course_data = {"title": "Python"}
+    
+        mock_course = self.create_mock_course(
+            course_id,
+            "JavaScript",
+            "Learn JavaScript",
+            5,
+            None
+        )
+    
+        mock_get.return_value = mock_course
+    
+        # Simulate another course already using "Python"
+        mock_filter.return_value.exclude.return_value.exists.return_value = True
+    
+        mock_admin = self.create_mock_user("admin")
+        self.client.force_authenticate(user=mock_admin)
+    
+        # Act
+        response = self.client.patch(
+            f"/api/courses/{course_id}/update",
+            course_data,
+            format="json"
+        )
+    
+        # Assert
+        self.assertEqual(response.status_code, 400)
+    
+        data = response.json()
+    
+        self.assertEqual(data["error"],"A course with this title already exists.")
+        mock_course.save.assert_not_called()
 
 # ------------------------------------------------------------------------------------------
 # TESTS FOR DELETING A COURSE

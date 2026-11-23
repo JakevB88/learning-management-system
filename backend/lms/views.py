@@ -342,8 +342,13 @@ def update_course(request, course_id):
                 )
             
         if "title" in data:
+            if Course.objects.filter(title=data["title"]).exclude(id=course_id).exists():
+                return JsonResponse(
+                    {"error": "A course with this title already exists."},
+                    status=400
+                )
             course.title = data["title"]
-
+            
         if "description" in data:
             course.description = data["description"]
 

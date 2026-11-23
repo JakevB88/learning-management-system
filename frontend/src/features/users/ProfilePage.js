@@ -10,19 +10,20 @@ export default function ProfilePage() {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
-    useEffect(() => {
-        const loadCourses = async () => {
-            try {
-                const data = await getCourses();
-                setCourses(data);
-            } catch (error) {
-                console.error(error);
-                alert(error.message);
-            }
-        };
+    const loadCourses = async () => {
+        try {
+            const data = await getCourses();
+            setCourses(data);
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    };
 
+    useEffect(() => {
         loadCourses();
     }, []);
+
 
     let displayedCourses = [...courses];
         if (user?.role === "student") {
@@ -96,7 +97,7 @@ export default function ProfilePage() {
                 ?<h2>Your courses</h2>
                 :<h2>Your created courses</h2>
             }
-                <DisplayCourse courses={displayedCourses}/>
+                <DisplayCourse courses={displayedCourses} refreshCourses={loadCourses}/>
                 
             </div>
         </div>

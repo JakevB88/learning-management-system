@@ -9,17 +9,17 @@ export default function CoursesPage() {
     const { user } = useContext(AuthContext);
     const [courses, setCourses] = useState([]);
 
-    useEffect(() => {
-        const loadCourses = async () => {
-            try {
-                const data = await getCourses();
-                setCourses(data);
-            } catch (error) {
-                console.error(error);
-                alert(error.message);
-            }
-        };
+    const loadCourses = async () => {
+        try {
+            const data = await getCourses();
+            setCourses(data);
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    };
 
+    useEffect(() => {
         loadCourses();
     }, []);
 
@@ -42,7 +42,7 @@ export default function CoursesPage() {
             </div>
 
             <div>
-                <DisplayCourse courses={courses}/>
+                <DisplayCourse courses={courses}  refreshCourses={loadCourses}/>
             </div>
         </div>
     )

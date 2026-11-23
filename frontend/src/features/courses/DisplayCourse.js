@@ -3,76 +3,108 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
 import settingsIcon from "../../lib/images/settings-icon.png";
 import tickIcon from "../../lib/images/tick-icon.png";
+import { registerToCourse } from "../../services/courseServices";
+import { deregisterFromCourse } from "../../services/courseServices";
 
-export default function DisplayCourse({courses = []}) {
+export default function DisplayCourse({courses = [], refreshCourses}) {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
-    const handleRegistration = async (id) => {
+    // const handleRegistration = async (id) => {
 
+    //     if (!window.confirm(`Register to Course ${id}?`)) {
+    //         return;
+    //     }
+
+    //     try {
+
+    //         const response = await fetch(
+    //             `http://127.0.0.1:8000/api/courses/${id}/register`,
+    //             {
+    //                 method: "PUT",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+    //                 }
+    //             }
+    //         );
+
+    //         const data = await response.json();
+            
+    //         if (!response.ok) {
+    //             throw new Error(data.error || "Failed to register to course.")
+    //         }
+
+    //         alert("Successfully registered");
+           
+    //     } 
+    //     catch (error){
+    //         console.error(error);
+    //         alert(error.message)
+    //     };
+    // };
+
+    // const handleDeRegistration = async (id) => {
+    //     if (!window.confirm(`De-register to Course ${id}?`)) {
+    //         return;
+    //     }
+    //     try {
+
+    //         const response = await fetch(
+    //             `http://127.0.0.1:8000/api/courses/${id}/deregister`,
+    //             {
+    //                 method: "PUT",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+    //                 }
+    //             }
+    //         );
+
+    //         const data = await response.json();
+
+    //         if (!response.ok) {
+    //             throw new Error(data.error || "Failed to deregister to course.")
+    //         }
+
+    //         alert("Successfully Deregistered");
+
+    //     } 
+    //     catch (error){
+    //         console.error(error);
+    //         alert(error.message)
+    //     };
+    // }
+
+    const handleRegistration = async (id) => {
         if (!window.confirm(`Register to Course ${id}?`)) {
             return;
         }
 
         try {
-
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/${id}/register`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                    }
-                }
-            );
-
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to register to course.")
-            }
-
+            await registerToCourse(id);
+            await refreshCourses();
             alert("Successfully registered");
-           
-        } 
-        catch (error){
+        } catch (error) {
             console.error(error);
-            alert(error.message)
-        };
+            alert(error.message);
+        }
     };
 
     const handleDeRegistration = async (id) => {
-        if (!window.confirm(`De-register to Course ${id}?`)) {
+        if (!window.confirm(`Register to Course ${id}?`)) {
             return;
         }
+
         try {
-
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/${id}/deregister`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-                    }
-                }
-            );
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to deregister to course.")
-            }
-
-            alert("Successfully Deregistered");
-
-        } 
-        catch (error){
+            await deregisterFromCourse(id);
+            await refreshCourses();
+            alert("Successfully deregistered");
+        } catch (error) {
             console.error(error);
-            alert(error.message)
-        };
-    }
+            alert(error.message);
+        }
+    };
 
 
     return(

@@ -4,7 +4,6 @@ import AuthContext from "../../app/AuthContext";
 
 export default function UpdateUserAdmin() { //was CreatUser
     const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
     const [first_name, setFirstname] = useState("");
     const [last_name, setLastname] = useState("");
     const [email, setEmail] = useState("");
@@ -13,6 +12,7 @@ export default function UpdateUserAdmin() { //was CreatUser
     const { user } = useContext(AuthContext);
     const { id } = useParams();
     const navigate = useNavigate();
+    
 
     
     const getUser = async (e) => {

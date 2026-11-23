@@ -23,6 +23,8 @@ const mockCourse = [
     },
 ];
 
+
+
 beforeEach(() => {
     global.fetch = jest.fn().mockResolvedValue({
         ok: true,
@@ -47,7 +49,7 @@ describe("DisplayCourse page", () => {
                         },
                     }}
                 >
-                    <DisplayCourse courses={mockCourse} />
+                    <DisplayCourse courses={mockCourse} refreshCourses={jest.fn()}/>
                 </AuthContext.Provider>
             </MemoryRouter>
         );
@@ -68,7 +70,7 @@ describe("DisplayCourse page", () => {
                         },
                     }}
                 >
-                    <DisplayCourse courses={mockCourse} />
+                    <DisplayCourse courses={mockCourse} refreshCourses={jest.fn()} />
                 </AuthContext.Provider>
             </MemoryRouter>
         );
@@ -94,7 +96,7 @@ describe("DisplayCourse page", () => {
                         },
                     }}
                 >
-                    <DisplayCourse courses={mockCourse} />
+                    <DisplayCourse courses={mockCourse} refreshCourses={jest.fn()}/>
                 </AuthContext.Provider>
             </MemoryRouter>
         );
