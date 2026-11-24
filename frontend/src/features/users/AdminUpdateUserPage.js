@@ -5,7 +5,7 @@ import { getUser } from "../../services/userServices";
 
 export default function UpdateUserAdmin() { //was CreatUser
     const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [password] = useState("");
     const [first_name, setFirstname] = useState("");
     const [last_name, setLastname] = useState("");
     const [email, setEmail] = useState("");
@@ -14,45 +14,6 @@ export default function UpdateUserAdmin() { //was CreatUser
     const { id } = useParams();
     const { user, setUser, getCurrentUser  } = useContext(AuthContext)
     const navigate = useNavigate();
-    
-    
-    // const getUser = async (e) => {
-    //      try {
-    //         const response = await fetch(
-    //             `http://127.0.0.1:8000/api/users/${id}`,
-    //             {
-    //                 method: "GET",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                     "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-    //                 },
-    //             }
-    //         );
-
-    //         const data = await response.json();
-
-    //         if (response.ok) {
-    //             console.log("User retreived: ", data)
-    //             setUserId(data.id)
-    //             setUsername(data.username);
-    //             setFirstname(data.first_name);
-    //             setLastname(data.last_name);
-    //             setEmail(data.email);
-    //             setRole(data.role);
-    //         } 
-    //         else {
-    //             alert("User not found");
-    //         }
-    //     } 
-    //     catch (error) {
-    //         console.error(error);
-    //         alert("Error retrieving user");
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     getUser();
-    // }, [id]);
 
     useEffect(() => {
         const loadUser = async () => {
@@ -118,7 +79,7 @@ export default function UpdateUserAdmin() { //was CreatUser
         catch (error) {
             console.error(error);
             alert(error.message);
-        }        
+        }
     };
 
     const handleDeleteUser = async (e) => {
@@ -139,7 +100,7 @@ export default function UpdateUserAdmin() { //was CreatUser
             );
 
             const data = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(data.error || "Failed to delete user");
             }
@@ -156,8 +117,8 @@ export default function UpdateUserAdmin() { //was CreatUser
             else {
                 navigate("/users");
             }
-            
-        } 
+
+        }
         catch (error) {
             console.error(error);
             alert(error.message);
@@ -204,7 +165,7 @@ export default function UpdateUserAdmin() { //was CreatUser
                 />
                 <label htmlFor="role">Role</label>
                 <div>
-                    <select 
+                    <select
                         id="role"
                         value={role}
                         onChange={(e) => setRole(e.target.value)}
@@ -217,10 +178,10 @@ export default function UpdateUserAdmin() { //was CreatUser
                 <div className="updateUserButtons">
                     <button className="submit update">Update User</button>
                     <button className="submit delete" onClick={handleDeleteUser}>Delete User</button>
-                </div>            
+                </div>
             </form>
-            
+
         </div>
-        
+
     );
 }

@@ -54,7 +54,7 @@ export default function UpdateCourse() {
             }
             alert("Course Updated!");
             navigate("/courses");
-        } 
+        }
         catch (error){
             console.error(error);
             alert(error.message)
@@ -84,8 +84,8 @@ export default function UpdateCourse() {
             if (!response.ok) {
                 throw new Error(data.error || "Failed to delete course.");
             }
-            
-            
+
+
             alert("course Deleted!");
             navigate("/courses");
         }
@@ -119,9 +119,9 @@ export default function UpdateCourse() {
                 <div className="updateUserButtons">
                     <button className="submit update" type="submit">Update Course</button>
                     <button className="submit delete" onClick={handleDeleteCourse}>Delete Course</button>
-                </div> 
+                </div>
             </form>
-            
+
             <div className="users margintop">
                 {students?.length === 1
                     ?<h2> {students?.length} student registered to: {title}</h2>
@@ -140,10 +140,10 @@ export default function UpdateCourse() {
                                 {students.map((userr) => (
                                     <tr
                                         className={user?.role === "admin" || user?.role === "teacher" ? "admin-row" : ""}
-                                        key={userr.id}     
+                                        key={userr.id}
                                         onClick={() => {
                                         navigate(`/user/${userr.id}/`);
-                                        
+
                                     }}>
                                         <td>{userr.username}</td>
                                         <td>{userr.first_name} {userr.last_name}</td>
@@ -151,13 +151,13 @@ export default function UpdateCourse() {
                                 ))}
                             </tbody>
                         </table>
-                        
+
                     </div>
                     : <p className="margintop">No students are registered to this course. </p>
                 }
-                
+
             </div>
-            
+
         </div>
     );
 }

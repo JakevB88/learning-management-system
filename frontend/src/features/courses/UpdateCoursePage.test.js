@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
-import { getCourse } from "../../services/courseServices";
 import UpdateCourse from "./UpdateCoursePage";
 import "@testing-library/jest-dom";
 
@@ -74,10 +73,10 @@ describe("UpdateCoursePage", () => {
                 </AuthContext.Provider>
             </MemoryRouter>
         );
-        
+
         //wait for the form to render
         const coursenameInput = await screen.findByLabelText(/Course name/i);
-        
+
         //act
         //clear the input for username
         await userEvent.clear(coursenameInput);
@@ -90,7 +89,7 @@ describe("UpdateCoursePage", () => {
 
         //assert
         expect(fetch).toHaveBeenCalledTimes(1);
-                
+
         expect(fetch).toHaveBeenCalledWith(
             "http://127.0.0.1:8000/api/courses/1/update",
             expect.objectContaining({
@@ -159,4 +158,4 @@ describe("DeleteCourse", () => {
         expect(fetch).not.toHaveBeenCalled();
     });
 });
-    
+

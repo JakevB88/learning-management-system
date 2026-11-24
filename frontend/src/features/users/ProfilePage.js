@@ -1,5 +1,5 @@
 import { useState, useEffect ,useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
 import DisplayCourse from "../courses/DisplayCourse";
 import { getCourses } from "../../services/courseServices";
@@ -33,7 +33,7 @@ export default function ProfilePage() {
             for (const course of courses) {
                 if (course.students.includes(user.id)) {
                     registered.push(course);
-                } 
+                }
             }
 
             displayedCourses = [...registered, ...notRegistered];
@@ -44,9 +44,9 @@ export default function ProfilePage() {
             for (const course of courses) {
                 if (course.teacher_id === user.id) {
                     teachersCourse.push(course);
-                } 
+                }
             }
-            
+
             displayedCourses = [...teachersCourse];
         }
 
@@ -56,10 +56,9 @@ export default function ProfilePage() {
                 <h2>Your Profile</h2>
                 <div>
                     <button className="submit submitTopright" onClick={() => {
-                        {user?.role === "admin"
+                        user?.role === "admin"
                             ? navigate(`/admin-update-user/${user.id}`)
                             : navigate(`/update-user/${user.id}`)
-                        }
                     }}
                     >
                         Manage Profile
@@ -98,9 +97,9 @@ export default function ProfilePage() {
                 :<h2>Your created courses</h2>
             }
                 <DisplayCourse courses={displayedCourses} refreshCourses={loadCourses}/>
-                
+
             </div>
         </div>
-            
+
     );
 }

@@ -12,9 +12,9 @@ export default function UpdateUserAdmin() { //was CreatUser
     const { user } = useContext(AuthContext);
     const { id } = useParams();
     const navigate = useNavigate();
-    
 
-    
+
+
     const getUser = async (e) => {
          try {
             const response = await fetch(
@@ -39,8 +39,8 @@ export default function UpdateUserAdmin() { //was CreatUser
             setLastname(data.last_name);
             setEmail(data.email);
             setRole(data.role);
-            
-        } 
+
+        }
         catch (error){
             console.error(error);
             alert(error.message);
@@ -49,6 +49,7 @@ export default function UpdateUserAdmin() { //was CreatUser
 
     useEffect(() => {
         getUser();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     return (
@@ -91,8 +92,8 @@ export default function UpdateUserAdmin() { //was CreatUser
                         </tr>
                     </tbody>
                 </table>
-            
+
         </div>
-        
+
     );
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import AuthContext from "../../app/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -41,7 +41,7 @@ export default function UpdateUser() {
             console.log("user aupdate response: ", data)
             alert("User Updated: " + username);
             navigate("/profile");
-        } 
+        }
         else {
             alert("Invalid input");
         }
@@ -95,10 +95,10 @@ export default function UpdateUser() {
                 <label htmlFor="role">Role: {user.role}</label>
                 <div className="updateUserButtons">
                     <button className="submit createUser">Update Account</button>
-                </div>            
+                </div>
             </form>
-            
+
         </div>
-        
+
     );
 }

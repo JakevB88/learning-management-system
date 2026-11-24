@@ -7,11 +7,8 @@ export default function CreateUser() {
     const [first_name, setFirstname] = useState("");
     const [last_name, setLastname] = useState("");
     const [email, setEmail] = useState("");
-    const [isstaff, setIsStaff] = useState(false);
-    const [isactive, setIsActive] = useState(true);
-    const [role, setRole] = useState("student");
     const navigate = useNavigate();
-    
+
     const handleSubmitUser = async (e) => {
         e.preventDefault();
         try {
@@ -43,7 +40,7 @@ export default function CreateUser() {
 
             alert("User Created!");
             navigate("/");
-        
+
         }
         catch (error) {
             console.error(error);

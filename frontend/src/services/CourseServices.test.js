@@ -55,7 +55,7 @@ describe("getCourse", () => {
         jest.resetAllMocks();
         global.fetch = jest.fn();
     });
-
+    const mockNavigate = jest.fn();
     jest.mock("react-router-dom", () => ({
         ...jest.requireActual("react-router-dom"),
         useNavigate: () => mockNavigate,
@@ -63,8 +63,8 @@ describe("getCourse", () => {
     }));
 
     it("return course when request is successful", async () => {
-        const mockCourse = { 
-            id: 1, title: "React" 
+        const mockCourse = {
+            id: 1, title: "React"
         };
 
         fetch.mockResolvedValue({
