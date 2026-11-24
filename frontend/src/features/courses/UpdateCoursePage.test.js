@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
+import { getCourse } from "../../services/courseServices";
 import UpdateCourse from "./UpdateCoursePage";
 import "@testing-library/jest-dom";
 
@@ -102,5 +103,60 @@ describe("UpdateCoursePage", () => {
             description: ""
         });
     });
-});  
+});
+
+describe("DeleteCourse", () => {
+    it("delete a course", async () => {
+        window.confirm = jest.fn(() => true);
+
+        fetch.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                message: "deleted",
+            }),
+        });
+
+        render(
+            <MemoryRouter>
+                <AuthContext.Provider value={{ user: { id: 1, role: "admin" } }}>
+                    <UpdateCourse />
+                </AuthContext.Provider>
+            </MemoryRouter>
+        );
+
+        await userEvent.click(
+            await screen.findByRole("button", {
+                name: /delete course/i,
+            })
+        );
+
+        expect(fetch).toHaveBeenCalledWith("http://127.0.0.1:8000/api/courses/1/remove",
+            expect.objectContaining({
+                method: "DELETE",
+            })
+        );
+
+        expect(mockNavigate).toHaveBeenCalledWith("/courses");
+    });
+
+    it("does not delete when confirmation is cancelled", async () => {
+        window.confirm = jest.fn(() => false);
+
+        render(
+            <MemoryRouter>
+                <AuthContext.Provider value={{ user: { id: 1, role: "admin" } }}>
+                    <UpdateCourse />
+                </AuthContext.Provider>
+            </MemoryRouter>
+        );
+
+        await userEvent.click(
+            await screen.findByRole("button", {
+                name: /delete course/i,
+            })
+        );
+
+        expect(fetch).not.toHaveBeenCalled();
+    });
+});
     

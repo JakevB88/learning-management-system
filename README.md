@@ -375,7 +375,7 @@ PUT /api/courses/1/deregister-admin/
 
 ---
 
-# ✅ Permissions Summary
+# Permissions Summary
 
 | Endpoint | Admin | Teacher | Student |
 |-----------|-----------|-----------|-----------|
@@ -394,6 +394,55 @@ PUT /api/courses/1/deregister-admin/
 | Deregister Any Student | ✅ | ❌ | ❌ |
 
 
+
+
+---
+
+## Testing
+
+### Manual backend tests
+Once the backend view.py was build I created CRUD tests in the directory "backend/api_tests" to manually validate the API.
+I tracked the results in the permissions table.
+
+<img src="frontend/src/lib/testresults/backend-permission-table-manual-test-results.png" alt="permissions-CRUD-test-results.png" width="600"/>
+
+### Frontend
+Screenshot showing the results of running $ npm test -- --coverage --watchAll=false
+
+<img src="frontend/src/lib/testresults/npm-test-coverage.png" alt="npm-test-coverage.png" width="600"/>
+
+
+### Backend
+Screenshot showing the results of running $ python -m coverage run manage.py test
+
+<img src="frontend/src/lib/testresults/manage.py-test-coverage-results.png" alt="manage.py-test-coverage-results.png" width="600"/>
+
+---
+
+## Wireframes
+### Initial wireframes for:
+- home page
+- Login page
+- Profile page student
+- course page student
+- Profile page Teacher
+- manage course Teacher
+- users page Teacher
+- Profile page Admin
+- manage course page admin
+- users page admin
+- manage user admin
+
+<img src="frontend/src/lib/wireframes/figma-wireframes-overview.png" alt="General overfiew wireframe" width="800"/>
+<img src="frontend/src/lib/wireframes/figma-wireframes-profilepage.png" alt="Profile page wireframe" width="300"/>
+<img src="frontend/src/lib/wireframes/figma-wireframes-manageCourses.png" alt="Profile page wireframe" width="300"/>
+<img src="frontend/src/lib/wireframes/figma-wireframes-Manage-userpage.png" alt="Profile page wireframe" width="300"/>
+
+After creating the frontend based on these wireframes it was clear that the tables are not very responsive for small screens.
+It was then decided to display the courses as tiles instead for better responsiveness
+The tables for users staid but the column count is reduced and each column can be clicked to navigate to a page with more detail on that specific user.
+
+---
 
 ## Refferences
 - dropdown.png            https://uxwing.com/arrow-thin-chevron-bottom-icon/
