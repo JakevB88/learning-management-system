@@ -147,7 +147,7 @@ def create_user_profile(request):
             email=data["email"],
             is_staff=False,
             is_active=True,
-            role="student"
+            role="admin"
         )
         return JsonResponse(
             {

@@ -28,7 +28,7 @@ export default function CreateUser() {
                     email,
                     is_staff: false,
                     is_active: true,
-                    role: "admin"
+                    role: "student"
                     }),
                 }
             );
