@@ -1,5 +1,5 @@
-import HomePage from "../features/home/HomePage"
-import Login from "../features/authentication/LoginPage"
+import HomePage from "../features/home/HomePage";
+import Login from "../features/authentication/LoginPage";
 import ProfilePage from "../features/users/ProfilePage";
 import UsersPage from "../features/users/UsersPage";
 import CoursesPage from "../features/courses/CoursesPage"
@@ -10,13 +10,14 @@ import CreateCourse from "../features/courses/CreateCoursePage";
 import UpdateCourse from "../features/courses/UpdateCoursePage";
 import AuthContext from "./AuthContext";
 import UpdateUser from "../features/users/UpdateUserPage";
-import UserPage from "../features/users/UserPage"
-import burgermenu from "../lib/images/burgermenu.png"
+import UserPage from "../features/users/UserPage";
+import burgermenu from "../lib/images/burgermenu.png";
+import { API_URL } from "../services/api";
 import { useState, useContext, useEffect } from "react";
-import { 
-  Route, 
-  RouterProvider, 
-  createBrowserRouter, 
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
   createRoutesFromElements,
   Outlet,
   useNavigate,
@@ -35,7 +36,7 @@ export function ProtectedRoute({
     if (roles.length && !roles.includes(user.role)) {
       return <Navigate to="/" replace />;
     }
-    
+
     return children;
 }
 
@@ -45,8 +46,8 @@ export function Sidebar({ setMenuOpen }) {
   return (
     <div className="sidebar-menu">
       <div>
-        <button 
-          className="sidebar-btn"   
+        <button
+          className="sidebar-btn"
           onClick={() => {
             navigate("/");
             setMenuOpen(false);
@@ -56,20 +57,20 @@ export function Sidebar({ setMenuOpen }) {
         </button>
       </div>
       <div>
-        <button 
-          className="sidebar-btn" 
+        <button
+          className="sidebar-btn"
           onClick={() => {
-            navigate("courses"); 
+            navigate("courses");
             setMenuOpen(false);
           }}
         >
           Courses
         </button>
       </div>
-      {user && 
+      {user &&
         <div>
-            <button 
-              className="sidebar-btn" 
+            <button
+              className="sidebar-btn"
               onClick={() => {
                 navigate("profile")
                 setMenuOpen(false);
@@ -77,13 +78,13 @@ export function Sidebar({ setMenuOpen }) {
             >
               Profile
             </button>
-          
+
         </div>
       }
       {["admin", "teacher"].includes(user?.role) && (
         <div>
-          <button 
-            className="sidebar-btn" 
+          <button
+            className="sidebar-btn"
             onClick={() =>  {
               navigate("/users");
               setMenuOpen(false);
@@ -95,8 +96,8 @@ export function Sidebar({ setMenuOpen }) {
       )}
       <div>
         {!user && (
-          <button 
-            className="sidebar-btn" 
+          <button
+            className="sidebar-btn"
             onClick={() => {
               navigate("/signup");
               setMenuOpen(false);
@@ -122,7 +123,7 @@ export function Layout() {
     setUser(null);
     navigate("/")
   };
-  
+
   return (
     <div className="page">
       <div className="header">
@@ -141,7 +142,7 @@ export function Layout() {
           <span>Learn new skills and boost your career</span>
         </div>
         <div className="headerIcons">
-          {user 
+          {user
             ?(
             <button className="login-btn" onClick={HandleLogout}>
               Log out
@@ -164,7 +165,7 @@ export function Layout() {
           <Sidebar setMenuOpen={setMenuOpen}/>
         </div>
         <div className="pageContent">
-          <Outlet /> 
+          <Outlet />
         </div>
       </div>
       <div className="footer">
@@ -176,32 +177,32 @@ export function Layout() {
 
 
 
-const appRouter = createBrowserRouter( 
+const appRouter = createBrowserRouter(
   createRoutesFromElements(
   <Route path="/" element={ <Layout /> }>
     <Route index element={ <HomePage/> } />
     <Route path='login' element={ <Login/>} />
-    <Route path='profile' element={ 
+    <Route path='profile' element={
       <ProtectedRoute roles={["admin", "teacher", "student"]}>
         <ProfilePage/>
       </ProtectedRoute>
-      } 
+      }
     />
     <Route path='courses' element={ <CoursesPage/>} />
     <Route path='users' element={
       <ProtectedRoute roles={["admin", "teacher"]}>
         <UsersPage/>
       </ProtectedRoute>
-    }/> 
+    }/>
 
-    <Route path='user/:id' element={ 
+    <Route path='user/:id' element={
       <ProtectedRoute roles={["admin", "teacher", "student"]}>
         <UserPage/>
       </ProtectedRoute>
     }/>
 
     <Route path='signup' element={ <CreateUser/>} />
-    <Route path='create-user' element={ 
+    <Route path='create-user' element={
       <ProtectedRoute roles={["admin"]}>
         <AdminCreateUser />
       </ProtectedRoute>
@@ -217,33 +218,33 @@ const appRouter = createBrowserRouter(
       <ProtectedRoute roles={["admin", "teacher", "student"]}>
         <UpdateUser/>
       </ProtectedRoute>
-      } 
+      }
     />
-    <Route path='create-course' element={ 
+    <Route path='create-course' element={
       <ProtectedRoute roles={["admin", "teacher"]}>
         <CreateCourse/>
       </ProtectedRoute>
-      } 
+      }
     />
-    <Route path='update-course/:id' element={ 
+    <Route path='update-course/:id' element={
       <ProtectedRoute roles={["admin", "teacher"]}>
         <UpdateCourse/>
       </ProtectedRoute>
     } />
   </Route>
   ),
-  //required to use for github pages 
-  //{ basename: process.env.NODE_ENV === "test" ? "/" : "/quiz" } 
+  //required to use for github pages
+  //{ basename: process.env.NODE_ENV === "test" ? "/" : "/quiz" }
 );
 
 
 function App() {
   const [user, setUser] = useState(null);
-    
+
   async function getCurrentUser() {
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/users/profile",
+        `${API_URL}/api/users/profile`,
         {
           method: "GET",
           headers: {
@@ -262,7 +263,7 @@ function App() {
       console.error(error);
     }
   }
-  
+
   useEffect(() => {
     const token = localStorage.getItem("access_token");
 

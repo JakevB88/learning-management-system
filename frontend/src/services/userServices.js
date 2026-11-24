@@ -1,7 +1,9 @@
+import { API_URL } from "./api";
+
 export async function getUsers() {
 
     const response = await fetch(
-        "http://127.0.0.1:8000/api/users",
+        `${API_URL}/api/users`,
         {
             method: "GET",
             headers: {
@@ -24,7 +26,7 @@ export async function getUsers() {
 
 export async function getUser(id) {
     const response = await fetch(
-        `http://127.0.0.1:8000/api/users/${id}`,
+        `${API_URL}/api/users/${id}`,
         {
             method: "GET",
             headers: {

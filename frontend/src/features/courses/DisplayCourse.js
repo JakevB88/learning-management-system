@@ -10,72 +10,6 @@ export default function DisplayCourse({courses = [], refreshCourses}) {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
-    // const handleRegistration = async (id) => {
-
-    //     if (!window.confirm(`Register to Course ${id}?`)) {
-    //         return;
-    //     }
-
-    //     try {
-
-    //         const response = await fetch(
-    //             `http://127.0.0.1:8000/api/courses/${id}/register`,
-    //             {
-    //                 method: "PUT",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                     "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-    //                 }
-    //             }
-    //         );
-
-    //         const data = await response.json();
-            
-    //         if (!response.ok) {
-    //             throw new Error(data.error || "Failed to register to course.")
-    //         }
-
-    //         alert("Successfully registered");
-           
-    //     } 
-    //     catch (error){
-    //         console.error(error);
-    //         alert(error.message)
-    //     };
-    // };
-
-    // const handleDeRegistration = async (id) => {
-    //     if (!window.confirm(`De-register to Course ${id}?`)) {
-    //         return;
-    //     }
-    //     try {
-
-    //         const response = await fetch(
-    //             `http://127.0.0.1:8000/api/courses/${id}/deregister`,
-    //             {
-    //                 method: "PUT",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                     "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-    //                 }
-    //             }
-    //         );
-
-    //         const data = await response.json();
-
-    //         if (!response.ok) {
-    //             throw new Error(data.error || "Failed to deregister to course.")
-    //         }
-
-    //         alert("Successfully Deregistered");
-
-    //     } 
-    //     catch (error){
-    //         console.error(error);
-    //         alert(error.message)
-    //     };
-    // }
-
     const handleRegistration = async (id) => {
         if (!window.confirm(`Register to Course ${id}?`)) {
             return;
@@ -110,22 +44,22 @@ export default function DisplayCourse({courses = [], refreshCourses}) {
     return(
         <div className="coursesTiles">
                 {courses.map((course) => (
-                    <div 
-                        key={course.id} 
+                    <div
+                        key={course.id}
                         className={
                             user?.role === "admin" || user?.id === course.teacher_id
-                                ? "course-item-admin" 
+                                ? "course-item-admin"
                                 : user?.role=== "student"
-                                    ?course.students.includes(user?.id) 
+                                    ?course.students.includes(user?.id)
                                         ?"course-item-student-registered"
                                         :"course-item-student"
                                     :"course-item"
                         }
                         onClick={
                             user?.role === "admin" || user?.id === course.teacher_id
-                                ? () => navigate(`/update-course/${course.id}`) 
-                                : user?.role === "student" 
-                                    ? course.students.includes(user?.id) 
+                                ? () => navigate(`/update-course/${course.id}`)
+                                : user?.role === "student"
+                                    ? course.students.includes(user?.id)
                                             ? () => handleDeRegistration(course.id)
                                             : () => handleRegistration(course.id)
                                     : undefined
@@ -133,7 +67,7 @@ export default function DisplayCourse({courses = [], refreshCourses}) {
                     >
                     <div className="courseCardHeader">
                         <h3 className="courseTitle">{course.title}</h3>
-                        {(user?.role === "admin" || user?.id === course.teacher_id) 
+                        {(user?.role === "admin" || user?.id === course.teacher_id)
                             ? <img
                                     className="settingsIcon"
                                     src={settingsIcon}

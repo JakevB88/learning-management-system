@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../services/api";
 
 export default function CreateUser() {
     const [username, setUsername] = useState("");
@@ -9,12 +10,12 @@ export default function CreateUser() {
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("student");
     const navigate = useNavigate();
-    
+
     const handleSubmitUser = async (e) => {
         e.preventDefault();
         try{
             const response = await fetch(
-                `http://127.0.0.1:8000/api/users/create-staff`,
+                `${API_URL}/api/users/create-staff`,
                 {
                     method: "POST",
                     headers: {
@@ -41,7 +42,7 @@ export default function CreateUser() {
             }
             alert("User Created!");
             navigate("/users");
-            
+
         }
         catch (error){
             console.error(error);
@@ -95,7 +96,7 @@ export default function CreateUser() {
                 />
                 <label htmlFor="role">Role</label>
                 <div>
-                    <select 
+                    <select
                         id="role"
                         value={role}
                         onChange={(e) => setRole(e.target.value)}

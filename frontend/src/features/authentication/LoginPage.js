@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
+import { API_URL } from "../../services/api"
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -13,7 +14,7 @@ export default function Login() {
 
         try {
             const response = await fetch(
-                "http://127.0.0.1:8000/api/token",
+                `${API_URL}/api/token`,
                 {
                     method: "POST",
                     headers: {
@@ -31,13 +32,13 @@ export default function Login() {
             if (!response.ok) {
                 throw new Error(data.error || "Failed to sign in, please confirm username and password.");
             }
-      
-        
+
+
             localStorage.setItem("access_token", data.access);
             localStorage.setItem("refresh_token", data.refresh);
-        
+
             await getCurrentUser();
-        
+
             navigate("/profile");
         }
         catch (error){

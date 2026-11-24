@@ -2,6 +2,7 @@ import { useState, useEffect ,useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
 import { getCourse } from "../../services/courseServices";
+import { API_URL } from "../../services/api"
 
 export default function UpdateCourse() {
     const [title, setTitle] = useState("");
@@ -33,7 +34,7 @@ export default function UpdateCourse() {
         e.preventDefault();
         try {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/${id}/update`,
+                `${API_URL}/api/courses/${id}/update`,
                 {
                     method: "PATCH",
                     headers: {
@@ -69,7 +70,7 @@ export default function UpdateCourse() {
 
         try {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/courses/${id}/remove`,
+                `${API_URL}/api/courses/${id}/remove`,
                 {
                     method: "DELETE",
                     headers: {

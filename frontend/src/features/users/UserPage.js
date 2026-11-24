@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
+import { API_URL } from "../../services/api";
 
 export default function UpdateUserAdmin() { //was CreatUser
     const [username, setUsername] = useState("");
@@ -18,7 +19,7 @@ export default function UpdateUserAdmin() { //was CreatUser
     const getUser = async (e) => {
          try {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/users/${id}`,
+                `${API_URL}/api/users/${id}`,
                 {
                     method: "GET",
                     headers: {

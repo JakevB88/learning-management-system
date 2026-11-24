@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../app/AuthContext";
 import { getUser } from "../../services/userServices";
+import { API_URL } from "../../services/api";
 
 export default function UpdateUserAdmin() { //was CreatUser
     const [username, setUsername] = useState("");
@@ -41,7 +42,7 @@ export default function UpdateUserAdmin() { //was CreatUser
         e.preventDefault();
         try {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/users/${id}/update`,
+                `${API_URL}/api/users/${id}/update`,
                 {
                     method: "PATCH",
                     headers: {
@@ -89,7 +90,7 @@ export default function UpdateUserAdmin() { //was CreatUser
         }
         try {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/users/${id}/remove`,
+                `${API_URL}/api/users/${id}/remove`,
                 {
                     method: "DELETE",
                     headers: {

@@ -1,6 +1,8 @@
+import { API_URL } from "./api";
+
 export async function getCourses() {
     const response = await fetch(
-        "http://127.0.0.1:8000/api/courses",
+        `${API_URL}/api/courses`,
         {
             method: "GET",
         }
@@ -20,7 +22,7 @@ export async function getCourses() {
 
 export async function getCourse(id) {
     const response = await fetch(
-        `http://127.0.0.1:8000/api/courses/${id}`
+        `${API_URL}/api/courses/${id}`
     );
 
     const data = await response.json();
@@ -36,7 +38,7 @@ export async function getCourse(id) {
 
 export async function registerToCourse(courseId) {
     const response = await fetch(
-        `http://127.0.0.1:8000/api/courses/${courseId}/register`,
+        `${API_URL}/api/courses/${courseId}/register`,
         {
             method: "PUT",
             headers: {
@@ -57,7 +59,7 @@ export async function registerToCourse(courseId) {
 
 export async function deregisterFromCourse(courseId) {
     const response = await fetch(
-        `http://127.0.0.1:8000/api/courses/${courseId}/deregister`,
+        `${API_URL}/api/courses/${courseId}/deregister`,
         {
             method: "PUT",
             headers: {

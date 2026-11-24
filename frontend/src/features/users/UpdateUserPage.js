@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import AuthContext from "../../app/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../services/api";
 
 export default function UpdateUser() {
     const [username, setUsername] = useState("");
@@ -15,7 +16,7 @@ export default function UpdateUser() {
     const handleUpdateUser = async (e) => {
         e.preventDefault();
         const response = await fetch(
-            `http://127.0.0.1:8000/api/users/${user.id}/update`,
+            `${API_URL}/api/users/${user.id}/update`,
             {
                 method: "PATCH",
                 headers: {

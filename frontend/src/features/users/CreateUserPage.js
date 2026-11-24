@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../services/api";
 
 export default function CreateUser() {
     const [username, setUsername] = useState("");
@@ -13,7 +14,7 @@ export default function CreateUser() {
         e.preventDefault();
         try {
             const response = await fetch(
-                "http://127.0.0.1:8000/api/users/create",
+                `${API_URL}/api/users/create`,
                 {
                     method: "POST",
                     headers: {
@@ -27,7 +28,7 @@ export default function CreateUser() {
                     email,
                     is_staff: false,
                     is_active: true,
-                    role: "student"
+                    role: "admin"
                     }),
                 }
             );
