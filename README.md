@@ -4,16 +4,60 @@ Final project for Full Stack Front End Development.
 
 Built using Django, Django REST Framework (DRF), JWT Authentication, React and SQLite.
 
+## Features
+
+### Students
+- Register to courses
+- Deregister from courses
+- View enrolled courses
+- Update own profile
+
+### Teachers
+- Create courses
+- Update owned courses
+- View users
+- Update own profile
+
+### Administrators
+- Create staff accounts
+- Manage all users
+- Manage all courses
+- Deregister students from courses
+- Update own profile (but can't delete/update last admin)
+
+
+
 ## Tech Stack
 
+### Backend
 - Python
 - Django
 - Django REST Framework
 - Simple JWT
 - SQLite
+
+### Frontend
 - JavaScript
 - React
-- Redux
+- React Router
+
+## Testing and Code Quality
+- Jest
+- React Testing Library
+- Flake8
+- ESLint
+- W3C
+
+## External Libraries and Frameworks
+- React - Frontend JavaScript library https://react.dev/
+- React Router - Client-side routing https://reactrouter.com/
+- Jest - Unit testing framework https://jestjs.io/
+- React Testing Library - React component testing https://testing-library.com/
+- Django - Python web framework https://www.djangoproject.com/
+- Django REST Framework - REST API framework for Django https://www.django-rest-framework.org/
+- Simple JWT - JWT authentication for Django REST Framework https://django-rest-framework-simplejwt.readthedocs.io/
+- Flake8 - Python code linting https://flake8.pycqa.org/
+- ESLint - JavaScript and React code linting https://eslint.org/
 
 ## Run the Project
 
@@ -22,8 +66,20 @@ Built using Django, Django REST Framework (DRF), JWT Authentication, React and S
 git clone https://github.com/JakevB88/learning-management-system.git
 ```
 
-### Install requirements
+### Install frontend dependencies
 ```
+cd frontend
+npm install
+```
+
+### Run React frontend
+```
+npm start
+```
+
+### Install backend requirements
+```
+cd backend
 pip install -r requirements.txt
 ```
 
@@ -31,14 +87,17 @@ pip install -r requirements.txt
 ```bash
 python manage.py migrate
 ```
+
 ### Start development server
 ```bash
 python manage.py runserver
 ```
+
 ### Create superuser
 ```bash
 python manage.py createsuperuser
 ```
+
 Follow the prompts to create an admin account.
 
 You can then obtain a JWT token using the administrator credentials via:
@@ -47,14 +106,6 @@ You can then obtain a JWT token using the administrator credentials via:
 POST /api/token/
 ```
 ---
-## Code validation
-### CSS validation with W3C
-1 error found for "immage not found", this is the drop down icon and this error is expected as W3C has no access to this.
-When the immage refference is temporarily removed for the validation, W3C reports no errors.
-
-
-
-
 
 # Consuming the API
 # Authentication
@@ -375,23 +426,9 @@ PUT /api/courses/1/deregister-admin/
 
 ---
 
-# Permissions Summary
+## Permissions table Summary
 
-| Endpoint | Admin | Teacher | Student |
-|-----------|-----------|-----------|-----------|
-| View Courses | ✅ | ✅ | ✅ |
-| View Single Course | ✅ | ✅ | ✅ |
-| Create Course | ✅ | ✅ | ❌ |
-| Update Own Course | ✅ | ✅ | ❌ |
-| Delete Own Course | ✅ | ✅ | ❌ |
-| View Users | ✅ | ✅ | ❌ |
-| Create Student Account | ✅ | ✅ | ✅ |
-| Create Staff Account | ✅ | ❌ | ❌ |
-| Update Own Profile | ✅ | ✅ | ✅ |
-| Delete User | ✅ | ❌ | ❌ |
-| Register For Course | ❌ | ❌ | ✅ |
-| Deregister From Course | ❌ | ❌ | ✅ |
-| Deregister Any Student | ✅ | ❌ | ❌ |
+<img src="frontend/src/lib/testresults/permissionstable.png" alt="permissionstable.png" width="300"/>
 
 
 
@@ -401,21 +438,52 @@ PUT /api/courses/1/deregister-admin/
 ## Testing
 
 ### Manual backend tests
-Once the backend view.py was build I created CRUD tests in the directory "backend/api_tests" to manually validate the API.
+Once the backend view.py was build I created REST CRUD tests in the directory "backend/api_tests" to manually validate the API.
 I tracked the results in the permissions table.
 
 <img src="frontend/src/lib/testresults/backend-permission-table-manual-test-results.png" alt="permissions-CRUD-test-results.png" width="600"/>
 
-### Frontend
-Screenshot showing the results of running $ npm test -- --coverage --watchAll=false
+### Frontend automated testing
+**$ npm test -- --coverage --watchAll=false**
+
+Run this inside the frontend directory to run all test.js files in the frontend directory.
+
+Screenshot showing the results.
 
 <img src="frontend/src/lib/testresults/npm-test-coverage.png" alt="npm-test-coverage.png" width="600"/>
 
 
-### Backend
-Screenshot showing the results of running $ python -m coverage run manage.py test
+### Backend automated testing
+**$ python -m coverage run manage.py test**
+
+**$ python -m coverage report**
+
+Run these 2 commands to run all the tests set out in tests.py and to see the covverage of these tests
+
+Screenshot showing the results:
 
 <img src="frontend/src/lib/testresults/manage.py-test-coverage-results.png" alt="manage.py-test-coverage-results.png" width="600"/>
+
+### Code validation
+
+#### Backend validation Django Python
+Flake8 was used to check
+- views.py
+- tests.py
+- models.py
+- urls.py
+- permissions.py
+
+All functionall issues (unused imports/variables) have been corrected.
+All the remaining issues are linelength or comment related spacing.
+
+#### Frontend validation Javascript & CSS
+estlint was used to check all code nested in the src directory.
+
+CSS validation with W3C
+W3C CSS validation reported a single asset loading warning relating to the dropdown icon image reference.
+When the external image reference is temporarily removed, the stylesheet validates successfully with no reported CSS errors.
+
 
 ---
 
@@ -446,6 +514,15 @@ The tables for users staid but the column count is reduced and each column can b
 
 ## Refferences
 - dropdown.png            https://uxwing.com/arrow-thin-chevron-bottom-icon/
-- burgermenu.png          https://uxwing.com/three-horizontal-lines-icon/ 
+- burgermenu.png          https://uxwing.com/three-horizontal-lines-icon/
 - dropdown.png            https://uxwing.com/line-angle-down-icon/
-- tick-icon.png           https://uxwing.com/check-mark-box-line-icon/   
+- tick-icon.png           https://uxwing.com/check-mark-box-line-icon/
+
+### Use of AI Tools
+Microsoft Copilot was used during the development of this project to:
+- Explain React, Django, and Django REST Framework concepts
+- Assist with debugging and troubleshooting
+- Suggest code refactoring and project structure improvements
+- Generate examples of unit tests
+- Explain error messages
+- Review code

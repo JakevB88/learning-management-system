@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission
 
-#Allows access only to teachers and admins.
+
+#  Allows access only to teachers and admins.
 class IsTeacherOrAdmin(BasePermission):
     def has_permission(self, request, view):
         return (
@@ -8,12 +9,14 @@ class IsTeacherOrAdmin(BasePermission):
             and request.user.role in ["teacher", "admin"]
         )
 
-#Allows access only to admins.
+
+#  Allows access only to admins.
 class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         return request.user.role == "admin"
 
-#Allows access only to students.
+
+#  Allows access only to students.
 class IsStudent(BasePermission):
     def has_permission(self, request, view):
         return request.user.role == "student"

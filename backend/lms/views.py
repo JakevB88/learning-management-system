@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-import json
 from .models import User, Course
 from django.forms.models import model_to_dict
 from .permissions import IsTeacherOrAdmin, IsAdmin, IsStudent
@@ -7,7 +6,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django.db.models.deletion import ProtectedError
 
-#Return data of current logged in user for validation
+# Return data of current logged in user for validation
+
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def current_profile(request):
@@ -20,7 +21,9 @@ def current_profile(request):
         "role": request.user.role,
     })
 
-#user model CRUD defenitions for User model
+# user model CRUD defenitions for User model
+
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsTeacherOrAdmin])
 def get_user_profiles(request):
@@ -39,6 +42,7 @@ def get_user_profiles(request):
     ]
 
     return JsonResponse(users, safe=False)
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsTeacherOrAdmin])
@@ -65,6 +69,7 @@ def get_user_profile(request, user_id):
             {"error": "User not found"},
             status=404
         )
+
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated, IsAdmin])
@@ -111,7 +116,8 @@ def create_staff_user_profile(request):
             {"error": "Failed to create user"},
             status=400
         )
-                                
+
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_user_profile(request):
@@ -131,7 +137,7 @@ def create_user_profile(request):
                 {"error": f"{field.replace('_', ' ').title()} is required."},
                 status=400
             )
-        
+
     try:
         user = User.objects.create_user(
             username=data["username"],
@@ -157,7 +163,8 @@ def create_user_profile(request):
             {"error": "Failed to create course"},
             status=400
         )
-   
+
+
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
 def update_user_profile(request, user_id):
@@ -167,10 +174,10 @@ def update_user_profile(request, user_id):
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
-            return JsonResponse(
-                {"error": "User not found"},
-                status=404
-            )
+        return JsonResponse(
+            {"error": "User not found"},
+            status=404
+        )
     # Permission check
     if (
         request.user.id != user.id
@@ -206,7 +213,11 @@ def update_user_profile(request, user_id):
                 if admin_count <= 1:
                     return JsonResponse(
                         {
-                            "error": f"You are the last admin and therefore cannot change yourself to '{data['role']}'. Please assign another admin first."
+                            "error": (
+                                f"You are the last admin and therefore cannot "
+                                f"change yourself to '{data['role']}'. Please "
+                                "assign another admin first."
+                            )
                         },
                         status=400
                     )
@@ -216,13 +227,15 @@ def update_user_profile(request, user_id):
 
     return JsonResponse(model_to_dict(user))
 
+
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated, IsAdmin])
 def remove_user_profile(request, user_id):
 
     try:
-        user = User.objects.get(id=user_id) #user is the user to be deleted in the database
-        if user.role == "admin": #user role from the database
+        # user is the user to be deleted in the database
+        user = User.objects.get(id=user_id)
+        if user.role == "admin":  # user role from the database
             admin_count = User.objects.filter(role="admin").count()
             if admin_count <= 1:
                 return JsonResponse(
@@ -231,16 +244,19 @@ def remove_user_profile(request, user_id):
                     },
                     status=400
                 )
-            
+
         user.delete()
         return JsonResponse({
             "message": "User deleted"
         })
-    
+
     except ProtectedError:
         return JsonResponse(
             {
-                "error": "Cannot delete this user because they are assigned as a teacher or admin to one or more courses."
+                "error": (
+                    "Cannot delete this user because they are "
+                    "assigned as a teacher or admin to one or more courses."
+                )
             },
             status=404
         )
@@ -250,7 +266,10 @@ def remove_user_profile(request, user_id):
             status=404
         )
 
-#course model CRUD defenitions for Course model
+
+# course model CRUD defenitions for Course model
+
+
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_courses(request):
@@ -269,12 +288,13 @@ def get_courses(request):
 
     return JsonResponse(courses, safe=False)
 
+
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_course(request, course_id):
     try:
         course = Course.objects.get(
-            id= course_id
+            id=course_id
         )
         return JsonResponse({
             "id": course.id,
@@ -297,10 +317,11 @@ def get_course(request, course_id):
             status=404
         )
 
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated, IsTeacherOrAdmin])
 def create_course(request):
-    
+
     data = request.data
 
     title = data.get("title", "").strip()
@@ -311,19 +332,20 @@ def create_course(request):
             {"error": "Title and description are required"},
             status=400
         )
-    
+
     if Course.objects.filter(title=data["title"]).exists():
         return JsonResponse(
             {"error": "A course with this title already exists."},
             status=400
         )
-    
+
     course = Course.objects.create(
         title=data["title"],
         description=data["description"],
-        teacher_id = request.user.id
+        teacher_id=request.user.id
     )
-    return JsonResponse(model_to_dict(course),status=201)
+    return JsonResponse(model_to_dict(course), status=201)
+
 
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated, IsTeacherOrAdmin])
@@ -340,19 +362,20 @@ def update_course(request, course_id):
                     {"error": "Permission denied"},
                     status=403
                 )
-            
+
         if "title" in data:
-            if Course.objects.filter(title=data["title"]).exclude(id=course_id).exists():
+            if Course.objects.filter(
+                    title=data["title"]).exclude(id=course_id).exists():
                 return JsonResponse(
                     {"error": "A course with this title already exists."},
                     status=400
                 )
             course.title = data["title"]
-            
+
         if "description" in data:
             course.description = data["description"]
 
-        course.save() # writes changes to SQLite
+        course.save()  # writes changes to SQLite
 
         return JsonResponse({
             "id": course.id,
@@ -375,13 +398,14 @@ def update_course(request, course_id):
             status=404
         )
 
+
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated, IsTeacherOrAdmin])
 def remove_course(request, course_id):
 
     try:
         course = Course.objects.get(
-            id = course_id
+            id=course_id
         )
 
         if request.user.role != "admin":
@@ -390,7 +414,7 @@ def remove_course(request, course_id):
                     {"error": "Permission denied"},
                     status=403
                 )
-            
+
         course.delete()
         return JsonResponse({
             "message": "Course removed"
@@ -402,10 +426,11 @@ def remove_course(request, course_id):
             status=404
         )
 
+
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated, IsStudent])
 def register_student_to_course(request, course_id):
-    
+
     try:
         course = Course.objects.get(id=course_id)
     except Course.DoesNotExist:
@@ -418,7 +443,7 @@ def register_student_to_course(request, course_id):
             {"error": "Already registered to this course"},
             status=400
         )
-    
+
     course.students.add(request.user)
 
     return JsonResponse(
@@ -426,10 +451,11 @@ def register_student_to_course(request, course_id):
         status=200
     )
 
+
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated, IsStudent])
 def deregister_student_from_course(request, course_id):
-    
+
     try:
         course = Course.objects.get(id=course_id)
     except Course.DoesNotExist:
@@ -451,12 +477,13 @@ def deregister_student_from_course(request, course_id):
         status=200
     )
 
+
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated, IsAdmin])
 def deregister_student_from_course_admin(request, course_id):
 
     student_id = request.data.get("student_id")
-    
+
     try:
         course = Course.objects.get(id=course_id)
     except Course.DoesNotExist:
@@ -464,7 +491,7 @@ def deregister_student_from_course_admin(request, course_id):
             {"error": "Course not found"},
             status=404
         )
-    
+
     try:
         user = User.objects.get(id=student_id)
     except User.DoesNotExist:

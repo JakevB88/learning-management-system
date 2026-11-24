@@ -18,7 +18,7 @@ from .views import (
     register_student_to_course,
     deregister_student_from_course,
     deregister_student_from_course_admin,
-    
+
     )
 
 urlpatterns = [
@@ -31,11 +31,14 @@ urlpatterns = [
     path("users/profile", current_profile),
 
     path("courses/<int:course_id>/remove", remove_course),
-    path("courses", get_courses), 
+    path("courses", get_courses),
     path("courses/create", create_course),
     path("courses/<int:course_id>", get_course),
     path("courses/<int:course_id>/update", update_course),
     path("courses/<int:course_id>/register", register_student_to_course),
     path("courses/<int:course_id>/deregister", deregister_student_from_course),
-    path("courses/<int:course_id>/deregister-admin", deregister_student_from_course_admin),
+    path(
+        "courses/<int:course_id>/deregister-admin",
+        deregister_student_from_course_admin
+    ),
 ]

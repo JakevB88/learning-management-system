@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# Models
+#  Models
+
 
 class User(AbstractUser):
-    # from AbstractUser we alread get username, email, password, first_name, last_name
+    # from AbstractUser we get username, email, password, first_name, last_name
     ROLE_CHOICES = [
         ("student", "Student"),
         ("teacher", "Teacher"),
@@ -22,13 +23,14 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+
 class Course(models.Model):
     title = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     teacher = models.ForeignKey(
         User,
-        # prevent course from being orphaned if the teacher is deleted.
-        on_delete=models.PROTECT 
+        #  prevent course from being orphaned if the teacher is deleted.
+        on_delete=models.PROTECT
     )
 
     students = models.ManyToManyField(
