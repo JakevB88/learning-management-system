@@ -4,6 +4,10 @@ Final project for Full Stack Front End Development.
 
 Built using Django, Django REST Framework (DRF), JWT Authentication, React and SQLite.
 
+## deployment
+frontend:
+backend: 
+
 ## Features
 
 ### Students
