@@ -5,8 +5,9 @@ Final project for Full Stack Front End Development.
 Built using Django, Django REST Framework (DRF), JWT Authentication, React and SQLite.
 
 ## deployment
-frontend:
-backend: 
+frontend URL: https://learning-management-system-s2mc.onrender.com
+Due to the SQLite server it is not possible to keep the DB when re deploying.
+Due to this it is dificult to get an admin user setup.
 
 ## Features
 
