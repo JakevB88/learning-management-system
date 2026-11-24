@@ -25,6 +25,12 @@ Built using Django, Django REST Framework (DRF), JWT Authentication, React and S
 - Deregister students from courses
 - Update own profile (but can't delete/update last admin)
 
+### Examples screenshots of the application
+<img src="frontend/src/lib/application/login-page.png" alt="login page" height="350"/>
+<img src="frontend/src/lib/application/Profile-page.png" alt="profile page" height="350"/>
+<img src="frontend/src/lib/application/signup-page.png" alt="signup page" height="350"/>
+<img src="frontend/src/lib/application/course-page.png" alt="course page" height="350"/>
+<img src="frontend/src/lib/application/sidebar-dropdown-page.png" alt="sidebar dropdown page" height="350"/>
 
 
 ## Tech Stack
