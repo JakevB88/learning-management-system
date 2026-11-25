@@ -139,16 +139,24 @@ def create_user_profile(request):
             )
 
     try:
-        user = User.objects.create_user(
-            username=data["username"],
-            password=data["password"],
-            first_name=data["first_name"],
-            last_name=data["last_name"],
-            email=data["email"],
-            is_staff=False,
-            is_active=True,
-            role="student"
-        )
+        if not User.objects.exists():
+            user = User.objects.create_superuser(
+                username=data["username"],
+                password=data["password"],
+                first_name=data["first_name"],
+                last_name=data["last_name"],
+                email=data["email"],
+                role="admin"
+            )
+        else:
+            user = User.objects.create_user(
+                username=data["username"],
+                password=data["password"],
+                first_name=data["first_name"],
+                last_name=data["last_name"],
+                email=data["email"],
+                role="student"
+            )
         return JsonResponse(
             {
                 "id": user.id,

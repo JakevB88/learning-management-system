@@ -7,7 +7,7 @@ Built using Django, Django REST Framework (DRF), JWT Authentication, React and S
 ## deployment
 frontend URL: https://learning-management-system-s2mc.onrender.com
 Due to the SQLite server it is not possible to keep the DB when re deploying.
-Due to this it is dificult to get an admin user setup.
+For this reason I decided that the 1st user to sign up is always an admin, this way I can create the first account after deployment and always have admin rights.
 
 ## Features
 
