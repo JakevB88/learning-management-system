@@ -77,7 +77,7 @@ describe("DisplayCourse page", () => {
 
         await userEvent.click(screen.getByText("JavaScript"));
 
-        expect(window.confirm).toHaveBeenCalledWith("Register to Course 1?");
+        expect(window.confirm).toHaveBeenCalledWith("Register to course: JavaScript?");
         expect(fetch).toHaveBeenCalledWith("http://127.0.0.1:8000/api/courses/1/register",expect.objectContaining({
                 method: "PUT",
             })

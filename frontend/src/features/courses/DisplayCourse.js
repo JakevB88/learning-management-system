@@ -10,13 +10,13 @@ export default function DisplayCourse({courses = [], refreshCourses}) {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
-    const handleRegistration = async (id) => {
-        if (!window.confirm(`Register to Course ${id}?`)) {
+    const handleRegistration = async (course) => {
+        if (!window.confirm(`Register to course: ${course.title}?`)) {
             return;
         }
 
         try {
-            await registerToCourse(id);
+            await registerToCourse(course.id);
             await refreshCourses();
             alert("Successfully registered");
         } catch (error) {
@@ -25,13 +25,13 @@ export default function DisplayCourse({courses = [], refreshCourses}) {
         }
     };
 
-    const handleDeRegistration = async (id) => {
-        if (!window.confirm(`Register to Course ${id}?`)) {
+    const handleDeRegistration = async (course) => {
+        if (!window.confirm(`Deregister from course: ${course.title}?`)) {
             return;
         }
 
         try {
-            await deregisterFromCourse(id);
+            await deregisterFromCourse(course.id);
             await refreshCourses();
             alert("Successfully deregistered");
         } catch (error) {
@@ -60,8 +60,8 @@ export default function DisplayCourse({courses = [], refreshCourses}) {
                                 ? () => navigate(`/update-course/${course.id}`)
                                 : user?.role === "student"
                                     ? course.students.includes(user?.id)
-                                            ? () => handleDeRegistration(course.id)
-                                            : () => handleRegistration(course.id)
+                                            ? () => handleDeRegistration(course)
+                                            : () => handleRegistration(course)
                                     : undefined
                         }
                     >
