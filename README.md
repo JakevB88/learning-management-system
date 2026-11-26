@@ -5,7 +5,7 @@ Final project for Full Stack Front End Development.
 Built using Django, Django REST Framework (DRF), JWT Authentication, React and SQLite.
 
 ## deployment
-frontend URL: https://learning-management-system-s2mc.onrender.com
+frontend URL: https://learning-management-system-frontend-c7jz.onrender.com/
 Due to the SQLite server it is not possible to keep the DB when re deploying.
 For this reason I decided that the 1st user to sign up is always an admin, this way I can create the first account after deployment and always have admin rights.
 
@@ -24,11 +24,15 @@ For this reason I decided that the 1st user to sign up is always an admin, this 
 - Update own profile
 
 ### Administrators
-- Create staff accounts
+- Create staff accounts and student accounts
 - Manage all users
 - Manage all courses
-- Deregister students from courses
 - Update own profile (but can't delete/update last admin)
+
+
+### additional constraints
+- If a course is deleted, the students will automatically be deregistered
+- A teacher/admin can not be deleted as long as there is a course assinged to them.
 
 ### Examples screenshots of the application
 <img src="frontend/src/lib/application/login-page.png" alt="login page" height="350"/>

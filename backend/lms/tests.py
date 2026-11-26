@@ -580,9 +580,9 @@ class GetCoursesTest(SimpleTestCase):  # inherit from SimpleTestCase
 #  TesTS FOR CREATING USER PROFILE
 #  ------------------------------------------------------------------------------------------
 
-
+    @patch.object(views.User.objects, "exists")
     @patch.object(views.User.objects, "create_user")
-    def test_create_user_successfully_not_authenticated(self, mock_create_user):
+    def test_create_user_successfully_not_authenticated(self, mock_create_user, mock_exists):
         # Arrange
         user_data = {
             "password": "password",
@@ -597,6 +597,8 @@ class GetCoursesTest(SimpleTestCase):  # inherit from SimpleTestCase
             1, "JSmith", "John", "Smith", "jsmith@vbcourses.co.uk", "student"
         )
         mock_create_user.return_value = mock_user_full
+
+        mock_exists.User.objects.exists() == True
 
         #  Act
         response = self.client.post(
@@ -622,8 +624,6 @@ class GetCoursesTest(SimpleTestCase):  # inherit from SimpleTestCase
             first_name="John",
             last_name="Smith",
             email="jsmith@vbcourses.co.uk",
-            is_staff=False,
-            is_active=True,
             role="student"
         )
 

@@ -168,7 +168,7 @@ def create_user_profile(request):
         )
     except KeyError:
         return JsonResponse(
-            {"error": "Failed to create course"},
+            {"error": "Failed to create user"},
             status=400
         )
 
